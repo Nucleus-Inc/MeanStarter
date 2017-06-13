@@ -1,0 +1,34 @@
+{
+  "name": "mean-starter",
+  "version": "0.0.1",
+  "description": "Mean Stack starter template with useful modules and features required for most applications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Igor-Lopes/MeanStarter.git"
+  },
+  "keywords": [
+    "mean-stack",
+    "rest-api",
+    "template-project"
+  ],
+  "author": "Igor Lopes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Igor-Lopes/MeanStarter/issues"
+  },
+  "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "express-load": "^1.1.16",
+    "helmet": "^3.6.1",
+    "method-override": "^2.3.9",
+    "mongoose": "^4.10.6"
+  }
+}
