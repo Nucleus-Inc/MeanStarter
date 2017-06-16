@@ -1,6 +1,7 @@
 var express = require('express');
 var load = require('express-load');
 var bodyParser = require('body-parser');
+var bodyParserError = require('bodyparser-json-error');
 var helmet = require('helmet');
 var mongoose = require('mongoose');
 
@@ -15,6 +16,8 @@ module.exports = function() {
         extended: true
     }));
     app.use(bodyParser.json());
+    app.use(bodyParserError.beautify());
+
     app.use(require('method-override')());
     app.use(express.static('./public'));
 
