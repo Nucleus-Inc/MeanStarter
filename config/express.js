@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var bodyParserError = require('bodyparser-json-error');
 var helmet = require('helmet');
 var mongoose = require('mongoose');
+var expressValidator = require('express-validator');
+var zxcvbn = require('zxcvbn');
 
 module.exports = function() {
 
@@ -17,6 +19,18 @@ module.exports = function() {
     }));
     app.use(bodyParser.json());
     app.use(bodyParserError.beautify());
+
+    /* Express Validator */
+    app.use(expressValidator({
+        customValidators: {
+            isObjectId: function(_id) {
+                return mongoose.Types.ObjectId.isValid(_id);
+            },
+            isValidPassword: function(password) {
+                return password && zxcvbn(password).score >= 2 ? true : false
+            }
+        }
+    }));
 
     app.use(require('method-override')());
     app.use(express.static('./public'));
