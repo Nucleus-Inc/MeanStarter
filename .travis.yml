@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "6.10"
+  - "7.9"
+before_script:
+  - npm install
+services:
+  - mongodb
+script:
+  - npm test
