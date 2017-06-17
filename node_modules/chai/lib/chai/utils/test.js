@@ -11,7 +11,7 @@
 var flag = require('./flag');
 
 /**
- * # test(object, expression)
+ * ### .test(object, expression)
  *
  * Test and object for expression.
  *
@@ -21,7 +21,7 @@ var flag = require('./flag');
  * @name test
  */
 
-module.exports = function (obj, args) {
+module.exports = function test(obj, args) {
   var negate = flag(obj, 'negate')
     , expr = args[0];
   return negate ? !expr : expr;

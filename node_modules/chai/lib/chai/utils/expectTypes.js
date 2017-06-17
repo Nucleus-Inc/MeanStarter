@@ -5,7 +5,7 @@
  */
 
 /**
- * ### expectTypes(obj, types)
+ * ### .expectTypes(obj, types)
  *
  * Ensures that the object being tested against is of a valid type.
  *
@@ -13,6 +13,8 @@
  *
  * @param {Mixed} obj constructed Assertion
  * @param {Array} type A list of allowed types for this assertion
+ * @param {Function} ssfi starting point for removing implementation frames from
+ *                        stack trace of AssertionError
  * @namespace Utils
  * @name expectTypes
  * @api public
@@ -22,8 +24,12 @@ var AssertionError = require('assertion-error');
 var flag = require('./flag');
 var type = require('type-detect');
 
-module.exports = function (obj, types) {
-  var obj = flag(obj, 'object');
+module.exports = function expectTypes(obj, types, ssfi) {
+  var flagMsg = flag(obj, 'message');
+
+  flagMsg = flagMsg ? flagMsg + ': ' : '';
+
+  obj = flag(obj, 'object');
   types = types.map(function (t) { return t.toLowerCase(); });
   types.sort();
 
@@ -34,9 +40,13 @@ module.exports = function (obj, types) {
     return or + art + ' ' + t;
   }).join(', ');
 
-  if (!types.some(function (expected) { return type(obj) === expected; })) {
+  var objType = type(obj).toLowerCase();
+
+  if (!types.some(function (expected) { return objType === expected; })) {
     throw new AssertionError(
-      'object tested must be ' + str + ', but ' + type(obj) + ' given'
+      flagMsg + 'object tested must be ' + str + ', but ' + objType + ' given',
+      undefined,
+      ssfi
     );
   }
 };

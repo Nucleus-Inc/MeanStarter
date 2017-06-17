@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -25,7 +27,7 @@ exports = module.exports = Suite;
  * @param {string} title
  * @return {Suite}
  */
-exports.create = function(parent, title) {
+exports.create = function (parent, title) {
   var suite = new Suite(title, parent.ctx);
   suite.parent = parent;
   title = suite.fullTitle();
@@ -40,9 +42,12 @@ exports.create = function(parent, title) {
  * @param {string} title
  * @param {Context} parentContext
  */
-function Suite(title, parentContext) {
+function Suite (title, parentContext) {
+  if (!utils.isString(title)) {
+    throw new Error('Suite `title` should be a "string" but "' + typeof title + '" was given instead.');
+  }
   this.title = title;
-  function Context() {}
+  function Context () {}
   Context.prototype = parentContext;
   this.ctx = new Context();
   this.suites = [];
@@ -58,6 +63,8 @@ function Suite(title, parentContext) {
   this._slow = 75;
   this._bail = false;
   this._retries = -1;
+  this._onlyTests = [];
+  this._onlySuites = [];
   this.delayed = false;
 }
 
@@ -72,7 +79,7 @@ inherits(Suite, EventEmitter);
  * @api private
  * @return {Suite}
  */
-Suite.prototype.clone = function() {
+Suite.prototype.clone = function () {
   var suite = new Suite(this.title);
   debug('clone');
   suite.ctx = this.ctx;
@@ -91,7 +98,7 @@ Suite.prototype.clone = function() {
  * @param {number|string} ms
  * @return {Suite|number} for chaining
  */
-Suite.prototype.timeout = function(ms) {
+Suite.prototype.timeout = function (ms) {
   if (!arguments.length) {
     return this._timeout;
   }
@@ -113,7 +120,7 @@ Suite.prototype.timeout = function(ms) {
  * @param {number|string} n
  * @return {Suite|number} for chaining
  */
-Suite.prototype.retries = function(n) {
+Suite.prototype.retries = function (n) {
   if (!arguments.length) {
     return this._retries;
   }
@@ -129,7 +136,7 @@ Suite.prototype.retries = function(n) {
   * @param {boolean} enabled
   * @return {Suite|boolean} self or enabled
   */
-Suite.prototype.enableTimeouts = function(enabled) {
+Suite.prototype.enableTimeouts = function (enabled) {
   if (!arguments.length) {
     return this._enableTimeouts;
   }
@@ -145,7 +152,7 @@ Suite.prototype.enableTimeouts = function(enabled) {
  * @param {number|string} ms
  * @return {Suite|number} for chaining
  */
-Suite.prototype.slow = function(ms) {
+Suite.prototype.slow = function (ms) {
   if (!arguments.length) {
     return this._slow;
   }
@@ -164,7 +171,7 @@ Suite.prototype.slow = function(ms) {
  * @param {boolean} bail
  * @return {Suite|number} for chaining
  */
-Suite.prototype.bail = function(bail) {
+Suite.prototype.bail = function (bail) {
   if (!arguments.length) {
     return this._bail;
   }
@@ -178,7 +185,7 @@ Suite.prototype.bail = function(bail) {
  *
  * @api private
  */
-Suite.prototype.isPending = function() {
+Suite.prototype.isPending = function () {
   return this.pending || (this.parent && this.parent.isPending());
 };
 
@@ -190,7 +197,7 @@ Suite.prototype.isPending = function() {
  * @param {Function} fn
  * @return {Suite} for chaining
  */
-Suite.prototype.beforeAll = function(title, fn) {
+Suite.prototype.beforeAll = function (title, fn) {
   if (this.isPending()) {
     return this;
   }
@@ -220,7 +227,7 @@ Suite.prototype.beforeAll = function(title, fn) {
  * @param {Function} fn
  * @return {Suite} for chaining
  */
-Suite.prototype.afterAll = function(title, fn) {
+Suite.prototype.afterAll = function (title, fn) {
   if (this.isPending()) {
     return this;
   }
@@ -250,7 +257,7 @@ Suite.prototype.afterAll = function(title, fn) {
  * @param {Function} fn
  * @return {Suite} for chaining
  */
-Suite.prototype.beforeEach = function(title, fn) {
+Suite.prototype.beforeEach = function (title, fn) {
   if (this.isPending()) {
     return this;
   }
@@ -280,7 +287,7 @@ Suite.prototype.beforeEach = function(title, fn) {
  * @param {Function} fn
  * @return {Suite} for chaining
  */
-Suite.prototype.afterEach = function(title, fn) {
+Suite.prototype.afterEach = function (title, fn) {
   if (this.isPending()) {
     return this;
   }
@@ -309,7 +316,7 @@ Suite.prototype.afterEach = function(title, fn) {
  * @param {Suite} suite
  * @return {Suite} for chaining
  */
-Suite.prototype.addSuite = function(suite) {
+Suite.prototype.addSuite = function (suite) {
   suite.parent = this;
   suite.timeout(this.timeout());
   suite.retries(this.retries());
@@ -328,7 +335,7 @@ Suite.prototype.addSuite = function(suite) {
  * @param {Test} test
  * @return {Suite} for chaining
  */
-Suite.prototype.addTest = function(test) {
+Suite.prototype.addTest = function (test) {
   test.parent = this;
   test.timeout(this.timeout());
   test.retries(this.retries());
@@ -347,7 +354,7 @@ Suite.prototype.addTest = function(test) {
  * @api public
  * @return {string}
  */
-Suite.prototype.fullTitle = function() {
+Suite.prototype.fullTitle = function () {
   if (this.parent) {
     var full = this.parent.fullTitle();
     if (full) {
@@ -363,8 +370,8 @@ Suite.prototype.fullTitle = function() {
  * @api public
  * @return {number}
  */
-Suite.prototype.total = function() {
-  return utils.reduce(this.suites, function(sum, suite) {
+Suite.prototype.total = function () {
+  return utils.reduce(this.suites, function (sum, suite) {
     return sum + suite.total();
   }, 0) + this.tests.length;
 };
@@ -377,9 +384,9 @@ Suite.prototype.total = function() {
  * @param {Function} fn
  * @return {Suite}
  */
-Suite.prototype.eachTest = function(fn) {
+Suite.prototype.eachTest = function (fn) {
   utils.forEach(this.tests, fn);
-  utils.forEach(this.suites, function(suite) {
+  utils.forEach(this.suites, function (suite) {
     suite.eachTest(fn);
   });
   return this;
@@ -388,7 +395,7 @@ Suite.prototype.eachTest = function(fn) {
 /**
  * This will run the root suite if we happen to be running in delayed mode.
  */
-Suite.prototype.run = function run() {
+Suite.prototype.run = function run () {
   if (this.root) {
     this.emit('run');
   }

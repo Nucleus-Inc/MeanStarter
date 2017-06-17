@@ -4,7 +4,8 @@
   "description": "Mean Stack starter template with useful modules and features required for most applications",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "SET NODE_ENV=local-test && node app.js",
+    "test": "mocha specs/"
   },
   "repository": {
     "type": "git",
@@ -39,5 +40,10 @@
     "mongoose-findorcreate": "^2.0.0",
     "mongoose-sanitizer": "^1.0.0",
     "zxcvbn": "^4.4.2"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.4.2"
   }
 }

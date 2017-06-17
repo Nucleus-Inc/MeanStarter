@@ -1,8 +1,8 @@
 var config = require('../../config/config.js');
 var async = require('async');
+var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var zxcvbn = require('zxcvbn');
-
 
 function getSmsCode() {
     var length = 4;
@@ -37,6 +37,7 @@ module.exports = function(app) {
                 if (req.validationErrors()) {
                     res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {
@@ -59,14 +60,14 @@ module.exports = function(app) {
                     } else {
                         res.status(401);
                         res.json({
-                            error: 'Custom error for unauthorized'
+                            code: 4100
                         });
                     }
                     return null;
                 }).catch(function(err) {
                     res.status(500);
                     res.json({
-                        error: 'Custom error for internal error'
+                        code: 5000
                     });
                 });
             }
@@ -95,6 +96,10 @@ module.exports = function(app) {
                     'phone_number': {
                         notEmpty: {
                             errorMessage: 'Phone number is required'
+                        },
+                        isPhoneNumber: {
+                            number: req.body.phone_number,
+                            errorMessage: 'Invalid phone number'
                         }
                     },
                     'password': {
@@ -110,6 +115,7 @@ module.exports = function(app) {
                 if (req.validationErrors()) {
                     res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {
@@ -144,18 +150,19 @@ module.exports = function(app) {
                     if (err.code == 11000) {
                         res.status(422);
                         res.json({
+                            code: 4200,
                             errors: err.fields
                         });
                     } else {
                         res.status(500);
                         res.json({
-                            error: 'Custom error for internal error'
+                            code: 5000
                         });
                     }
                 });
             },
             function(code, done) {
-                //Your code to send SMS with your preferred api
+                //Your code for sending sms here
                 res.end();
             }
         ], function(err, result) {
@@ -177,6 +184,7 @@ module.exports = function(app) {
                 if (req.validationErrors()) {
                     res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {
@@ -192,10 +200,10 @@ module.exports = function(app) {
                     } else if (data.is_active) {
                         res.status(422);
                         res.json({
-                            error: 'Custom error for account already active'
+                            code: 4201
                         });
                     } else {
-                        Professional.findByIdAndUpdate(data._id, {
+                        User.findByIdAndUpdate(data._id, {
                             token: new User().generateHash(code.toString()),
                             token_exp: Date.now() + 300000
                         }).then(function(data) {
@@ -208,7 +216,7 @@ module.exports = function(app) {
                         }).catch(function(err) {
                             res.status(500);
                             res.json({
-                                error: 'Custom error for internal error'
+                                code: 5000
                             });
                         });
                     }
@@ -216,12 +224,12 @@ module.exports = function(app) {
                 }).catch(function(err) {
                     res.status(500);
                     res.json({
-                        error: 'Custom error for internal error'
+                        code: 5000
                     });
                 });
             },
             function(code, done) {
-                //Your code to send SMS with your preferred api
+                //Your code for sending sms here
                 res.end();
             }
         ], function(err, result) {
@@ -246,7 +254,9 @@ module.exports = function(app) {
                     }
                 });
                 if (req.validationErrors()) {
+                    res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {
@@ -261,10 +271,10 @@ module.exports = function(app) {
                     } else if (data.is_active) {
                         res.status(422);
                         res.json({
-                            error: 'Custom error for account already active'
+                            code: 4201
                         });
                     } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.token_exp) {
-                        Professional.findByIdAndUpdate(data._id, {
+                        User.findByIdAndUpdate(data._id, {
                             token: null,
                             token_exp: null,
                             is_active: true
@@ -282,20 +292,21 @@ module.exports = function(app) {
                         }).catch(function(err) {
                             res.status(500);
                             res.json({
-                                error: 'Custom error for internal error'
+                                code: 5000
                             });
                         });
                     } else {
                         res.status(403);
                         res.json({
-                            error: 'Custom error for invalid credentials'
+                            status: 403,
+                            code: 4301
                         });
                     }
                     return null;
                 }).catch(function(err) {
                     res.status(500);
                     res.json({
-                        error: 'Custom error for internal error'
+                        code: 5000
                     });
                 });
             }
@@ -311,12 +322,17 @@ module.exports = function(app) {
                         'phone_number': {
                             notEmpty: {
                                 errorMessage: 'Phone number is required'
+                            },
+                            isPhoneNumber: {
+                                number: req.body.phone_number,
+                                errorMessage: 'Invalid phone number'
                             }
                         }
                     });
                     if (req.validationErrors()) {
                         res.status(400);
                         res.json({
+                            code: 4000,
                             errors: req.validationErrors()
                         });
                     } else {
@@ -345,7 +361,7 @@ module.exports = function(app) {
                             }).catch(function(err) {
                                 res.status(500);
                                 res.json({
-                                    error: 'Custom error for internal error'
+                                    code: 5000
                                 });
                             });
                         }
@@ -353,12 +369,12 @@ module.exports = function(app) {
                     }).catch(function(err) {
                         res.status(500);
                         res.json({
-                            error: 'Custom error for internal error'
+                            code: 5000
                         });
                     });
                 },
                 function(code, done) {
-                    //Your code to send SMS with your preferred api
+                    //Your code for sending sms here
                     res.end();
                 }
             ],
@@ -374,6 +390,10 @@ module.exports = function(app) {
                     'phone_number': {
                         notEmpty: {
                             errorMessage: 'Phone number is required'
+                        },
+                        isPhoneNumber: {
+                            number: req.body.phone_number,
+                            errorMessage: 'Invalid phone number'
                         }
                     }
                 });
@@ -394,6 +414,7 @@ module.exports = function(app) {
                 if (req.validationErrors()) {
                     res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {
@@ -407,10 +428,11 @@ module.exports = function(app) {
                     if (!data) {
                         res.status(403);
                         res.json({
-                            error: 'Custom error for invalid credentials'
+                            status: 403,
+                            code: 4301
                         });
                     } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.token_exp) {
-                        Professional.findByIdAndUpdate(data._id, {
+                        User.findByIdAndUpdate(data._id, {
                             token: null,
                             token_exp: null,
                             is_active: true,
@@ -420,20 +442,22 @@ module.exports = function(app) {
                         }).catch(function(err) {
                             res.status(500);
                             res.json({
-                                error: 'Custom error for internal error'
+                                code: 5000
                             });
                         });
                     } else {
                         res.status(403);
                         res.json({
-                            error: 'Custom error for invalid credentials'
+                            status: 403,
+                            code: 4301
                         });
                     }
                     return null;
                 }).catch(function(err) {
                     res.status(500);
                     res.json({
-                        error: 'Custom error for internal error'
+                        status: 500,
+                        code: 5000
                     });
                 });
             }
@@ -455,6 +479,7 @@ module.exports = function(app) {
                 if (req.validationErrors()) {
                     res.status(400);
                     res.json({
+                        code: 4000,
                         errors: req.validationErrors()
                     });
                 } else {

@@ -28,6 +28,10 @@ module.exports = function() {
             },
             isValidPassword: function(password) {
                 return password && zxcvbn(password).score >= 2 ? true : false
+            },
+            isPhoneNumber: function(number) {
+                var numberExp = new RegExp(/(55)[0-9]{11}/);
+                return numberExp.test(number);
             }
         }
     }));
