@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var beautifyUnique = require('mongoose-beautiful-unique-validation');
 var sanitizerPlugin = require('mongoose-sanitizer');
 

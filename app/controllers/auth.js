@@ -2,7 +2,6 @@ var config = require('../../config/config.js');
 var async = require('async');
 var nodemailer = require('nodemailer');
 var hbs = require('nodemailer-express-handlebars');
-var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var zxcvbn = require('zxcvbn');
 
