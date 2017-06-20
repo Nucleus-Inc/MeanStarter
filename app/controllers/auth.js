@@ -1,14 +1,34 @@
 var config = require('../../config/config.js');
 var async = require('async');
+var nodemailer = require('nodemailer');
+var hbs = require('nodemailer-express-handlebars');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var zxcvbn = require('zxcvbn');
 
 function getSmsCode() {
     var length = 4;
-
     return Math.floor(Math.pow(10, length - 1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1));
-}
+};
+
+function sendEmail(mailOptions) {
+    var smtpTransporter = nodemailer.createTransport({
+        service: config.email.service,
+        auth: {
+            user: config.email.user,
+            pass: config.email.pass
+        }
+    }, {
+        from: config.email.from
+    });
+    smtpTransporter.use('compile', hbs({
+        viewPath: 'app/views/',
+        extName: '.hbs'
+    }));
+    smtpTransporter.sendMail(mailOptions, function(err, data) {
+        return err ? err : data;
+    });
+};
 
 module.exports = function(app) {
 
@@ -162,7 +182,7 @@ module.exports = function(app) {
                 });
             },
             function(code, done) {
-                //Your code for sending sms here
+                // Your code for sending sms here
                 res.end();
             }
         ], function(err, result) {
@@ -207,7 +227,20 @@ module.exports = function(app) {
                             token: new User().generateHash(code.toString()),
                             token_exp: Date.now() + 300000
                         }).then(function(data) {
-                            if (process.env.NODE_ENV === 'production') {
+                            if (req.query.option && req.query.option === 'email') {
+                                var mailOptions = {
+                                    to: data.email,
+                                    subject: 'Activate your account',
+                                    template: 'email-inline',
+                                    context: {
+                                        username: data.name,
+                                        message: 'Please confirm your account by clicking the link below',
+                                        link: 'http://' + req.headers.host + '/your-activation-link/' + code
+                                    }
+                                };
+                                sendEmail(mailOptions);
+                                res.end();
+                            } else if (process.env.NODE_ENV === 'production') {
                                 done(null, code);
                             } else {
                                 res.set('code', code);
@@ -352,7 +385,20 @@ module.exports = function(app) {
                                 token: new User().generateHash(code.toString()),
                                 token_exp: Date.now() + 300000
                             }).then(function(data) {
-                                if (process.env.NODE_ENV === 'production') {
+                                if (req.query.option && req.query.option === 'email') {
+                                    var mailOptions = {
+                                        to: data.email,
+                                        subject: 'Reset your account password',
+                                        template: 'email-inline',
+                                        context: {
+                                            username: data.name,
+                                            message: 'Reset your password account by clicking the link below',
+                                            link: 'http://' + req.headers.host + '/password-reset-link/' + code
+                                        }
+                                    };
+                                    sendEmail(mailOptions);
+                                    res.end();
+                                } else if (process.env.NODE_ENV === 'production') {
                                     done(null, code);
                                 } else {
                                     res.set('code', code);
