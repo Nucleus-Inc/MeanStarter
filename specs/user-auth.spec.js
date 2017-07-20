@@ -6,6 +6,8 @@ var should = chai.should();
 var config = require('../config/config.js');
 var jwt = require('jsonwebtoken');
 
+var userModel = server.models.user;
+
 var user = {};
 
 chai.use(chaiHttp);
@@ -422,4 +424,10 @@ describe('User Account Recovery', function() {
                 });
             });
     });
+});
+
+after(function(done) {
+    userModel.remove({}, function(err, docs) {
+        done();
+    })
 });
