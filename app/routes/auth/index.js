@@ -1,6 +1,6 @@
 module.exports = function(app) {
 
-    var controller = app.controllers.auth;
+    var controller = app.controllers.auth.index;
 
     app.route('/auth/signin/mobile')
         .post(controller.signIn);

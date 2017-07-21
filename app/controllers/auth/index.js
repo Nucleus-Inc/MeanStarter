@@ -1,4 +1,4 @@
-var config = require('../../config/config.js');
+var config = require('../../../config/config.js');
 var async = require('async');
 var nodemailer = require('nodemailer');
 var hbs = require('nodemailer-express-handlebars');
