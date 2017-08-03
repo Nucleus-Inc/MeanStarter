@@ -1,0 +1,17 @@
+{
+  "extends": "standard",
+  "rules": {
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2,
+    "eqeqeq": "warn",
+    "no-throw-literal": "off",
+    "handle-callback-err": "warn",
+    "no-undef": "warn"
+  },
+  "env": {
+    "mocha": true
+  },
+  "plugins": [
+        "chai-friendly"
+    ]
+}
