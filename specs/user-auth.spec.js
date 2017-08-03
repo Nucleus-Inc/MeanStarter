@@ -21,7 +21,7 @@ describe('User Signup', function() {
                 "name": "Jimmy McGuill",
                 "email": "jimmy@wmlaw.com",
                 "password": "upm3@2017",
-                "phone_number": "5585999999999"
+                "phoneNumber": "5585999999999"
             })
             .end(function(err, res) {
                 res.should.have.status(201);
@@ -30,7 +30,7 @@ describe('User Signup', function() {
                 res.headers.code.length.should.be.eql(4);
                 jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function(err, decoded) {
                     decoded.should.have.property('_id');
-                    decoded.should.have.property('is_active');
+                    decoded.should.have.property('isActive');
                     decoded.should.have.property('iat');
                     decoded.should.have.property('exp');
                     user._id = decoded._id;
@@ -46,7 +46,7 @@ describe('User Signup', function() {
                 "name": "Jimmy McGuill",
                 "email": "jimmywmlaw.com",
                 "password": "upme", //Weak Password
-                "phone_number": "55859999"
+                "phoneNumber": "55859999"
             })
             .end(function(err, res) {
                 res.should.have.status(400);
@@ -55,7 +55,7 @@ describe('User Signup', function() {
                 res.body.should.have.property('errors');
                 res.body.errors.should.be.a('array');
                 res.body.errors[0].param.should.be.eql('email');
-                res.body.errors[1].param.should.be.eql('phone_number');
+                res.body.errors[1].param.should.be.eql('phoneNumber');
                 res.body.errors[2].param.should.be.eql('password');
                 done();
             });
@@ -68,7 +68,7 @@ describe('User Signup', function() {
                 "name": "Jimmy McGuill",
                 "email": "jimmy@wmlaw.com",
                 "password": "upm3@2017",
-                "phone_number": "5585999999999"
+                "phoneNumber": "5585999999999"
             })
             .end(function(err, res) {
                 res.should.have.status(422);
@@ -81,14 +81,14 @@ describe('User Signup', function() {
             });
     });
 
-    it('should fail to add a user with duplicate phone_number on /auth/signup/mobile POST', function(done) {
+    it('should fail to add a user with duplicate phoneNumber on /auth/signup/mobile POST', function(done) {
         chai.request(server)
             .post('/auth/signup/mobile')
             .send({
                 "name": "Jimmy McGuill",
                 "email": "jimmy2@wmlaw.com",
                 "password": "upm3@2017",
-                "phone_number": "5585999999999"
+                "phoneNumber": "5585999999999"
             })
             .end(function(err, res) {
                 res.should.have.status(422);
@@ -96,7 +96,7 @@ describe('User Signup', function() {
                 res.body.code.should.be.eql(4200);
                 res.body.should.have.property('errors');
                 res.body.errors.should.be.a('array');
-                res.body.errors[0].should.be.eql('phone_number');
+                res.body.errors[0].should.be.eql('phoneNumber');
                 done();
             });
     });
@@ -117,7 +117,7 @@ describe('User SignIn', function() {
                 res.headers.jwt.should.be.a('string');
                 jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function(err, decoded) {
                     decoded.should.have.property('_id');
-                    decoded.should.have.property('is_active');
+                    decoded.should.have.property('isActive');
                     decoded.should.have.property('iat');
                     decoded.should.have.property('exp');
                     done();
@@ -247,7 +247,7 @@ describe('User Account Activation', function() {
                 res.should.have.status(200);
                 jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function(err, decoded) {
                     decoded.should.have.property('_id');
-                    decoded.should.have.property('is_active');
+                    decoded.should.have.property('isActive');
                     decoded.should.have.property('iat');
                     decoded.should.have.property('exp');
                     _id = decoded._id;
@@ -285,7 +285,7 @@ describe('User Account Activation', function() {
 
 describe('User Account Recovery', function() {
 
-    it('should successfully get a recovery code on /auth/recovery/mobile/:phone_number GET', function(done) {
+    it('should successfully get a recovery code on /auth/recovery/mobile/:phoneNumber GET', function(done) {
         chai.request(server)
             .get('/auth/recovery/mobile/5585999999999')
             .end(function(err, res) {
@@ -298,7 +298,7 @@ describe('User Account Recovery', function() {
             });
     });
 
-    it('should fail to get a recovery code with invalid phone_number on /auth/activation/mobile/:phone_number GET', function(done) {
+    it('should fail to get a recovery code with invalid phoneNumber on /auth/activation/mobile/:phoneNumber GET', function(done) {
         chai.request(server)
             .get('/auth/recovery/mobile/55859999')
             .end(function(err, res) {
@@ -307,12 +307,12 @@ describe('User Account Recovery', function() {
                 res.body.code.should.be.eql(4000);
                 res.body.should.have.property('errors');
                 res.body.errors.should.be.a('array');
-                res.body.errors[0].param.should.be.eql('phone_number');
+                res.body.errors[0].param.should.be.eql('phoneNumber');
                 done();
             });
     });
 
-    it('should still get a recovery code with valid but non-existent phone_number on /auth/activation/mobile/:phone_number GET', function(done) {
+    it('should still get a recovery code with valid but non-existent phoneNumber on /auth/activation/mobile/:phoneNumber GET', function(done) {
         chai.request(server)
             .get('/auth/recovery/mobile/5585999999990')
             .end(function(err, res) {
@@ -324,7 +324,7 @@ describe('User Account Recovery', function() {
             });
     });
 
-    it('should fail to recover an account with an invalid token and valid phone_number on /auth/recovery/mobile/:phone_number PUT', function(done) {
+    it('should fail to recover an account with an invalid token and valid phoneNumber on /auth/recovery/mobile/:phoneNumber PUT', function(done) {
         chai.request(server)
             .put('/auth/recovery/mobile/5585999999999')
             .send({
@@ -339,7 +339,7 @@ describe('User Account Recovery', function() {
             });
     });
 
-    it('should fail to recover an account with a valid but non-existent phone_number and an invalid token on /auth/recovery/mobile/:phone_number PUT', function(done) {
+    it('should fail to recover an account with a valid but non-existent phoneNumber and an invalid token on /auth/recovery/mobile/:phoneNumber PUT', function(done) {
         chai.request(server)
             .put('/auth/recovery/mobile/5585999999990')
             .send({
@@ -354,7 +354,7 @@ describe('User Account Recovery', function() {
             });
     });
 
-    it('should fail to recover an account with invalid phone_number and token on /auth/recovery/mobile/:phone_number PUT', function(done) {
+    it('should fail to recover an account with invalid phoneNumber and token on /auth/recovery/mobile/:phoneNumber PUT', function(done) {
         chai.request(server)
             .put('/auth/recovery/mobile/55859999')
             .send({
@@ -367,13 +367,13 @@ describe('User Account Recovery', function() {
                 res.body.code.should.be.eql(4000);
                 res.body.should.have.property('errors');
                 res.body.errors.should.be.a('array');
-                res.body.errors[0].param.should.be.eql('phone_number');
+                res.body.errors[0].param.should.be.eql('phoneNumber');
                 res.body.errors[1].param.should.be.eql('token');
                 done();
             });
     });
 
-    it('should fail to recover an account with valid phone_number and token but weak password on /auth/recovery/mobile/:phone_number PUT', function(done) {
+    it('should fail to recover an account with valid phoneNumber and token but weak password on /auth/recovery/mobile/:phoneNumber PUT', function(done) {
         chai.request(server)
             .put('/auth/recovery/mobile/5585999999999')
             .send({
@@ -391,7 +391,7 @@ describe('User Account Recovery', function() {
             });
     });
 
-    it('should successfully recover an account on /auth/recovery/mobile/:phone_number PUT', function(done) {
+    it('should successfully recover an account on /auth/recovery/mobile/:phoneNumber PUT', function(done) {
         chai.request(server)
             .put('/auth/recovery/mobile/5585999999999')
             .send({
@@ -417,7 +417,7 @@ describe('User Account Recovery', function() {
                 res.headers.jwt.should.be.a('string');
                 jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function(err, decoded) {
                     decoded.should.have.property('_id');
-                    decoded.should.have.property('is_active');
+                    decoded.should.have.property('isActive');
                     decoded.should.have.property('iat');
                     decoded.should.have.property('exp');
                     done();

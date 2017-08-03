@@ -22,30 +22,30 @@ module.exports = function() {
             type: String,
             required: true
         },
-        is_active: {
+        isActive: {
             type: Boolean,
             default: false
         },
         token: {
             type: String
         },
-        token_exp: {
+        tokenExp: {
             type: Number
         },
         genre: {
             type: String,
             enum: ['male', 'female']
         },
-        profile_picture: {
+        profilePicture: {
             type: String
         },
-        phone_number: {
+        phoneNumber: {
             type: String,
             index: {
                 unique: true
             }
         },
-        member_since: {
+        memberSince: {
             type: Date,
             default: Date.now
         }

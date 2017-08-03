@@ -70,7 +70,7 @@ module.exports = function(app) {
                     if (data && new User().compareHash(req.body.password, data.password)) {
                         var token = jwt.sign({
                             _id: data._id,
-                            is_active: data.is_active
+                            isActive: data.isActive
                         }, config.jwt.jwtSecret, {
                             expiresIn: '1h'
                         });
@@ -112,12 +112,12 @@ module.exports = function(app) {
                             errorMessage: 'Invalid email address'
                         }
                     },
-                    'phone_number': {
+                    'phoneNumber': {
                         notEmpty: {
                             errorMessage: 'Phone number is required'
                         },
                         isPhoneNumber: {
-                            number: req.body.phone_number,
+                            number: req.body.phoneNumber,
                             errorMessage: 'Invalid phone number'
                         }
                     },
@@ -146,15 +146,15 @@ module.exports = function(app) {
                 User.create({
                     name: req.body.name,
                     email: req.body.email,
-                    phone_number: req.body.phone_number,
+                    phoneNumber: req.body.phoneNumber,
                     password: new User().generateHash(req.body.password),
                     token: new User().generateHash(code.toString()),
-                    token_exp: Date.now() + 300000
+                    tokenExp: Date.now() + 300000
                 }).then(function(data) {
                     res.status(201);
                     var token = jwt.sign({
                         _id: data._id,
-                        is_active: data.is_active
+                        isActive: data.isActive
                     }, config.jwt.jwtSecret, {
                         expiresIn: '1h'
                     });
@@ -216,7 +216,7 @@ module.exports = function(app) {
                     if (!data) {
                         res.status(404);
                         res.end();
-                    } else if (data.is_active) {
+                    } else if (data.isActive) {
                         res.status(422);
                         res.json({
                             code: 4201
@@ -224,7 +224,7 @@ module.exports = function(app) {
                     } else {
                         User.findByIdAndUpdate(data._id, {
                             token: new User().generateHash(code.toString()),
-                            token_exp: Date.now() + 300000
+                            tokenExp: Date.now() + 300000
                         }).then(function(data) {
                             if (req.query.option && req.query.option === 'email') {
                                 var mailOptions = {
@@ -300,22 +300,22 @@ module.exports = function(app) {
                     if (!data) {
                         res.status(404);
                         res.end();
-                    } else if (data.is_active) {
+                    } else if (data.isActive) {
                         res.status(422);
                         res.json({
                             code: 4201
                         });
-                    } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.token_exp) {
+                    } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.tokenExp) {
                         User.findByIdAndUpdate(data._id, {
                             token: null,
-                            token_exp: null,
-                            is_active: true
+                            tokenExp: null,
+                            isActive: true
                         }, {
                             new: true
                         }).then(function(data) {
                             var token = jwt.sign({
                                 _id: data._id,
-                                is_active: data.is_active
+                                isActive: data.isActive
                             }, config.jwt.jwtSecret, {
                                 expiresIn: '1h'
                             });
@@ -351,12 +351,12 @@ module.exports = function(app) {
         async.waterfall([
                 function(done) {
                     req.checkParams({
-                        'phone_number': {
+                        'phoneNumber': {
                             notEmpty: {
                                 errorMessage: 'Phone number is required'
                             },
                             isPhoneNumber: {
-                                number: req.body.phone_number,
+                                number: req.body.phoneNumber,
                                 errorMessage: 'Invalid phone number'
                             }
                         }
@@ -374,7 +374,7 @@ module.exports = function(app) {
                 function(done) {
                     var code = getSmsCode();
                     User.findOne({
-                        phone_number: req.params.phone_number
+                        phoneNumber: req.params.phoneNumber
                     }).then(function(data) {
                         if (!data) {
                             res.set('code', code);
@@ -382,7 +382,7 @@ module.exports = function(app) {
                         } else {
                             User.findByIdAndUpdate(data._id, {
                                 token: new User().generateHash(code.toString()),
-                                token_exp: Date.now() + 300000
+                                tokenExp: Date.now() + 300000
                             }).then(function(data) {
                                 if (req.query.option && req.query.option === 'email') {
                                     var mailOptions = {
@@ -432,12 +432,12 @@ module.exports = function(app) {
         async.waterfall([
             function(done) {
                 req.checkParams({
-                    'phone_number': {
+                    'phoneNumber': {
                         notEmpty: {
                             errorMessage: 'Phone number is required'
                         },
                         isPhoneNumber: {
-                            number: req.body.phone_number,
+                            number: req.body.phoneNumber,
                             errorMessage: 'Invalid phone number'
                         }
                     }
@@ -468,7 +468,7 @@ module.exports = function(app) {
             },
             function(done) {
                 User.findOne({
-                    phone_number: req.params.phone_number
+                    phoneNumber: req.params.phoneNumber
                 }).then(function(data) {
                     if (!data) {
                         res.status(403);
@@ -476,11 +476,11 @@ module.exports = function(app) {
                             status: 403,
                             code: 4301
                         });
-                    } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.token_exp) {
+                    } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.tokenExp) {
                         User.findByIdAndUpdate(data._id, {
                             token: null,
-                            token_exp: null,
-                            is_active: true,
+                            tokenExp: null,
+                            isActive: true,
                             password: new User().generateHash(req.body.new_password)
                         }).then(function(data) {
                             res.end();

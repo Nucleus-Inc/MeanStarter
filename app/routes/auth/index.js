@@ -12,7 +12,7 @@ module.exports = function(app) {
         .get(controller.getActivationCode)
         .put(controller.activateUser);
 
-    app.route('/auth/recovery/mobile/:phone_number')
+    app.route('/auth/recovery/mobile/:phoneNumber')
         .get(controller.getRecoveryCode)
         .put(controller.recoverPassword);
 
