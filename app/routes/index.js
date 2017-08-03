@@ -1,8 +1,6 @@
-module.exports = function(app){
-
-  var controller = app.controllers.index;
+module.exports = function (app) {
+  var controller = app.controllers.index
 
   app.route('/')
-    .get(controller.render);
-
+    .get(controller.render)
 }

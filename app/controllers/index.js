@@ -1,11 +1,9 @@
-module.exports = function(app){
+module.exports = function (app) {
+  var controller = {}
 
-  var controller = {};
+  controller.render = function (req, res) {
+    res.render('index')
+  }
 
-  controller.render = function(req,res){
-    res.render('index');
-  };
-
-  return controller;
-
+  return controller
 }
