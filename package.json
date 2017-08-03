@@ -6,7 +6,7 @@
   "scripts": {
     "start": "SET NODE_ENV=local-test && node app.js",
     "test": "mocha specs/",
-    "lint": "eslint app/** config/** specs/** --fix --ext .js"
+    "lint": "eslint app/** config/** specs/** --ext .js"
   },
   "repository": {
     "type": "git",
