@@ -1,4 +1,6 @@
 var config = require('../../config/config.js')
+var nodemailer = require('nodemailer')
+var hbs = require('nodemailer-express-handlebars')
 
 module.exports = function (app) {
   var broadcast = {}
@@ -18,7 +20,7 @@ module.exports = function (app) {
       extName: '.hbs'
     }))
     smtpTransporter.sendMail(mailOptions, function (err, data) {
-      return err ? err : data
+      return err || data
     })
   }
 

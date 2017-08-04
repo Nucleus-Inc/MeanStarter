@@ -1,7 +1,5 @@
 var config = require('../../../config/config.js')
 var async = require('async')
-var nodemailer = require('nodemailer')
-var hbs = require('nodemailer-express-handlebars')
 var jwt = require('jsonwebtoken')
 var zxcvbn = require('zxcvbn')
 
@@ -11,10 +9,8 @@ function getSmsCode () {
 }
 
 module.exports = function (app) {
-
   var User = app.models.user
   var broadcast = app.libs.broadcast
-
   var controller = {}
 
   controller.signIn = function (req, res) {
