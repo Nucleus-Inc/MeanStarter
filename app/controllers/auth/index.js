@@ -10,27 +10,10 @@ function getSmsCode () {
   return Math.floor(Math.pow(10, length - 1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1))
 }
 
-function sendEmail (mailOptions) {
-  var smtpTransporter = nodemailer.createTransport({
-    service: config.email.service,
-    auth: {
-      user: config.email.user,
-      pass: config.email.pass
-    }
-  }, {
-    from: config.email.from
-  })
-  smtpTransporter.use('compile', hbs({
-    viewPath: 'app/views/',
-    extName: '.hbs'
-  }))
-  smtpTransporter.sendMail(mailOptions, function (err, data) {
-    return err || data
-  })
-}
-
 module.exports = function (app) {
+
   var User = app.models.user
+  var broadcast = app.libs.broadcast
 
   var controller = {}
 
@@ -236,7 +219,7 @@ module.exports = function (app) {
                     link: 'http://' + req.headers.host + '/your-activation-link/' + code
                   }
                 }
-                sendEmail(mailOptions)
+                broadcast.sendEmail(mailOptions)
                 res.end()
               } else if (process.env.NODE_ENV === 'production') {
                 done(null, code)
@@ -394,7 +377,7 @@ module.exports = function (app) {
                     link: 'http://' + req.headers.host + '/password-reset-link/' + code
                   }
                 }
-                sendEmail(mailOptions)
+                broadcast.sendEmail(mailOptions)
                 res.end()
               } else if (process.env.NODE_ENV === 'production') {
                 done(null, code)
