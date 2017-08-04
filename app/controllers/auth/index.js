@@ -3,14 +3,10 @@ var async = require('async')
 var jwt = require('jsonwebtoken')
 var zxcvbn = require('zxcvbn')
 
-function getSmsCode () {
-  var length = 4
-  return Math.floor(Math.pow(10, length - 1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1))
-}
-
 module.exports = function (app) {
   var User = app.models.user
   var broadcast = app.libs.broadcast
+  var random = app.libs.random
   var controller = {}
 
   controller.signIn = function (req, res) {
@@ -120,7 +116,7 @@ module.exports = function (app) {
         }
       },
       function (done) {
-        var code = getSmsCode()
+        var code = random.generate(4, 'numeric')
         User.create({
           name: req.body.name,
           email: req.body.email,
@@ -189,7 +185,7 @@ module.exports = function (app) {
         }
       },
       function (done) {
-        var code = getSmsCode()
+        var code = random.generate(4, 'numeric')
         User.findById(req.params.id).then(function (data) {
           if (!data) {
             res.status(404)
@@ -350,7 +346,7 @@ module.exports = function (app) {
         }
       },
       function (done) {
-        var code = getSmsCode()
+        var code = random.generate(4, 'numeric')
         User.findOne({
           phoneNumber: req.params.phoneNumber
         }).then(function (data) {
