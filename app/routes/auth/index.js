@@ -1,3 +1,5 @@
+var jwt = require('../../middlewares/passport-jwt.js')()
+
 module.exports = function (app) {
   var controller = app.controllers.auth.index
 

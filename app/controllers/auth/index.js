@@ -60,12 +60,13 @@ module.exports = function (app) {
         }).catch(function (err) {
           res.status(500)
           res.json({
-            code: 5000
+            code: 5000,
+            error: err
           })
         })
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -149,7 +150,8 @@ module.exports = function (app) {
           } else {
             res.status(500)
             res.json({
-              code: 5000
+              code: 5000,
+              error: err
             })
           }
         })
@@ -159,7 +161,7 @@ module.exports = function (app) {
         res.end()
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -222,7 +224,8 @@ module.exports = function (app) {
             }).catch(function (err) {
               res.status(500)
               res.json({
-                code: 5000
+                code: 5000,
+                error: err
               })
             })
           }
@@ -230,7 +233,8 @@ module.exports = function (app) {
         }).catch(function (err) {
           res.status(500)
           res.json({
-            code: 5000
+            code: 5000,
+            error: err
           })
         })
       },
@@ -239,7 +243,7 @@ module.exports = function (app) {
         res.end()
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -298,7 +302,8 @@ module.exports = function (app) {
             }).catch(function (err) {
               res.status(500)
               res.json({
-                code: 5000
+                code: 5000,
+                error: err
               })
             })
           } else {
@@ -312,12 +317,13 @@ module.exports = function (app) {
         }).catch(function (err) {
           res.status(500)
           res.json({
-            code: 5000
+            code: 5000,
+            error: err
           })
         })
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -380,7 +386,8 @@ module.exports = function (app) {
             }).catch(function (err) {
               res.status(500)
               res.json({
-                code: 5000
+                code: 5000,
+                error: err
               })
             })
           }
@@ -388,7 +395,8 @@ module.exports = function (app) {
         }).catch(function (err) {
           res.status(500)
           res.json({
-            code: 5000
+            code: 5000,
+            error: err
           })
         })
       },
@@ -398,7 +406,7 @@ module.exports = function (app) {
       }
     ],
     function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -461,7 +469,8 @@ module.exports = function (app) {
             }).catch(function (err) {
               res.status(500)
               res.json({
-                code: 5000
+                code: 5000,
+                error: err
               })
             })
           } else {
@@ -476,12 +485,13 @@ module.exports = function (app) {
           res.status(500)
           res.json({
             status: 500,
-            code: 5000
+            code: 5000,
+            error: err
           })
         })
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 
@@ -511,7 +521,7 @@ module.exports = function (app) {
         })
       }
     ], function (err, result) {
-      return result
+      return err || result
     })
   }
 

@@ -1,5 +1,6 @@
 var config = require('./config.js')
 var express = require('express')
+var passport = require('passport')
 var load = require('express-load')
 var bodyParser = require('body-parser')
 var bodyParserError = require('bodyparser-json-error')
@@ -16,6 +17,9 @@ module.exports = function () {
   /* Express app */
   var app = express()
   app.set('port', (process.env.PORT || 5000))
+
+  /* passport */
+  app.use(passport.initialize())
 
   /* Body parser */
   app.use(bodyParser.urlencoded({
