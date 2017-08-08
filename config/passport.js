@@ -1,4 +1,3 @@
-var passport = require('passport')
 var mongoose = require('mongoose')
 
 module.exports = function () {

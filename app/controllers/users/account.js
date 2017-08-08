@@ -1,7 +1,6 @@
 var config = require('../../../config/config.js')
 var async = require('async')
 var jwt = require('jsonwebtoken')
-var zxcvbn = require('zxcvbn')
 
 module.exports = function (app) {
   var User = app.models.user
@@ -488,36 +487,6 @@ module.exports = function (app) {
             code: 5000,
             error: err
           })
-        })
-      }
-    ], function (err, result) {
-      return err || result
-    })
-  }
-
-  controller.validatePassword = function (req, res) {
-    async.waterfall([
-      function (done) {
-        req.checkBody({
-          'password': {
-            notEmpty: {
-              errorMessage: 'Password is required'
-            }
-          }
-        })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
-      },
-      function (done) {
-        res.json({
-          score: zxcvbn(req.body.password).score
         })
       }
     ], function (err, result) {

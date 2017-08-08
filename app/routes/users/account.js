@@ -16,7 +16,4 @@ module.exports = function (app) {
   app.route('/users/account/recovery/:phoneNumber')
     .get(controller.getRecoveryCode)
     .put(controller.recoverPassword)
-
-  app.route('/users/account/zxcvbn')
-    .post(controller.validatePassword)
 }
