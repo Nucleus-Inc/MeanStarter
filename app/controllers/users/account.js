@@ -410,13 +410,13 @@ module.exports = function (app) {
         })
       },
       function (code, done) {
-          // Your code for sending sms here
+        // Your code for sending sms here
         res.end()
       }
     ],
-      function (err, result) {
-        return err || result
-      })
+    function (err, result) {
+      return err || result
+    })
   }
 
   controller.recoverPassword = function (req, res) {
