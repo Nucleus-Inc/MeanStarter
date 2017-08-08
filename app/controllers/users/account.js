@@ -26,15 +26,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         User.findOne({
@@ -105,15 +107,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         var code = random.generate(4, 'numeric')
@@ -175,15 +179,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         var code = random.generate(4, 'numeric')
@@ -262,15 +268,17 @@ module.exports = function (app) {
             notEmpty: true
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         User.findById(req.params.id).then(function (data) {
@@ -340,15 +348,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         var code = random.generate(4, 'numeric')
@@ -400,13 +410,13 @@ module.exports = function (app) {
         })
       },
       function (code, done) {
-        // Your code for sending sms here
+          // Your code for sending sms here
         res.end()
       }
     ],
-    function (err, result) {
-      return err || result
-    })
+      function (err, result) {
+        return err || result
+      })
   }
 
   controller.recoverPassword = function (req, res) {
@@ -437,15 +447,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         User.findOne({

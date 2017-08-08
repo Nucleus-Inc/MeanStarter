@@ -14,15 +14,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         res.json({
