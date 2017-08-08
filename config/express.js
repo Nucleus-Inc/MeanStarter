@@ -34,7 +34,7 @@ module.exports = function () {
   app.use(helmet.hidePoweredBy({
     setTo: 'PHP 5.6.27'
   }))
-  
+
   /* Body parser */
   app.use(bodyParser.urlencoded({
     extended: true
