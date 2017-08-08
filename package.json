@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "SET NODE_ENV=local-test && node app.js",
-    "test": "mocha specs/",
+    "test": "mocha specs/**",
     "lint": "eslint app/** config/** specs/** --ext .js"
   },
   "repository": {
