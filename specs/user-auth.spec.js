@@ -12,9 +12,9 @@ var user = {}
 chai.use(chaiHttp)
 
 describe('User Signup', function () {
-  it('should successfully add a user on /auth/signup/mobile POST', function (done) {
+  it('should successfully add a user on /users/account/signup POST', function (done) {
     chai.request(server)
-      .post('/auth/signup/mobile')
+      .post('/users/account/signup')
       .send({
         'name': 'Jimmy McGuill',
         'email': 'jimmy@wmlaw.com',
@@ -37,9 +37,9 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with invalid fields on /auth/signup/mobile POST', function (done) {
+  it('should fail to add a user with invalid fields on /users/account/signup POST', function (done) {
     chai.request(server)
-      .post('/auth/signup/mobile')
+      .post('/users/account/signup')
       .send({
         'name': 'Jimmy McGuill',
         'email': 'jimmywmlaw.com',
@@ -59,9 +59,9 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with duplicate email on /auth/signup/mobile POST', function (done) {
+  it('should fail to add a user with duplicate email on /users/account/signup POST', function (done) {
     chai.request(server)
-      .post('/auth/signup/mobile')
+      .post('/users/account/signup')
       .send({
         'name': 'Jimmy McGuill',
         'email': 'jimmy@wmlaw.com',
@@ -79,9 +79,9 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with duplicate phoneNumber on /auth/signup/mobile POST', function (done) {
+  it('should fail to add a user with duplicate phoneNumber on /users/account/signup POST', function (done) {
     chai.request(server)
-      .post('/auth/signup/mobile')
+      .post('/users/account/signup')
       .send({
         'name': 'Jimmy McGuill',
         'email': 'jimmy2@wmlaw.com',
@@ -101,9 +101,9 @@ describe('User Signup', function () {
 })
 
 describe('User SignIn', function () {
-  it('should successfully get a JWT on /auth/signin/mobile POST', function (done) {
+  it('should successfully get a JWT on /users/account/signin POST', function (done) {
     chai.request(server)
-      .post('/auth/signin/mobile')
+      .post('/users/account/signin')
       .send({
         'email': 'jimmy@wmlaw.com',
         'password': 'upm3@2017'
@@ -122,9 +122,9 @@ describe('User SignIn', function () {
       })
   })
 
-  it('should fail to get a JWT with invalid credentials on /auth/signin/mobile POST', function (done) {
+  it('should fail to get a JWT with invalid credentials on /users/account/signin POST', function (done) {
     chai.request(server)
-      .post('/auth/signin/mobile')
+      .post('/users/account/signin')
       .send({
         'email': 'jimmy@wmlaw.com',
         'password': 'upm3@20'
@@ -139,9 +139,9 @@ describe('User SignIn', function () {
 })
 
 describe('User Account Activation', function () {
-  it('should successfully get a activation code on /auth/activation/mobile/:id GET', function (done) {
+  it('should successfully get a activation code on /users/account/activation/:id GET', function (done) {
     chai.request(server)
-      .get('/auth/activation/mobile/' + user._id)
+      .get('/users/' + user._id + '/account/activation')
       .end(function (err, res) {
         res.should.have.status(200)
         res.headers.should.have.property('code')
@@ -152,9 +152,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to get a activation code with invalid _id on /auth/activation/mobile/:id GET', function (done) {
+  it('should fail to get a activation code with invalid _id on /users/account/activation/:id GET', function (done) {
     chai.request(server)
-      .get('/auth/activation/mobile/' + '5931972a29')
+      .get('/users/5931972a29/account/activation')
       .end(function (err, res) {
         res.should.have.status(400)
         res.body.should.have.property('code')
@@ -166,18 +166,18 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to get an activation code with valid but non-existent _id on /auth/activation/mobile/:id GET', function (done) {
+  it('should fail to get an activation code with valid but non-existent _id on /users/account/activation/:id GET', function (done) {
     chai.request(server)
-      .get('/auth/activation/mobile/' + '59397de5f3700d641faaab09')
+      .get('/users/59397de5f3700d641faaab09/account/activation')
       .end(function (err, res) {
         res.should.have.status(404)
         done()
       })
   })
 
-  it('should fail to activate an account with an invalid token on /auth/activation/mobile/:id PUT', function (done) {
+  it('should fail to activate an account with an invalid token on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + user._id)
+      .put('/users/' + user._id + '/account/activation')
       .send({
         'token': '1234557757'
       })
@@ -189,9 +189,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account with an invalid id on /auth/activation/mobile/:id PUT', function (done) {
+  it('should fail to activate an account with an invalid id on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + '5931972a29')
+      .put('/users/5931972a29/account/activation')
       .send({
         'token': user.activationCode
       })
@@ -206,9 +206,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account with a valid id and a missing token on /auth/activation/mobile/:id PUT', function (done) {
+  it('should fail to activate an account with a valid id and a missing token on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + user._id)
+      .put('/users/' + user._id + '/account/activation')
       .send()
       .end(function (err, res) {
         res.should.have.status(400)
@@ -221,9 +221,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account with valid but non-existent _id on /auth/activation/mobile/:id PUT', function (done) {
+  it('should fail to activate an account with valid but non-existent _id on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + '59397de5f3700d641faaab09')
+      .put('/users/59397de5f3700d641faaab09/account/activation')
       .send({
         'token': user.activationCode
       })
@@ -233,9 +233,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should successfully activate an account on /auth/activation/mobile/:id PUT', function (done) {
+  it('should successfully activate an account on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + user._id)
+      .put('/users/' + user._id + '/account/activation')
       .send({
         'token': user.activationCode
       })
@@ -251,9 +251,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to get an activation code for an account that is already active on /auth/activation/mobile/:id GET', function (done) {
+  it('should fail to get an activation code for an account that is already active on /users/account/activation/:id GET', function (done) {
     chai.request(server)
-      .get('/auth/activation/mobile/' + user._id)
+      .get('/users/' + user._id + '/account/activation')
       .end(function (err, res) {
         res.should.have.status(422)
         res.body.should.have.property('code')
@@ -262,9 +262,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account that is already active on /auth/activation/mobile/:id PUT', function (done) {
+  it('should fail to activate an account that is already active on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
-      .put('/auth/activation/mobile/' + user._id)
+      .put('/users/' + user._id + '/account/activation')
       .send({
         'token': user.activationCode
       })
@@ -278,9 +278,9 @@ describe('User Account Activation', function () {
 })
 
 describe('User Account Recovery', function () {
-  it('should successfully get a recovery code on /auth/recovery/mobile/:phoneNumber GET', function (done) {
+  it('should successfully get a recovery code on /users/account/recovery/:phoneNumber GET', function (done) {
     chai.request(server)
-      .get('/auth/recovery/mobile/5585999999999')
+      .get('/users/account/recovery/5585999999999')
       .end(function (err, res) {
         res.should.have.status(200)
         res.headers.should.have.property('code')
@@ -291,9 +291,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should fail to get a recovery code with invalid phoneNumber on /auth/activation/mobile/:phoneNumber GET', function (done) {
+  it('should fail to get a recovery code with invalid phoneNumber on /users/account/activation/:phoneNumber GET', function (done) {
     chai.request(server)
-      .get('/auth/recovery/mobile/55859999')
+      .get('/users/account/recovery/55859999')
       .end(function (err, res) {
         res.should.have.status(400)
         res.body.should.have.property('code')
@@ -305,9 +305,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should still get a recovery code with valid but non-existent phoneNumber on /auth/activation/mobile/:phoneNumber GET', function (done) {
+  it('should still get a recovery code with valid but non-existent phoneNumber on /users/account/activation/:phoneNumber GET', function (done) {
     chai.request(server)
-      .get('/auth/recovery/mobile/5585999999990')
+      .get('/users/account/recovery/5585999999990')
       .end(function (err, res) {
         res.should.have.status(200)
         res.headers.should.have.property('code')
@@ -317,9 +317,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should fail to recover an account with an invalid token and valid phoneNumber on /auth/recovery/mobile/:phoneNumber PUT', function (done) {
+  it('should fail to recover an account with an invalid token and valid phoneNumber on /users/account/recovery/:phoneNumber PUT', function (done) {
     chai.request(server)
-      .put('/auth/recovery/mobile/5585999999999')
+      .put('/users/account/recovery/5585999999999')
       .send({
         'token': '1234567890',
         'new_password': 'upm3@n3w2018'
@@ -332,9 +332,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should fail to recover an account with a valid but non-existent phoneNumber and an invalid token on /auth/recovery/mobile/:phoneNumber PUT', function (done) {
+  it('should fail to recover an account with a valid but non-existent phoneNumber and an invalid token on /users/account/recovery/:phoneNumber PUT', function (done) {
     chai.request(server)
-      .put('/auth/recovery/mobile/5585999999990')
+      .put('/users/account/recovery/5585999999990')
       .send({
         'token': '1234567890',
         'new_password': 'upm3@n3w2018'
@@ -347,9 +347,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should fail to recover an account with invalid phoneNumber and token on /auth/recovery/mobile/:phoneNumber PUT', function (done) {
+  it('should fail to recover an account with invalid phoneNumber and token on /users/account/recovery/:phoneNumber PUT', function (done) {
     chai.request(server)
-      .put('/auth/recovery/mobile/55859999')
+      .put('/users/account/recovery/55859999')
       .send({
         'token': '',
         'new_password': 'upm3@n3w2018'
@@ -366,9 +366,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should fail to recover an account with valid phoneNumber and token but weak password on /auth/recovery/mobile/:phoneNumber PUT', function (done) {
+  it('should fail to recover an account with valid phoneNumber and token but weak password on /users/account/recovery/:phoneNumber PUT', function (done) {
     chai.request(server)
-      .put('/auth/recovery/mobile/5585999999999')
+      .put('/users/account/recovery/5585999999999')
       .send({
         'token': user.recoveryCode,
         'new_password': '1234'
@@ -384,9 +384,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should successfully recover an account on /auth/recovery/mobile/:phoneNumber PUT', function (done) {
+  it('should successfully recover an account on /users/account/recovery/:phoneNumber PUT', function (done) {
     chai.request(server)
-      .put('/auth/recovery/mobile/5585999999999')
+      .put('/users/account/recovery/5585999999999')
       .send({
         'token': user.recoveryCode,
         'new_password': 'upm3@n3w2018'
@@ -397,9 +397,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should successfully get a JWT with the new credentials on /auth/signin/mobile POST', function (done) {
+  it('should successfully get a JWT with the new credentials on /users/account/signin POST', function (done) {
     chai.request(server)
-      .post('/auth/signin/mobile')
+      .post('/users/account/signin')
       .send({
         'email': 'jimmy@wmlaw.com',
         'password': 'upm3@n3w2018'
