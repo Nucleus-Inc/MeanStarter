@@ -112,6 +112,7 @@ describe('User SignIn', function () {
         res.should.have.status(200)
         res.headers.should.have.property('jwt')
         res.headers.jwt.should.be.a('string')
+        user.jwt = res.headers.jwt
         jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function (err, decoded) {
           decoded.should.have.property('_id')
           decoded.should.have.property('isActive')
@@ -142,6 +143,7 @@ describe('User Account Activation', function () {
   it('should successfully get a activation code on /users/account/activation/:id GET', function (done) {
     chai.request(server)
       .get('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(200)
         res.headers.should.have.property('code')
@@ -155,6 +157,7 @@ describe('User Account Activation', function () {
   it('should fail to get a activation code with invalid _id on /users/account/activation/:id GET', function (done) {
     chai.request(server)
       .get('/users/5931972a29/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(400)
         res.body.should.have.property('code')
@@ -169,6 +172,7 @@ describe('User Account Activation', function () {
   it('should fail to get an activation code with valid but non-existent _id on /users/account/activation/:id GET', function (done) {
     chai.request(server)
       .get('/users/59397de5f3700d641faaab09/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(404)
         done()
@@ -178,6 +182,7 @@ describe('User Account Activation', function () {
   it('should fail to activate an account with an invalid token on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': '1234557757'
       })
@@ -192,6 +197,7 @@ describe('User Account Activation', function () {
   it('should fail to activate an account with an invalid id on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/5931972a29/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })
@@ -209,6 +215,7 @@ describe('User Account Activation', function () {
   it('should fail to activate an account with a valid id and a missing token on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send()
       .end(function (err, res) {
         res.should.have.status(400)
@@ -224,6 +231,7 @@ describe('User Account Activation', function () {
   it('should fail to activate an account with valid but non-existent _id on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/59397de5f3700d641faaab09/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })
@@ -236,6 +244,7 @@ describe('User Account Activation', function () {
   it('should successfully activate an account on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })
@@ -254,6 +263,7 @@ describe('User Account Activation', function () {
   it('should fail to get an activation code for an account that is already active on /users/account/activation/:id GET', function (done) {
     chai.request(server)
       .get('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(422)
         res.body.should.have.property('code')
@@ -265,6 +275,7 @@ describe('User Account Activation', function () {
   it('should fail to activate an account that is already active on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
+      .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })

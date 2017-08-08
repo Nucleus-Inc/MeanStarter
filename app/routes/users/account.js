@@ -10,8 +10,8 @@ module.exports = function (app) {
     .post(controller.registerUser)
 
   app.route('/users/:id/account/activation')
-    .get(controller.getActivationCode)
-    .put(controller.activateUser)
+    .get(jwt.authenticate(), controller.getActivationCode)
+    .put(jwt.authenticate(), controller.activateUser)
 
   app.route('/users/account/recovery/:phoneNumber')
     .get(controller.getRecoveryCode)
