@@ -21,14 +21,7 @@ module.exports = function () {
   /* passport */
   app.use(passport.initialize())
 
-  /* Body parser */
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }))
-  app.use(bodyParser.json())
-  app.use(bodyParserError.beautify())
-
-  /* ejs views */
+  /* Ejs views */
   app.use(require('method-override')())
   app.use(express.static('./public'))
   app.set('view engine', 'ejs')
@@ -41,6 +34,13 @@ module.exports = function () {
   app.use(helmet.hidePoweredBy({
     setTo: 'PHP 5.6.27'
   }))
+  
+  /* Body parser */
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }))
+  app.use(bodyParser.json())
+  app.use(bodyParserError.beautify())
 
   /* Express Validator */
   app.use(expressValidator({
