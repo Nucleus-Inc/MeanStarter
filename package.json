@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "NODE_ENV=travis mocha specs/**",
-    "lint": "eslint app/** config/** specs/** --ext .js"
+    "lint": "eslint app.js app/** config/** specs/** --ext .js"
   },
   "repository": {
     "type": "git",
