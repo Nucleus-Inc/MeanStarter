@@ -31,6 +31,30 @@ module.exports = function () {
     tokenExp: {
       type: Number
     },
+    changeRequests: {
+      phoneNumber: {
+        newNumber: {
+          type: String
+        },
+        token: {
+          type: String
+        },
+        tokenExp: {
+          type: Number
+        }
+      },
+      email: {
+        newEmail: {
+          type: String
+        },
+        token: {
+          type: String
+        },
+        tokenExp: {
+          type: Number
+        }
+      }
+    },
     genre: {
       type: String,
       enum: ['male', 'female']
