@@ -65,7 +65,9 @@ module.exports = function (app) {
               if (process.env.NODE_ENV !== 'production') {
                 res.set('code', code)
               }
-              broadcast.sendEmail(mailOptions)
+              if (process.env.NODE_ENV !== 'travis') {
+                broadcast.sendEmail(mailOptions)
+              }
               res.end()
             }).catch(function (err) {
               res.status(500)
