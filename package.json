@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "async": "^2.4.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",

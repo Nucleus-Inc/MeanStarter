@@ -1,4 +1,4 @@
-var config = require('../config.js')
+var config = require('config/config.js')
 var passport = require('passport')
 var passportJWT = require('passport-jwt')
 var ExtractJwt = passportJWT.ExtractJwt
