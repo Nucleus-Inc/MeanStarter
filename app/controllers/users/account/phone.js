@@ -77,6 +77,7 @@ module.exports = function (app) {
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
+        broadcast.sendSms(recipient, 'Your confirmation code is ' + code)
         res.end()
       }
     ], function (err, result) {

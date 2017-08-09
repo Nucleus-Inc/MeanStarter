@@ -74,12 +74,7 @@ module.exports = function (app) {
             expiresIn: '1h'
           })
           res.set('JWT', token)
-          if (process.env.NODE_ENV === 'production') {
-            done(null, code)
-          } else {
-            res.set('code', code)
-            res.end()
-          }
+          done(null, req.body.phoneNumber, code)
         }).catch(function (err) {
           if (err.code === 11000) {
             res.status(422)
@@ -96,8 +91,11 @@ module.exports = function (app) {
           }
         })
       },
-      function (code, done) {
-        // Your code for sending sms here
+      function (recipient, code, done) {
+        if (process.env.NODE_ENV !== 'production') {
+          res.set('code', code)
+        }
+        broadcast.sendSms(recipient, 'Your confirmation code is ' + code)
         res.end()
       }
     ], function (err, result) {

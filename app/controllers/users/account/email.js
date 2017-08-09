@@ -26,15 +26,17 @@ module.exports = function (app) {
             }
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         var code = app.libs.random.generate(4, 'numeric')
@@ -60,8 +62,10 @@ module.exports = function (app) {
                   link: 'http://' + req.headers.host + '/your-activation-link/' + code
                 }
               }
-              // broadcast.sendEmail(mailOptions)
-              res.set('code', code)
+              if (process.env.NODE_ENV !== 'production') {
+                res.set('code', code)
+              }
+              broadcast.sendEmail(mailOptions)
               res.end()
             }).catch(function (err) {
               res.status(500)
@@ -100,15 +104,17 @@ module.exports = function (app) {
             notEmpty: true
           }
         })
-        if (req.validationErrors()) {
-          res.status(400)
-          res.json({
-            code: 4000,
-            errors: req.validationErrors()
-          })
-        } else {
-          done(null)
-        }
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
       },
       function (done) {
         User.findById(req.params.id).then(function (data) {

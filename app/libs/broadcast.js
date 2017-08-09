@@ -24,5 +24,9 @@ module.exports = function (app) {
     })
   }
 
+  broadcast.sendSms = function (recipient, message) {
+    // Your code to send SMS here ..
+  }
+
   return broadcast
 }
