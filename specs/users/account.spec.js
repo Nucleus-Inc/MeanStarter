@@ -154,31 +154,6 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to get a activation code with invalid _id on /users/account/activation/:id GET', function (done) {
-    chai.request(server)
-      .get('/users/5931972a29/account/activation')
-      .set('Authorization', 'JWT ' + user.jwt)
-      .end(function (err, res) {
-        res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
-        res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('id')
-        done()
-      })
-  })
-
-  it('should fail to get an activation code with valid but non-existent _id on /users/account/activation/:id GET', function (done) {
-    chai.request(server)
-      .get('/users/59397de5f3700d641faaab09/account/activation')
-      .set('Authorization', 'JWT ' + user.jwt)
-      .end(function (err, res) {
-        res.should.have.status(404)
-        done()
-      })
-  })
-
   it('should fail to activate an account with an invalid token on /users/account/activation/:id PUT', function (done) {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
@@ -190,24 +165,6 @@ describe('User Account Activation', function () {
         res.should.have.status(403)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4301)
-        done()
-      })
-  })
-
-  it('should fail to activate an account with an invalid id on /users/account/activation/:id PUT', function (done) {
-    chai.request(server)
-      .put('/users/5931972a29/account/activation')
-      .set('Authorization', 'JWT ' + user.jwt)
-      .send({
-        'token': user.activationCode
-      })
-      .end(function (err, res) {
-        res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
-        res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('id')
         done()
       })
   })
@@ -224,19 +181,6 @@ describe('User Account Activation', function () {
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('array')
         res.body.errors[0].param.should.be.eql('token')
-        done()
-      })
-  })
-
-  it('should fail to activate an account with valid but non-existent _id on /users/account/activation/:id PUT', function (done) {
-    chai.request(server)
-      .put('/users/59397de5f3700d641faaab09/account/activation')
-      .set('Authorization', 'JWT ' + user.jwt)
-      .send({
-        'token': user.activationCode
-      })
-      .end(function (err, res) {
-        res.should.have.status(404)
         done()
       })
   })
