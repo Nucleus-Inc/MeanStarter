@@ -8,14 +8,6 @@ module.exports = function (app) {
   controller.setEmailChangeCode = function (req, res) {
     async.waterfall([
       function (done) {
-        req.checkParams({
-          'id': {
-            notEmpty: true,
-            isObjectId: {
-              _id: req.params.id
-            }
-          }
-        })
         req.checkBody({
           'email': {
             notEmpty: {
@@ -93,14 +85,6 @@ module.exports = function (app) {
   controller.updateEmail = function (req, res) {
     async.waterfall([
       function (done) {
-        req.checkParams({
-          'id': {
-            notEmpty: true,
-            isObjectId: {
-              _id: req.params.id
-            }
-          }
-        })
         req.checkBody({
           'token': {
             notEmpty: true

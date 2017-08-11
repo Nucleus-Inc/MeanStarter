@@ -7,14 +7,6 @@ module.exports = function (app) {
   controller.updatePassword = function (req, res) {
     async.waterfall([
       function (done) {
-        req.checkParams({
-          'id': {
-            notEmpty: true,
-            isObjectId: {
-              _id: req.params.id
-            }
-          }
-        })
         req.checkBody({
           'currentPassword': {
             notEmpty: {

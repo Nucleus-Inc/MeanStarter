@@ -11,27 +11,6 @@ module.exports = function (app) {
   controller.getActivationCode = function (req, res) {
     async.waterfall([
       function (done) {
-        req.checkParams({
-          'id': {
-            notEmpty: true,
-            isObjectId: {
-              _id: req.params.id
-            }
-          }
-        })
-        req.getValidationResult().then(function (result) {
-          if (!result.isEmpty()) {
-            res.status(400)
-            res.json({
-              code: 4000,
-              errors: result.array()
-            })
-          } else {
-            done(null)
-          }
-        })
-      },
-      function (done) {
         var code = random.generate(4, 'numeric')
         User.findById(req.params.id).then(function (data) {
           if (!data) {
@@ -95,14 +74,6 @@ module.exports = function (app) {
   controller.activateUser = function (req, res) {
     async.waterfall([
       function (done) {
-        req.checkParams({
-          'id': {
-            notEmpty: true,
-            isObjectId: {
-              _id: req.params.id
-            }
-          }
-        })
         req.checkBody({
           'token': {
             notEmpty: true
