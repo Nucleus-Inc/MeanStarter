@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_ENV=travis mocha specs/**",
+    "test": "NODE_ENV=travis mocha specs/specs.js",
     "lint": "eslint app.js app/** config/** specs/** --ext .js"
   },
   "repository": {
@@ -15,7 +15,8 @@
   "keywords": [
     "mean-stack",
     "rest-api",
-    "template-project"
+    "boilerplate",
+    "boilerplate-project"
   ],
   "author": "Igor Lopes",
   "license": "MIT",
