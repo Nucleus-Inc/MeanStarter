@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_ENV=travis mocha specs/specs.js",
+    "test": "NODE_PATH=. NODE_ENV=travis mocha specs/specs.js",
     "lint": "eslint app.js app/** config/** specs/** --ext .js"
   },
   "repository": {

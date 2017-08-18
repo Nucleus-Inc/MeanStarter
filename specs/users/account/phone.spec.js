@@ -1,8 +1,8 @@
 var chai = require('chai')
 var chaiHttp = require('chai-http')
-var server = require('../../app.js')
+var server = require('app.js')
 should = chai.should()
-var config = require('../../config/config.js')
+var config = require('config/config.js')
 var jwt = require('jsonwebtoken')
 
 var user = {}
@@ -95,11 +95,5 @@ describe('User Phone Number Change Request', function () {
         res.should.have.status(200)
         done()
       })
-  })
-})
-
-after(function (done) {
-  userModel.remove({}, function (err, docs) {
-    done()
   })
 })
