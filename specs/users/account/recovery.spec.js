@@ -129,9 +129,9 @@ describe('User Account Recovery', function () {
       })
   })
 
-  it('should successfully get a JWT with the new credentials on /users/account/signin POST', function (done) {
+  it('should successfully get a JWT with the new credentials on /users/auth/mobile POST', function (done) {
     chai.request(server)
-      .post('/users/account/signin')
+      .post('/users/auth/mobile')
       .send({
         'email': 'user@email.com',
         'password': 'us3r@recov3r'

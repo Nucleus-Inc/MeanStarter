@@ -1,10 +1,10 @@
-var jwt = require('app/middlewares/passport-jwt.js')()
+var passportMult = require('app/middlewares/passport-mult.js')
 var users = require('app/middlewares/users.js')
 
 module.exports = function (app) {
   var controller = app.controllers.users.account.email
 
   app.route('/users/:id/account/email')
-    .patch(jwt.authenticate(), users.verifyOwner, controller.setEmailChangeCode)
-    .put(jwt.authenticate(), users.verifyOwner, controller.updateEmail)
+    .patch(passportMult.isAuth, users.verifyOwner, controller.setEmailChangeCode)
+    .put(passportMult.isAuth, users.verifyOwner, controller.updateEmail)
 }

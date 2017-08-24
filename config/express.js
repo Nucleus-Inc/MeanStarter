@@ -1,9 +1,12 @@
 var config = require('./config.js')
 var express = require('express')
 var passport = require('passport')
+var flash = require('connect-flash')
 var load = require('express-load')
+var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var bodyParserError = require('bodyparser-json-error')
+var session = require('express-session')
 var helmet = require('helmet')
 var mongoose = require('mongoose')
 var expressValidator = require('express-validator')
@@ -17,9 +20,6 @@ module.exports = function () {
   /* Express app */
   var app = express()
   app.set('port', (process.env.PORT || 5000))
-
-  /* passport */
-  app.use(passport.initialize())
 
   /* Ejs views */
   app.use(require('method-override')())
@@ -35,12 +35,29 @@ module.exports = function () {
     setTo: 'PHP 5.6.27'
   }))
 
+  /* Cookie parser */
+  app.use(cookieParser())
+
   /* Body parser */
   app.use(bodyParser.urlencoded({
     extended: true
   }))
   app.use(bodyParser.json())
   app.use(bodyParserError.beautify())
+
+  /* Express session */
+  app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+  }))
+
+  /* Passport */
+  app.use(passport.initialize())
+  app.use(passport.session())
+
+  /* Flash messages */
+  app.use(flash())
 
   /* Express Validator */
   app.use(expressValidator({

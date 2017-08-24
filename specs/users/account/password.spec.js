@@ -10,9 +10,9 @@ var user = {}
 chai.use(chaiHttp)
 
 describe('User Account Password Update', function () {
-  it('should successfully get a JWT on /users/account/signin POST', function (done) {
+  it('should successfully get a JWT on /users/auth/mobile POST', function (done) {
     chai.request(server)
-      .post('/users/account/signin')
+      .post('/users/auth/mobile')
       .send({
         'email': 'user@email.com',
         'password': 'us3r@2017'
@@ -99,9 +99,9 @@ describe('User Account Password Update', function () {
       })
   })
 
-  it('should successfully get a JWT with new password on /users/account/signin POST', function (done) {
+  it('should successfully get a JWT with new password on /users/auth/mobile POST', function (done) {
     chai.request(server)
-      .post('/users/account/signin')
+      .post('/users/auth/mobile')
       .send({
         'email': 'user@email.com',
         'password': 'us3r@NeW'

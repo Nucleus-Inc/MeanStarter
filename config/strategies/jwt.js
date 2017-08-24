@@ -12,7 +12,9 @@ module.exports = function (User) {
   passport.use(new JwtStrategy(jwtOptions, function (jwtPayload, next) {
     User.findById(jwtPayload._id).then(function (data) {
       if (data) {
-        next(null, {user: jwtPayload._id})
+        next(null, {
+          user: jwtPayload._id
+        })
       } else {
         next(null, false)
       }
