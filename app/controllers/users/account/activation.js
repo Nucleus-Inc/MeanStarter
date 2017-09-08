@@ -8,10 +8,33 @@ module.exports = function (app) {
   var random = app.libs.random
   var controller = {}
 
-  controller.getActivationCode = function (req, res) {
+  controller.setActivationCode = function (req, res) {
     async.waterfall([
       function (done) {
-        var code = random.generate(4, 'numeric')
+        req.checkParams({
+          'id': {
+            notEmpty: true,
+            isObjectId: {
+              _id: req.params.id
+            }
+          }
+        })
+        req.getValidationResult().then(function (result) {
+          if (!result.isEmpty()) {
+            res.status(400)
+            res.json({
+              code: 4000,
+              errors: result.array()
+            })
+          } else {
+            done(null)
+          }
+        })
+      },
+      function (done) {
+        var code = req.query.option && req.query.option === 'email' ?
+        random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
+
         User.findById(req.params.id).then(function (data) {
           if (!data) {
             res.status(404)
@@ -33,17 +56,15 @@ module.exports = function (app) {
                   template: 'email-inline',
                   context: {
                     username: data.name,
-                    message: 'Please confirm your account by clicking the link below',
-                    link: 'http://' + req.headers.host + '/your-activation-link/' + code
+                    message: 'Please confirm your account by clicking the link below.',
+                    link: 'http://' + req.headers.host +
+                    '/#/account/' + data._id + '/activation?action=confirm' + '&token=' + code
                   }
                 }
                 broadcast.sendEmail(mailOptions)
                 res.end()
-              } else if (process.env.NODE_ENV === 'production') {
-                done(null, code)
               } else {
-                res.set('code', code)
-                res.end()
+                done(null, data.phone_number, code)
               }
             }).catch(function (err) {
               res.status(500)
@@ -62,8 +83,12 @@ module.exports = function (app) {
           })
         })
       },
-      function (code, done) {
-        // Your code for sending sms here
+      function (recipient, code, done) {
+        if (process.env.NODE_ENV != 'production') {
+          res.set('code', code)
+        } else {
+          broadcast.sendSms(recipient, config.smsMessages.registration.msg + code)
+        }
         res.end()
       }
     ], function (err, result) {
@@ -101,7 +126,7 @@ module.exports = function (app) {
             res.json({
               code: 4201
             })
-          } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.tokenExp) {
+          } else if (data.token && new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.tokenExp) {
             User.findByIdAndUpdate(data._id, {
               token: null,
               tokenExp: null,

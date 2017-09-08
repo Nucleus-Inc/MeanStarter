@@ -1,0 +1,57 @@
+<div ng-init="activationCtrl.init()">
+  <div class="container">
+    <div class="jumbotron">
+      <div ng-switch="activationCtrl.requestStatus">
+        <div ng-switch-when="notActiveError">
+          <div class="alert alert-success" role="alert" ng-show="activationCtrl.alert == 'sent'">
+            <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+            <span><i class="fa fa-check" aria-hidden="true"></i></span> A new confirmation link has been sent. Please check your mailbox.
+          </div>
+          <div class="alert alert-warning" role="error" ng-show="activationCtrl.alert == 'activatedError'">
+            <span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Your email address has been confirmed already.
+          </div>
+          <div class="alert alert-danger" role="error" ng-show="activationCtrl.alert == 'unkownError'">
+            <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+            <span><i class="fa fa-times" aria-hidden="true"></i></span> Your request could not be processed. Please try again later.
+          </div>
+          <h3><span><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> We need to verify your email address</h3>
+          <p class="lead">
+            <br> Please, check your mailbox for the verification link. You can request a new one.
+          </p>
+          <p><button ng-click="activationCtrl.requestEmail()" ng-show="activationCtrl.alert != 'activatedError'" type="button" class="btn btn-lg btn-success">Request new confirmation link</button></p>
+        </div>
+        <div ng-switch-when="invalidError">
+          <div class="alert alert-success" role="alert" ng-show="activationCtrl.alert == 'sent'">
+            <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+            <span><i class="fa fa-check" aria-hidden="true"></i></span> A new confirmation link has been sent. Please check your mailbox.
+          </div>
+          <div class="alert alert-warning" role="error" ng-show="activationCtrl.alert == 'activatedError'">
+            <span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Your email address has been confirmed already.
+          </div>
+          <div class="alert alert-danger" role="error" ng-show="activationCtrl.alert == 'unkownError'">
+            <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+            <span><i class="fa fa-times" aria-hidden="true"></i></span> Your request could not be processed. Please try again later.
+          </div>
+          <h3><span><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> We could not confirm your email address</h3>
+          <p class="lead">
+            <br> This link is invalid or expired.
+          </p>
+          <p><button ng-click="activationCtrl.requestEmail()" ng-show="activationCtrl.alert != 'activatedError'" type="button" class="btn btn-lg btn-success">Request new confirmation link</button></p>
+        </div>
+        <div ng-switch-when="success">
+          <h3><span><i class="fa fa-check" aria-hidden="true"></i></span> Your email address has been confirmed</h3>
+          <p class="lead">
+            <img src="app/assets/images/yeoman.png" alt="I'm Yeoman"><br> You may now access your account and enjoy our app
+          </p>
+          <p><a class="btn btn-lg btn-success" ng-href="#/">Sign in</a></p>
+        </div>
+        <div ng-switch-when="activationCtrl.loading">
+          <h3>Please wait a moment ...</h3>
+          <p class="lead">
+            <img src="app/assets/images/ajax-loader.gif" alt="loader">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

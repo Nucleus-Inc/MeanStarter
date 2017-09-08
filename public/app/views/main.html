@@ -1,23 +1,34 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="app/assets/images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
-</div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
-</div>
+<div class="container">
+  <section id="login">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-wrap">
+            <h1>Log in with your email account</h1>
+            <div ng-show="authError" class="alert alert-danger" role="alert">Incorrect email or password</div>
+            <form role="form">
+              <div class="form-group">
+                <label for="email" class="sr-only">Email</label>
+                <input ng-model="email" type="email" name="email" id="email" class="form-control input-lg" placeholder="somebody@example.com">
+              </div>
+              <div class="form-group">
+                <label for="key" class="sr-only">Password</label>
+                <input ng-model="password" type="password" name="key" id="key" class="form-control input-lg" placeholder="Password">
+              </div>
+              <div class="checkbox">
+                <span class="character-checkbox" onclick="showPassword()"></span>
+                <span class="label">Show password</span>
+              </div>
+              <input ng-click="login()" ng-disabled="authError" type="button" id="btn-login" class="btn btn-success btn-lg btn-block" value="Sign in">
+            </form>
+            <a href="javascript:;" class="forget" data-toggle="modal" data-target=".forget-modal">Forgot your password?</a>
+            <hr>
+          </div>
+        </div>
+        <!-- /.col-xs-12 -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container -->
+  </section>
+  <div/>

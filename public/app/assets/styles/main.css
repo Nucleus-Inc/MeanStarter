@@ -9,20 +9,25 @@ body {
   padding: 0;
 }
 
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
+
+.header, .marketing, .footer {
   padding-left: 15px;
   padding-right: 15px;
 }
 
+
 /* Custom page header */
+
 .header {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 10px;
 }
+
+
 /* Make the masthead heading the same height as the navigation */
+
 .header h3 {
   margin-top: 0;
   margin-bottom: 0;
@@ -30,45 +35,52 @@ body {
   padding-bottom: 19px;
 }
 
+
 /* Custom page footer */
+
 .footer {
   padding-top: 19px;
   color: #777;
   border-top: 1px solid #e5e5e5;
 }
 
-.container-narrow > hr {
+.container-narrow>hr {
   margin: 30px 0;
 }
 
+
 /* Main marketing message and sign up button */
+
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
 }
+
 .jumbotron .btn {
   font-size: 21px;
   padding: 14px 24px;
 }
 
+
 /* Supporting marketing content */
+
 .marketing {
   margin: 40px 0;
 }
-.marketing p + h4 {
+
+.marketing p+h4 {
   margin-top: 28px;
 }
 
+
 /* Responsive: Portrait tablets and up */
+
 @media screen and (min-width: 768px) {
   .container {
     max-width: 730px;
   }
-
   /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
+  .header, .marketing, .footer {
     padding-left: 0;
     padding-right: 0;
   }
@@ -80,4 +92,118 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+
+/*    --------------------------------------------------
+	:: Login Section
+	-------------------------------------------------- */
+
+#login {
+  padding-top: 50px
+}
+
+#login .form-wrap {
+  width: 60%;
+  margin: 0 auto;
+}
+
+#login h1 {
+  /*color: #1fa67b;*/
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 20px;
+}
+
+#login .form-group {
+  margin-bottom: 25px;
+}
+
+#login .checkbox {
+  margin-bottom: 20px;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#login .checkbox.show:before {
+  content: '\e013';
+  color: #1fa67b;
+  font-size: 17px;
+  margin: 1px 0 0 3px;
+  position: absolute;
+  pointer-events: none;
+  font-family: 'Glyphicons Halflings';
+}
+
+#login .checkbox .character-checkbox {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+#login .checkbox .label {
+  color: #6d6d6d;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+#login .btn.btn-custom {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+#login .forget {
+  font-size: 13px;
+  text-align: center;
+  display: block;
+}
+
+
+/*    --------------------------------------------------
+	:: Inputs & Buttons
+	-------------------------------------------------- */
+
+.form-control {
+  color: #212121;
+}
+
+.btn-custom {
+  color: #fff;
+  background-color: #1fa67b;
+}
+
+.btn-custom:hover, .btn-custom:focus {
+  color: #fff;
+}
+
+
+/*    --------------------------------------------------
+    :: Footer
+	-------------------------------------------------- */
+
+#footer {
+  color: #6d6d6d;
+  font-size: 12px;
+  text-align: center;
+}
+
+#footer p {
+  margin-bottom: 0;
+}
+
+#footer a {
+  color: inherit;
+}
+
+.submitted .ng-invalid {
+  border: 1px solid #a94442;
 }

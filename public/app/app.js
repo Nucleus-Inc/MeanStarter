@@ -8,27 +8,66 @@
  *
  * Main module of the application.
  */
+
 angular
   .module('meanStarterApp', [
-    'ngRoute'
+    'ngRoute',
+    'LocalStorageModule',
+    'AuthService',
+    'ActivationService',
+    'StorageService'
   ])
-  .config(function ($routeProvider, $locationProvider) {
+  .config(function($routeProvider, $locationProvider, $qProvider) {
 
     // Remove '!' from path
     $locationProvider.hashPrefix('');
 
+    // Disable Unhandled Rejections
+    $qProvider.errorOnUnhandledRejections(false);
+
     $routeProvider
       .when('/', {
         templateUrl: 'app/views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
+        controller: 'AuthController',
+        controllerAs: 'authCtrl'
       })
-      .when('/about', {
-        templateUrl: 'app/views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
+      .when('/profile', {
+        templateUrl: 'app/views/profile.html',
+        controller: 'ProfileController',
+        controllerAs: 'profileCtrl',
+        resolve: {
+          access: function(AuthService) {
+            return AuthService.isAuthenticated();
+          }
+        }
+      })
+      .when('/account/:account/activation', {
+        templateUrl: 'app/views/activation.html',
+        controller: 'ActivationController',
+        controllerAs: 'activationCtrl',
       })
       .otherwise({
         redirectTo: '/'
       });
+  })
+
+  .run(function($rootScope, $location, AuthService) {
+
+    $rootScope.$on("$routeChangeStart", function(event, next, current) {
+      console.log("Route Start");
+    });
+
+    $rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
+      console.log("Route Change Error: " + JSON.stringify(rejection));
+      $location.path("/");
+    });
+
+    $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
+      if (typeof previous != 'undefined') {
+        console.log("Previous Url: " + previous.originalPath);
+      }
+      console.log("Current Url: " + current.originalPath);
+
+    });
+
   });
