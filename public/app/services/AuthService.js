@@ -6,9 +6,10 @@ angular.module('AuthService', [])
         'email': email,
         'password': password
       }).then(function(result) {
+        console.log(result.status)
         if (!result.data.isActive) {
-          $location.path('/account/' + result.data.id + '/activation').search({
-            action: 'request'
+          $location.path('/account/' + result.data.id + '/verify').search({
+            action: 'resend'
           });
         } else if (result.data.isActive) {
           $location.path('/profile');

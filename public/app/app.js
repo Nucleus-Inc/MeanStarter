@@ -41,10 +41,15 @@ angular
           }
         }
       })
-      .when('/account/:account/activation', {
-        templateUrl: 'app/views/activation.html',
+      .when('/account/:id/activate', {
+        templateUrl: 'app/views/account/activation.html',
         controller: 'ActivationController',
         controllerAs: 'activationCtrl',
+      })
+      .when('/account/:id/verify', {
+        templateUrl: 'app/views/account/verification.html',
+        controller: 'EmailConfirmationController',
+        controllerAs: 'emailConfirmationCtrl',
       })
       .otherwise({
         redirectTo: '/'

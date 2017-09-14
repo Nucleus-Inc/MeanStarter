@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="jumbotron">
+    <div ng-switch="emailConfirmationCtrl.requestStatus">
+      <div ng-switch-when="200">
+        <h3><span><i class="fa fa-info-circle" aria-hidden="true"></i></span> We need to verify your email address</h3>
+        <p class="lead">
+          <br> We've sent you an email with a confirmation link. Please, check your mailbox.
+        </p>
+        <p><button type="button" class="btn btn-lg btn-success" ng-click="emailConfirmationCtrl.requestEmail()">Request new confirmation link</button></p>
+      </div>
+      <div ng-switch-when="422">
+        <h3><span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Your email address has been confirmed already</h3>
+        <p class="lead">
+          <br> Please, log in to your account.
+        </p>
+        <p><a ng-href="/#"><button type="button" class="btn btn-lg btn-success" ng-href="#/">Log in</button></a></p>
+      </div>
+      <div ng-switch-when="403">
+        <h3><span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Invalid or expired confirmation link</h3>
+        <p class="lead">
+          <br> Please, request a new confirmation link.
+        </p>
+        <p><a ng-href="/#"><button type="button" class="btn btn-lg btn-success" ng-href="#/">Request new confirmation link</button></a></p>
+      </div>
+      <div ng-switch-default>
+        <h3> Please, wait a moment ...</h3>
+        <p class="lead">
+          <img src="app/assets/images/ajax-loader.gif" alt="loader">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

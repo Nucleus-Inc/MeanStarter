@@ -4,56 +4,38 @@
 
       var vm = this;
 
-      vm.requestStatus = '';
-      vm.alert = '';
+      var userId = null;
+      var token = null;
 
-      vm.init = function() {
-        if ($location.search().action === 'confirm' && $location.search().token && $routeParams.account) {
-          activateAccount();
-        }
+      vm.requestStatus = null;
+      vm.resendStatus = null;
 
-        if ($location.search().action === 'request' && $routeParams.account) {
-          vm.requestStatus = 'notActiveError';
-        }
+      init();
 
+      function init() {
+        userId = $routeParams.id;
+        token = $location.search().token;
+        activateAccount();
+      };
+
+      function activateAccount() {
+        ActivationService.activateAccount(userId, token).then(function(result) {
+          vm.requestStatus = result.status;
+        }).catch(function(err) {
+          vm.requestStatus = err.status;
+        });
+      };
+
+      vm.resendEmail = function() {
+        ActivationService.requestEmail(userId).then(function(result) {
+          vm.resendStatus = result.status;
+        }).catch(function(err) {
+          vm.resendStatus = err.status;
+        });
       };
 
       vm.closeAlert = function() {
-        vm.alert = '';
-      };
-
-      var activateAccount = function() {
-        vm.requestStatus = 'loading';
-        ActivationService.activateAccount($routeParams.account, $location.search().token).then(function(result) {
-          if (result.status == 200) {
-            vm.requestStatus = 'success';
-          }
-        }).catch(function(err) {
-          vm.requestStatus = 'invalidError';
-          if (err.status && err.status == 422) {
-            vm.alert = 'activatedError';
-          } else {
-            vm.alert = 'unkownError';
-          }
-          vm.requestStatus = 'invalidError';
-          console.log('Error: ' + err);
-        });
-      };
-
-      vm.requestEmail = function() {
-        console.log('test')
-        ActivationService.requestEmail($routeParams.account).then(function(result) {
-          if (result.status == 200) {
-            vm.alert = 'sent';
-          }
-        }).catch(function(err) {
-          if (err.status && err.status == 422) {
-            vm.alert = 'activatedError';
-          } else {
-            vm.alert = 'unkownError';
-          }
-          console.log('Error: ' + err);
-        });
+        vm.resendStatus = null;
       };
     }
   ]);

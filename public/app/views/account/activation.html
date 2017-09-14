@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="jumbotron">
+    <div ng-switch="activationCtrl.requestStatus">
+      <div ng-switch-when="200">
+        <h3><span><i class="fa fa-check" aria-hidden="true"></i></span> Your email address has been confirmed</h3>
+        <p class="lead">
+          <img src="app/assets/images/yeoman.png" alt="I'm Yeoman">
+          <br> You may now access your account and enjoy our app
+        </p>
+        <p><button type="button" class="btn btn-lg btn-success" ng-href="#/">Log in</button></p>
+      </div>
+      <div ng-switch-when="422">
+        <h3><span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Your email address has been confirmed already</h3>
+        <p class="lead">
+          <br> Please, log in to your account.
+        </p>
+        <p><a ng-href="/#"><button type="button" class="btn btn-lg btn-success" ng-href="#/">Log in</button></a></p>
+      </div>
+      <div ng-switch-when="403">
+        <div class="alert alert-success" role="alert" ng-show="activationCtrl.resendStatus == 200">
+          <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+          <span><i class="fa fa-check" aria-hidden="true"></i></span> A new confirmation link has been sent. Please check your mailbox.
+        </div>
+        <div class="alert alert-warning" role="alert" ng-show="activationCtrl.resendStatus == 422">
+          <a class="close" ng-click="activationCtrl.closeAlert()" aria-label="close">&times;</a>
+          <span><i class="fa fa-info" aria-hidden="true"></i></span> Your email address has been confirmed already. Please <a ng-href="#/" class="alert-link">Log in</a>
+        </div>
+        <h3><span><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span> Invalid or expired confirmation link</h3>
+        <p class="lead">
+          <br> Please, request a new confirmation link.
+        </p>
+        <p><button type="button" class="btn btn-lg btn-success" ng-click="activationCtrl.resendEmail()">Request new confirmation link</button></p>
+      </div>
+      <div ng-switch-default>
+        <h3> Please, wait a moment ...</h3>
+        <p class="lead">
+          <img src="app/assets/images/ajax-loader.gif" alt="loader">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

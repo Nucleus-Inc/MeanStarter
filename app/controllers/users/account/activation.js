@@ -58,7 +58,7 @@ module.exports = function (app) {
                     username: data.name,
                     message: 'Please confirm your account by clicking the link below.',
                     link: 'http://' + req.headers.host +
-                    '/#/account/' + data._id + '/activation?action=confirm' + '&token=' + code
+                    '/#/account/' + data._id + '/activate?' + 'token=' + code
                   }
                 }
                 broadcast.sendEmail(mailOptions)
@@ -99,6 +99,14 @@ module.exports = function (app) {
   controller.activateUser = function (req, res) {
     async.waterfall([
       function (done) {
+        req.checkParams({
+          'id': {
+            notEmpty: true,
+            isObjectId: {
+              _id: req.params.id
+            }
+          }
+        })
         req.checkBody({
           'token': {
             notEmpty: true
