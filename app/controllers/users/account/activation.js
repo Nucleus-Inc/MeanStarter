@@ -32,8 +32,8 @@ module.exports = function (app) {
         })
       },
       function (done) {
-        var code = req.query.option && req.query.option === 'email' ?
-        random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
+        var code = req.query.option && req.query.option === 'email'
+          ? random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
 
         User.findById(req.params.id).then(function (data) {
           if (!data) {

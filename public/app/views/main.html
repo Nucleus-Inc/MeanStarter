@@ -5,21 +5,21 @@
         <div class="col-xs-12">
           <div class="form-wrap">
             <h1>Log in with your email account</h1>
-            <div ng-show="authError" class="alert alert-danger" role="alert">Incorrect email or password</div>
-            <form role="form">
+            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="authCtrl.requestStatus === 401"><button type="button" class="close" aria-label="Close" ng-click="authCtrl.closeAlert()"><span aria-hidden="true">&times;</span></button> Invalid email or password</div>
+            <form role="form" name="LoginForm" novalidate ng-submit="authCtrl.login()">
               <div class="form-group">
                 <label for="email" class="sr-only">Email</label>
-                <input ng-model="email" type="email" name="email" id="email" class="form-control input-lg" placeholder="somebody@example.com">
+                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="somebody@example.com" ng-model="authCtrl.auth.email">
               </div>
               <div class="form-group">
                 <label for="key" class="sr-only">Password</label>
-                <input ng-model="password" type="password" name="key" id="key" class="form-control input-lg" placeholder="Password">
+                <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="authCtrl.auth.password">
               </div>
               <div class="checkbox">
                 <span class="character-checkbox" onclick="showPassword()"></span>
                 <span class="label">Show password</span>
               </div>
-              <input ng-click="login()" ng-disabled="authError" type="button" id="btn-login" class="btn btn-success btn-lg btn-block" value="Sign in">
+              <input type="submit" id="btn-login" class="btn btn-success btn-lg btn-block" value="Sign in">
             </form>
             <a href="javascript:;" class="forget" data-toggle="modal" data-target=".forget-modal">Forgot your password?</a>
             <hr>
@@ -31,4 +31,4 @@
     </div>
     <!-- /.container -->
   </section>
-  <div/>
+</div>

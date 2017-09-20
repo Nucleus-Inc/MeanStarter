@@ -1,5 +1,5 @@
-angular.module('ActivationService', [])
-  .service('ActivationService', function($http, $q) {
+angular.module('Activation', [])
+  .service('Activation', function($http, $q) {
 
     this.activateAccount = function(account, token) {
       return $http.put('/users/' + account + '/account/activation', {

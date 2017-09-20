@@ -1,12 +1,11 @@
-angular.module('AuthService', [])
-  .service('AuthService', function($http, $q, localStorageService, $location) {
+angular.module('Auth', [])
+  .service('Auth', function($http, $q, localStorageService, $location) {
 
     this.login = function(email, password) {
       return $http.post('/users/auth/local/login', {
         'email': email,
         'password': password
       }).then(function(result) {
-        console.log(result.status)
         if (!result.data.isActive) {
           $location.path('/account/' + result.data.id + '/verify').search({
             action: 'resend'
