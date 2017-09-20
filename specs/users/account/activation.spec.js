@@ -10,7 +10,7 @@ var user = {}
 chai.use(chaiHttp)
 
 describe('User Account Activation', function () {
-  it('should successfully get a JWT on /users/auth/mobile POST', function (done) {
+  it('should successfully patch a JWT on /users/auth/mobile POST', function (done) {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
@@ -34,9 +34,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should successfully get a activation code on /users/account/activation/:id GET', function (done) {
+  it('should successfully patch a activation code on /users/account/activation/:id patch', function (done) {
     chai.request(server)
-      .get('/users/' + user._id + '/account/activation')
+      .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(200)
@@ -98,9 +98,9 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to get an activation code for an account that is already active on /users/account/activation/:id GET', function (done) {
+  it('should fail to patch an activation code for an account that is already active on /users/account/activation/:id patch', function (done) {
     chai.request(server)
-      .get('/users/' + user._id + '/account/activation')
+      .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .end(function (err, res) {
         res.should.have.status(422)
