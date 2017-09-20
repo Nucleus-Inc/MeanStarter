@@ -10,26 +10,28 @@ Mean Stack starter template with useful modules and features required for most a
 ### Boilerplate Features
 
 #### Authentication Strategies
-- [x] ~~Local Session~~
-- [x] ~~JWT~~
+- [x] Local Session
+- [x] JWT
 - [ ] Facebook
 - [ ] Google
 
 #### Authentication Features
-- [x] ~~Sign Up~~
-- [x] ~~Account Activation~~
-- [x] ~~Password Strength validation (zxcvbn)~~
-- [x] ~~Password Update~~
-- [x] ~~Password Recovery~~
+- [x] Sign Up
+- [x] Account Activation
+- [x] Password Strength validation (zxcvbn)
+- [x] Password Update
+- [x] Password Recovery
+- [x] Email update with verification
+- [x] Phone number update with verification
 
 #### API Features
-- [x] ~~Restful Approach~~
-- [x] ~~API Docs~~
-- [x] ~~Params and Body validation~~
-- [x] ~~Log requests that led to internal errors~~
+- [x] Restful Approach
+- [x] API Docs
+- [x] Params and Body validation
+- [x] Log requests that led to internal errors
 - [ ] Store sessions in database
-- [x] ~~Enforce Code Style~~
-- [x] ~~Specs~~
+- [x] Enforce Code Style
+- [x] Specs
 
 #### API Performance
 - [ ] Logging done correctly
@@ -38,7 +40,7 @@ Mean Stack starter template with useful modules and features required for most a
 - [ ] Gzip Compression
 
 #### API Security
-- [x] ~~Helmet - Protect app from HTTP headers vulnerabilities~~
+- [x] Helmet - Protect app from HTTP headers vulnerabilities
 - [ ] Secure Cookies
 - [ ] Requests Rate Limiting
 - [ ] Csurf - Avoid cross-site request forgery (CSRF)
