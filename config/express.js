@@ -92,14 +92,17 @@ module.exports = function () {
   }))
 
   /* Express load */
-
   load('models', {
     cwd: 'app'
   })
     .then('libs')
     .then('controllers')
     .then('routes')
+    .then('middlewares/errors.js')
     .into(app)
+
+  /* Error handler */
+  //app.use(app.middlewares.errors)
 
   return app
 }

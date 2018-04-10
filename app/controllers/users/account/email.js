@@ -58,13 +58,14 @@ module.exports = function (app) {
                 res.set('code', code)
               }
               if (process.env.NODE_ENV !== 'travis') {
-                broadcast.sendEmail(mailOptions)
+                //broadcast.sendEmail(mailOptions)
               }
               res.end()
             }).catch(function (err) {
               res.status(500)
               res.json({
-                code: 5000
+                code: 5000,
+                err
               })
             })
           }
