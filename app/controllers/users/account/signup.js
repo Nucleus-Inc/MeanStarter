@@ -1,13 +1,11 @@
 const config = require('config/config.js')
-const async = require('async')
 const jwt = require('jsonwebtoken')
 const controller = {}
 
 module.exports = function (app) {
-
   const User = app.models.user
   const random = app.libs.random
-  const broadcast = app.libs.broadcast
+  // const broadcast = app.libs.broadcast
 
   controller.registerUser = async (req, res, next) => {
     try {
@@ -69,8 +67,8 @@ module.exports = function (app) {
         _id: user._id,
         isActive: user.isActive
       }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+        expiresIn: '1h'
+      })
 
       res.set('JWT', token)
 
@@ -79,7 +77,6 @@ module.exports = function (app) {
       }
 
       res.status(201).send(user)
-
     } catch (e) {
       next(e)
     }

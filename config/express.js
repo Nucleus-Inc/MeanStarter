@@ -102,7 +102,7 @@ module.exports = function () {
     .into(app)
 
   /* Error handler */
-  //app.use(app.middlewares.errors)
+  // app.use(app.middlewares.errors)
 
   return app
 }

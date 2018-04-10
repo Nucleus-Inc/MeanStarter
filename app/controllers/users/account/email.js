@@ -2,7 +2,7 @@ var async = require('async')
 
 module.exports = function (app) {
   var User = app.models.user
-  var broadcast = app.libs.broadcast
+  // var broadcast = app.libs.broadcast
   var controller = {}
 
   controller.setEmailChangeCode = function (req, res) {
@@ -44,7 +44,7 @@ module.exports = function (app) {
             User.findByIdAndUpdate(data._id, {
               changeRequests: changeRequests
             }).then(function (data) {
-              var mailOptions = {
+              /* var mailOptions = {
                 to: data.email,
                 subject: 'Activate your account',
                 template: 'email-inline',
@@ -53,12 +53,12 @@ module.exports = function (app) {
                   message: 'Please confirm your account by clicking the link below',
                   link: 'http://' + req.headers.host + '/your-activation-link/' + code
                 }
-              }
+              } */
               if (process.env.NODE_ENV !== 'production') {
                 res.set('code', code)
               }
               if (process.env.NODE_ENV !== 'travis') {
-                //broadcast.sendEmail(mailOptions)
+                // broadcast.sendEmail(mailOptions)
               }
               res.end()
             }).catch(function (err) {
