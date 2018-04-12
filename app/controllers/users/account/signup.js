@@ -43,7 +43,7 @@ module.exports = function (app) {
         }
       })
 
-      const validationResult = await req.getValidationResult()
+      let validationResult = await req.getValidationResult()
 
       if (!validationResult.isEmpty()) {
         throw {
@@ -67,8 +67,8 @@ module.exports = function (app) {
         _id: user._id,
         isActive: user.isActive
       }, config.jwt.jwtSecret, {
-        expiresIn: '1h'
-      })
+          expiresIn: '1h'
+        })
 
       res.set('JWT', token)
 
