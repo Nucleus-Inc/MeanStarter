@@ -1,5 +1,6 @@
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
+const { validationResult } = require('express-validator/check')
 const controller = {}
 
 module.exports = function (app) {
@@ -9,7 +10,7 @@ module.exports = function (app) {
 
   controller.registerUser = async (req, res, next) => {
     try {
-      req.checkBody({
+      /*req.checkBody({
         'name': {
           notEmpty: {
             errorMessage: 'Name is required'
@@ -41,16 +42,9 @@ module.exports = function (app) {
             errorMessage: 'Password is weak or invalid'
           }
         }
-      })
+      })*/
 
-      let validationResult = await req.getValidationResult()
-
-      if (!validationResult.isEmpty()) {
-        throw {
-          apiError: 'Validation',
-          data: validationResult.array()
-        }
-      }
+      validationResult(req).throw()
 
       let code = random.generate(4, 'numeric')
 
@@ -67,8 +61,8 @@ module.exports = function (app) {
         _id: user._id,
         isActive: user.isActive
       }, config.jwt.jwtSecret, {
-        expiresIn: '1h'
-      })
+          expiresIn: '1h'
+        })
 
       res.set('JWT', token)
 
@@ -77,8 +71,8 @@ module.exports = function (app) {
       }
 
       res.status(201).send(user)
-    } catch (e) {
-      next(e)
+    } catch (ex) {
+      res.json(ex.mapped())
     }
   }
 

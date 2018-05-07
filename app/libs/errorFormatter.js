@@ -20,8 +20,15 @@ module.exports = function (app) {
           errors: err.data
         }
       }
-    }
-  }
+    } else {
 
-  return errorFormatter
+      return {
+        statusCode: 500,
+        errorData: {
+          code: 5000
+        }
+      }
+    }
+    return errorFormatter
+  }
 }

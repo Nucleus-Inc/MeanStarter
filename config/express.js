@@ -59,21 +59,25 @@ module.exports = function () {
   /* Flash messages */
   app.use(flash())
 
+  const validators = require('app/validators/custom')
+
   /* Express Validator */
   app.use(expressValidator({
-    customValidators: {
-      isObjectId: function (_id) {
-        return mongoose.Types.ObjectId.isValid(_id)
-      },
-      isValidPassword: function (password) {
-        return !!(password && zxcvbn(password).score >= 2)
-      },
-      isPhoneNumber: function (number) {
-        var numberExp = new RegExp(/(55)[0-9]{11}/)
-        return numberExp.test(number)
-      }
-    }
+    customValidators: validators
   }))
+
+  console.log(validators)
+
+  /* Express load */
+  load('models', {
+    cwd: 'app'
+  })
+    .then('libs')
+    .then('validators')
+    .then('controllers')
+    .then('routes')
+    .then('middlewares/errors.js')
+    .into(app)
 
   /* Winston logger */
   app.use(expressWinston.logger({
@@ -90,19 +94,6 @@ module.exports = function () {
       return res.statusCode !== 500
     }
   }))
-
-  /* Express load */
-  load('models', {
-    cwd: 'app'
-  })
-    .then('libs')
-    .then('controllers')
-    .then('routes')
-    .then('middlewares/errors.js')
-    .into(app)
-
-  /* Error handler */
-  // app.use(app.middlewares.errors)
 
   return app
 }
