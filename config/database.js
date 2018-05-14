@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var bluebird = require('bluebird')
+const mongoose = require('mongoose')
+const bluebird = require('bluebird')
 
 module.exports = function (uri) {
   bluebird.promisifyAll(mongoose)
@@ -9,20 +9,20 @@ module.exports = function (uri) {
 
   mongoose.connect(uri)
 
-  mongoose.connection.on('connected', function () {
+  mongoose.connection.on('connected', () => {
     console.log('Mongoose! Connected in: ' + uri)
   })
 
-  mongoose.connection.on('disconnected', function () {
+  mongoose.connection.on('disconnected', () => {
     console.log('Mongoose! Disconnected: ' + uri)
   })
 
-  mongoose.connection.on('error', function (erro) {
-    console.log('Mongoose! Error in connection: ' + erro)
+  mongoose.connection.on('error', (err) => {
+    console.log('Mongoose! Error in connection: ' + err)
   })
 
-  process.on('SIGINT', function () {
-    mongoose.connection.close(function () {
+  process.on('SIGINT', () => {
+    mongoose.connection.close(() => {
       console.log('Mongoose! Disconnected for finished app')
     })
     process.exit(0)
