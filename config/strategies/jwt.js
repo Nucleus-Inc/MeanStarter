@@ -1,16 +1,16 @@
-var config = require('config/config.js')
-var passport = require('passport')
-var passportJWT = require('passport-jwt')
-var ExtractJwt = passportJWT.ExtractJwt
-var JwtStrategy = passportJWT.Strategy
+const config = require('config/config.js')
+const passport = require('passport')
+const passportJWT = require('passport-jwt')
+const ExtractJwt = passportJWT.ExtractJwt
+const JwtStrategy = passportJWT.Strategy
 
-var jwtOptions = {}
+const jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
 jwtOptions.secretOrKey = config.jwt.jwtSecret
 
 module.exports = function (User) {
-  passport.use(new JwtStrategy(jwtOptions, function (jwtPayload, next) {
-    User.findById(jwtPayload._id).then(function (data) {
+  passport.use(new JwtStrategy(jwtOptions, (jwtPayload, next) => {
+    User.findById(jwtPayload._id).then((data) => {
       if (data) {
         next(null, {
           user: jwtPayload._id

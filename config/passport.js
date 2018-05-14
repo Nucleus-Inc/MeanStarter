@@ -1,8 +1,7 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
+const User = mongoose.model('User')
 
 module.exports = function () {
-  var User = mongoose.model('User')
-
   require('./strategies/jwt.js')(User)
   require('./strategies/local.js')(User)
 }
