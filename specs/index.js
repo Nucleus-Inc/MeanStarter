@@ -1,4 +1,7 @@
-/* Define tests order */
+/* Hooks */
+require('./hooks.js')
+
+/* Define specs order */
 require('./users/account/signup.spec.js')
 /*require('./users/account/signin.spec.js')
 require('./users/account/activation.spec.js')
