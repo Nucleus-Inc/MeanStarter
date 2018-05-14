@@ -9,7 +9,6 @@ module.exports = function (app) {
 
   controller.registerUser = async (req, res, next) => {
     try {
-
       validationResult(req).throw()
 
       let code = random.generate(4, 'numeric')
@@ -27,8 +26,8 @@ module.exports = function (app) {
         _id: user._id,
         isActive: user.isActive
       }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+        expiresIn: '1h'
+      })
 
       res.set('JWT', token)
 

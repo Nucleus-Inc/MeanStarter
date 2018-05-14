@@ -10,15 +10,15 @@ var userModel = server.models.user
 /* Before hooks */
 
 before(function (done) {
-    userModel.ensureIndexes(function (err) {
-        done()
-    })
+  userModel.ensureIndexes(function (err) {
+    done()
+  })
 })
 
 /* After hooks */
 
 after(function (done) {
-    userModel.remove({}, function (err, docs) {
-        done()
-    })
+  userModel.remove({}, function (err, docs) {
+    done()
+  })
 })
