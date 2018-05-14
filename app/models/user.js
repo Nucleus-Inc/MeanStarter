@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var findOrCreate = require('mongoose-findorcreate')
 var bcrypt = require('bcryptjs')
 var beautifyUnique = require('mongoose-beautiful-unique-validation')
 var sanitizerPlugin = require('mongoose-sanitizer')
@@ -75,7 +74,6 @@ module.exports = function () {
   })
 
   schema.plugin(sanitizerPlugin)
-  schema.plugin(findOrCreate)
   schema.plugin(beautifyUnique)
 
   schema.methods.generateHash = function (plainText) {
