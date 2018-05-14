@@ -10,7 +10,9 @@ module.exports = function (app) {
         .exists(),
       check('email')
         .exists()
-        .isEmail(),
+        .isEmail()
+        .trim()
+        .normalizeEmail(),
       check('phoneNumber')
         .exists()
         .custom((value, { req }) => {
