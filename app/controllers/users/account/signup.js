@@ -6,43 +6,9 @@ const controller = {}
 module.exports = function (app) {
   const User = app.models.user
   const random = app.libs.random
-  // const broadcast = app.libs.broadcast
 
   controller.registerUser = async (req, res, next) => {
     try {
-      /*req.checkBody({
-        'name': {
-          notEmpty: {
-            errorMessage: 'Name is required'
-          }
-        },
-        'email': {
-          notEmpty: {
-            errorMessage: 'Email address is required'
-          },
-          isEmail: {
-            errorMessage: 'Invalid email address'
-          }
-        },
-        'phoneNumber': {
-          notEmpty: {
-            errorMessage: 'Phone number is required'
-          },
-          isPhoneNumber: {
-            number: req.body.phoneNumber,
-            errorMessage: 'Invalid phone number'
-          }
-        },
-        'password': {
-          notEmpty: {
-            errorMessage: 'Password is required'
-          },
-          isValidPassword: {
-            password: req.body.password,
-            errorMessage: 'Password is weak or invalid'
-          }
-        }
-      })*/
 
       validationResult(req).throw()
 
@@ -72,7 +38,7 @@ module.exports = function (app) {
 
       res.status(201).send(user)
     } catch (ex) {
-      res.json(ex.mapped())
+      next(ex)
     }
   }
 

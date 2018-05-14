@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
+const zxcvbn = require('zxcvbn')
 
-module.exports = function (app) {
+module.exports = (app) => {
 
-    const customValidators = {
+    const custom = {
+
         isObjectId: (_id) => {
             return mongoose.Types.ObjectId.isValid(_id)
         },
@@ -13,7 +15,8 @@ module.exports = function (app) {
             var numberExp = new RegExp(/(55)[0-9]{11}/)
             return numberExp.test(number)
         }
+
     }
 
-    return customValidators
-}
+    return custom
+} 

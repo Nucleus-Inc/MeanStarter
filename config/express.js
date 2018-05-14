@@ -59,21 +59,11 @@ module.exports = function () {
   /* Flash messages */
   app.use(flash())
 
-  const validators = require('app/validators/custom')
-
-  /* Express Validator */
-  app.use(expressValidator({
-    customValidators: validators
-  }))
-
-  console.log(validators)
-
   /* Express load */
   load('models', {
     cwd: 'app'
   })
     .then('libs')
-    .then('validators')
     .then('controllers')
     .then('routes')
     .then('middlewares/errors.js')
