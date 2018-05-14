@@ -124,5 +124,4 @@ describe('User Account Activation', function () {
         done()
       })
   })
-
 })

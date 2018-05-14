@@ -1,16 +1,13 @@
 const jwt = require('jsonwebtoken')
 const config = require('config/config.js')
 const { validationResult } = require('express-validator/check')
-const async = require('async')
 
 module.exports = function (app) {
   const User = app.models.user
   const controller = {}
 
   controller.signIn = async (req, res, next) => {
-
     try {
-
       validationResult(req).throw()
 
       let user = await User.findOne({
@@ -22,8 +19,8 @@ module.exports = function (app) {
           _id: user._id,
           isActive: user.isActive
         }, config.jwt.jwtSecret, {
-            expiresIn: '1h'
-          })
+          expiresIn: '1h'
+        })
         res.set('JWT', token)
         res.send(user)
       } else {

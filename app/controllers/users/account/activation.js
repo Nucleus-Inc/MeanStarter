@@ -1,18 +1,14 @@
 const config = require('config/config.js')
-const async = require('async')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
 
 module.exports = function (app) {
   const User = app.models.user
-  const broadcast = app.libs.broadcast
   const random = app.libs.random
   const controller = {}
 
   controller.setActivationCode = async (req, res, next) => {
-
     try {
-
       validationResult(req).throw()
 
       let code = req.query.option && req.query.option === 'email' ? random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
@@ -27,7 +23,7 @@ module.exports = function (app) {
           code: 4201
         })
       } else {
-        let userUpdate = await User.findByIdAndUpdate(user._id, {
+        await User.findByIdAndUpdate(user._id, {
           token: new User().generateHash(code.toString()),
           tokenExp: Date.now() + 300000
         })
@@ -43,9 +39,7 @@ module.exports = function (app) {
   }
 
   controller.activateUser = async (req, res, next) => {
-
     try {
-
       validationResult(req).throw()
 
       let user = await User.findById(req.params.id)
@@ -56,8 +50,7 @@ module.exports = function (app) {
           code: 4201
         })
       } else if (user.token && new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
-
-        let userUpdate = await User.findByIdAndUpdate(user._id, {
+        await User.findByIdAndUpdate(user._id, {
           token: null,
           tokenExp: null,
           isActive: true
@@ -65,10 +58,10 @@ module.exports = function (app) {
 
         let token = jwt.sign({
           _id: user._id,
-          isActive: userUpdate.isActive
+          isActive: user.isActive
         }, config.jwt.jwtSecret, {
-            expiresIn: '1h'
-          })
+          expiresIn: '1h'
+        })
 
         res.set('JWT', token)
         res.end()
@@ -79,7 +72,6 @@ module.exports = function (app) {
           code: 4301
         })
       }
-
     } catch (ex) {
       next(ex)
     }
