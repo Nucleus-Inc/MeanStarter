@@ -1,6 +1,6 @@
 const { check } = require('express-validator/check')
 
-module.exports = function (app) {
+module.exports = (app) => {
   const controller = app.controllers.users.auth.mobile
 
   app.route('/users/auth/mobile')
