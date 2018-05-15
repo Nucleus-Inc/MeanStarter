@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator/check')
 
-module.exports = function (app) {
+module.exports = (app) => {
   const User = app.models.user
   const controller = {}
 

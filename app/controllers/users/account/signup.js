@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
 const controller = {}
 
-module.exports = function (app) {
+module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
 
