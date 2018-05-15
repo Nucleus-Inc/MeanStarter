@@ -13,7 +13,7 @@ module.exports = (app) => {
 
       let code = req.query.option && req.query.option === 'email' ? random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
@@ -26,8 +26,8 @@ module.exports = (app) => {
           token: new User().generateHash(code.toString()),
           tokenExp: Date.now() + 300000
         }, {
-          new: true
-        })
+            new: true
+          })
           .lean()
 
         if (process.env.NODE_ENV != 'production') {
@@ -45,7 +45,7 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (user.isActive) {
         res.status(422).send({
@@ -57,16 +57,16 @@ module.exports = (app) => {
           tokenExp: null,
           isActive: true
         }, {
-          new: true
-        })
+            new: true
+          })
           .lean()
 
         let token = jwt.sign({
           _id: user._id,
           isActive: user.isActive
         }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+            expiresIn: '1h'
+          })
 
         res.set('JWT', token).end()
       } else {

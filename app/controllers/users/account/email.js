@@ -12,7 +12,7 @@ module.exports = (app) => {
 
       let code = random.generate(4, 'numeric')
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
@@ -39,7 +39,7 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
@@ -57,8 +57,8 @@ module.exports = (app) => {
             'changeRequests.email.tokenExp': null
           }
         }, {
-          new: true
-        })
+            new: true
+          })
           .lean()
 
         res.end()
