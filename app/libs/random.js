@@ -1,9 +1,9 @@
-var randomstring = require('randomstring')
+const randomstring = require('randomstring')
 
-module.exports = function (app) {
-  var random = {}
+module.exports = (app) => {
+  const random = {}
 
-  random.generate = function (_length, _charset) {
+  random.generate = (_length, _charset) => {
     return randomstring.generate({
       length: _length,
       charset: _charset
