@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const beautifyUnique = require('mongoose-beautiful-unique-validation')
 const sanitizerPlugin = require('mongoose-sanitizer')
 
-module.exports = function () {
+module.exports = () => {
   const schema = mongoose.Schema({
     name: {
       type: String,
@@ -76,11 +76,11 @@ module.exports = function () {
   schema.plugin(sanitizerPlugin)
   schema.plugin(beautifyUnique)
 
-  schema.methods.generateHash = function (plainText) {
+  schema.methods.generateHash = (plainText) => {
     return bcrypt.hashSync(plainText, 10)
   }
 
-  schema.methods.compareHash = function (plainText, hash) {
+  schema.methods.compareHash = (plainText, hash) => {
     return bcrypt.compareSync(plainText, hash)
   }
 

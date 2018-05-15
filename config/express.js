@@ -13,7 +13,7 @@ const winston = require('winston')
 const expressWinston = require('express-winston')
 const WinstonMongo = require('winston-mongodb').MongoDB
 
-module.exports = function () {
+module.exports = () => {
   /* Express app */
   const app = express()
   app.set('port', (process.env.PORT || 5000))

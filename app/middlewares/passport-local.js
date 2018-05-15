@@ -1,25 +1,25 @@
 var passport = require('passport')
 
-module.exports = function (req, res, next) {
+module.exports = (req, res, next) => {
   return {
-    login: function () {
+    login: () => {
       return passport.authenticate('local-login', {
         /*  successRedirect: '/profile',
           failureRedirect: '/login',
           failureFlash: true // allow flash messages */
       })
     },
-    logout: function (req, res, next) {
+    logout: (req, res, next) => {
       req.logout()
-      req.session.destroy(function (err) {
+      req.session.destroy((err) => {
         if (err) {
           res.status(500).end()
         } else {
-          res.status(200).clearCookie('connect.sid', {path: '/'}).end()
+          res.status(200).clearCookie('connect.sid', { path: '/' }).end()
         }
       })
     },
-    isAuth: function (req, res, next) {
+    isAuth: (req, res, next) => {
       if (req.isAuthenticated()) {
         return next()
       }

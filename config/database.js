@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bluebird = require('bluebird')
 
-module.exports = function (uri) {
+module.exports = (uri) => {
   bluebird.promisifyAll(mongoose)
 
   // mongoose.Promise = global.Promise; For use native promise

@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-module.exports = function (app) {
+module.exports = (app) => {
   const errorFormatter = {}
 
   errorFormatter.format = (err) => {
