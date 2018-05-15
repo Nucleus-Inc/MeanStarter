@@ -45,9 +45,9 @@ module.exports = (app) => {
         res.status(404).end()
       } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.email.token) &&
         Date.now() < user.changeRequests.email.tokenExp) {
-        var changeRequests = user.changeRequests
-        var newEmail = changeRequests.email.newEmail
-        changeRequests.email = {}
+
+        let newEmail = user.changeRequests.email.newEmail
+
         await User.findByIdAndUpdate(user._id, {
           $set: {
             email: newEmail,
