@@ -9,16 +9,16 @@ const userModel = server.models.user
 
 /* Before hooks */
 
-before(function (done) {
-  userModel.ensureIndexes(function (err) {
+before((done) => {
+  userModel.ensureIndexes((err) => {
     done()
   })
 })
 
 /* After hooks */
 
-after(function (done) {
-  userModel.remove({}, function (err, docs) {
+after((done) => {
+  userModel.remove({}, (err, docs) => {
     done()
   })
 })

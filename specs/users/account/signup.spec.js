@@ -1,14 +1,14 @@
-var chai = require('chai')
-var chaiHttp = require('chai-http')
-var server = require('app.js')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const server = require('app.js')
 should = chai.should()
-var config = require('config/config.js')
-var jwt = require('jsonwebtoken')
+const config = require('config/config.js')
+const jwt = require('jsonwebtoken')
 
 chai.use(chaiHttp)
 
-describe('User Signup', function () {
-  it('should successfully add a user on /users/account/signup POST', function (done) {
+describe('User Signup', () => {
+  it('should successfully add a user on /users/account/signup POST', (done) => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
@@ -17,12 +17,12 @@ describe('User Signup', function () {
         'password': 'us3r@2017',
         'phoneNumber': '5585999999999'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(201)
         res.headers.should.have.property('code')
         res.headers.code.should.be.a('string')
         res.headers.code.length.should.be.eql(4)
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function (err, decoded) {
+        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
           decoded.should.have.property('_id')
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
@@ -32,7 +32,7 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with invalid fields on /users/account/signup POST', function (done) {
+  it('should fail to add a user with invalid fields on /users/account/signup POST', (done) => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
@@ -41,7 +41,7 @@ describe('User Signup', function () {
         'password': 'lame',
         'phoneNumber': '55859999999'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(400)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
@@ -54,7 +54,7 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with duplicate email on /users/account/signup POST', function (done) {
+  it('should fail to add a user with duplicate email on /users/account/signup POST', (done) => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
@@ -63,7 +63,7 @@ describe('User Signup', function () {
         'password': 'us3r@2017',
         'phoneNumber': '5585999999999'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(422)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4200)
@@ -74,7 +74,7 @@ describe('User Signup', function () {
       })
   })
 
-  it('should fail to add a user with duplicate phoneNumber on /users/account/signup POST', function (done) {
+  it('should fail to add a user with duplicate phoneNumber on /users/account/signup POST', (done) => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
@@ -83,7 +83,7 @@ describe('User Signup', function () {
         'password': 'us3r@2017',
         'phoneNumber': '5585999999999'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(422)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4200)
