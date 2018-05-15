@@ -1,10 +1,10 @@
-var mongoose = require('mongoose')
-var bcrypt = require('bcryptjs')
-var beautifyUnique = require('mongoose-beautiful-unique-validation')
-var sanitizerPlugin = require('mongoose-sanitizer')
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const beautifyUnique = require('mongoose-beautiful-unique-validation')
+const sanitizerPlugin = require('mongoose-sanitizer')
 
 module.exports = function () {
-  var schema = mongoose.Schema({
+  const schema = mongoose.Schema({
     name: {
       type: String,
       required: true
