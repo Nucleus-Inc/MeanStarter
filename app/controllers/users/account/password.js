@@ -8,7 +8,7 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
@@ -18,14 +18,16 @@ module.exports = (app) => {
           code: 4100
         })
       } else if (new User().compareHash(req.body.newPassword, user.password)) {
-        res.status(422)
-        res.json({
+        res.status(422).send({
           code: 4200
         })
       } else {
         await User.findByIdAndUpdate(user._id, {
           password: new User().generateHash(req.body.newPassword)
+        }, {
+          new: true
         })
+          .lean()
 
         res.end()
       }
