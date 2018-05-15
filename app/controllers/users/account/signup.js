@@ -1,11 +1,11 @@
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
-const controller = {}
 
 module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
+  const controller = {}
 
   controller.registerUser = async (req, res, next) => {
     try {
@@ -26,8 +26,8 @@ module.exports = (app) => {
         _id: user._id,
         isActive: user.isActive
       }, config.jwt.jwtSecret, {
-        expiresIn: '1h'
-      })
+          expiresIn: '1h'
+        })
 
       res.set('JWT', token)
 
