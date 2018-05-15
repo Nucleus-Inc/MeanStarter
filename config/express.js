@@ -1,5 +1,6 @@
 const config = require('./config.js')
 const express = require('express')
+const mongoose = require('mongoose')
 const passport = require('passport')
 const flash = require('connect-flash')
 const load = require('express-load')
@@ -7,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const bodyParserError = require('bodyparser-json-error')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const helmet = require('helmet')
 /* Winston logger */
 const winston = require('winston')
@@ -17,6 +19,15 @@ module.exports = () => {
   /* Express app */
   const app = express()
   app.set('port', (process.env.PORT || 5000))
+
+  /* Express session */
+  app.use(session({
+    name: 'default.sid',
+    secret: 'default',
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection, collection: 'localsessions' })
+  }))
 
   /* Ejs views */
   app.use(require('method-override')())
