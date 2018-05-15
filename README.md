@@ -1,6 +1,6 @@
 # MeanStarter
 
-## ES6
+## AuthFlow
 
 ## Work in progress
 
