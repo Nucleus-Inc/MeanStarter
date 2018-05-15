@@ -1,11 +1,11 @@
-var chai = require('chai')
-var chaiHttp = require('chai-http')
-var server = require('app.js')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const server = require('app.js')
 should = chai.should()
 
 chai.use(chaiHttp)
 
-var userModel = server.models.user
+const userModel = server.models.user
 
 /* Before hooks */
 
