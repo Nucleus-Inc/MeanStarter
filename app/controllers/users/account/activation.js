@@ -25,11 +25,16 @@ module.exports = (app) => {
         await User.findByIdAndUpdate(user._id, {
           token: new User().generateHash(code.toString()),
           tokenExp: Date.now() + 300000
+        }, {
+          new: true
         })
+          .lean()
 
         if (process.env.NODE_ENV != 'production') {
-          res.set('code', code).end()
+          res.set('code', code)
         }
+
+        res.end()
       }
     } catch (ex) {
       next(ex)
@@ -51,7 +56,10 @@ module.exports = (app) => {
           token: null,
           tokenExp: null,
           isActive: true
-        }, { new: true })
+        }, {
+          new: true
+        })
+          .lean()
 
         let token = jwt.sign({
           _id: user._id,

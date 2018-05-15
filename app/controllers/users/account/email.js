@@ -17,16 +17,17 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else {
-        let changeRequests = user.changeRequests
-        changeRequests.email.newEmail = req.body.email
-        changeRequests.email.token = new User().generateHash(code.toString())
-        changeRequests.email.tokenExp = Date.now() + 300000
         await User.findByIdAndUpdate(user._id, {
-          changeRequests: changeRequests
+          $set: {
+            'changeRequests.email.newEmail': req.body.email,
+            'changeRequests.email.token': new User().generateHash(code.toString()),
+            'changeRequests.email.tokenExp': Date.now() + 300000
+          }
         })
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
+
         res.end()
       }
     } catch (ex) {
@@ -48,14 +49,21 @@ module.exports = (app) => {
         var newEmail = changeRequests.email.newEmail
         changeRequests.email = {}
         await User.findByIdAndUpdate(user._id, {
-          isActive: true,
-          email: newEmail,
-          changeRequests: changeRequests
+          $set: {
+            email: newEmail,
+            isActive: true,
+            'changeRequests.email.newEmail': null,
+            'changeRequests.email.token': null,
+            'changeRequests.email.tokenExp': null
+          }
+        }, {
+          new: true
         })
+          .lean()
+
         res.end()
       } else {
-        res.status(403)
-        res.json({
+        res.status(403).send({
           status: 403,
           code: 4301
         })
