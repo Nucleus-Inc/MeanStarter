@@ -5,8 +5,6 @@ should = chai.should()
 var config = require('config/config.js')
 var jwt = require('jsonwebtoken')
 
-var userModel = server.models.user
-
 var user = {}
 
 chai.use(chaiHttp)
@@ -48,8 +46,8 @@ describe('User Email Change Request', function () {
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('email')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('email')
         done()
       })
   })
@@ -97,11 +95,5 @@ describe('User Email Change Request', function () {
         res.should.have.status(200)
         done()
       })
-  })
-})
-
-after(function (done) {
-  userModel.remove({}, function (err, docs) {
-    done()
   })
 })
