@@ -1,7 +1,7 @@
-module.exports = function (app) {
-  var controller = {}
+module.exports = (app) => {
+  const controller = {}
 
-  controller.login = function (req, res) {
+  controller.login = (req, res) => {
     res.json({
       id: req.user.id,
       name: req.user.name,
@@ -12,11 +12,11 @@ module.exports = function (app) {
     })
   }
 
-  controller.isAuth = function (req, res) {
+  controller.isAuth = (req, res) => {
     res.end()
   }
 
-  controller.logout = function (req, res) {
+  controller.logout = (req, res) => {
     res.end()
   }
 

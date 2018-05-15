@@ -1,30 +1,28 @@
-var chai = require('chai')
-var chaiHttp = require('chai-http')
-var server = require('app.js')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const server = require('app.js')
 should = chai.should()
-var config = require('config/config.js')
-var jwt = require('jsonwebtoken')
+const config = require('config/config.js')
+const jwt = require('jsonwebtoken')
 
-var userModel = server.models.user
-
-var user = {}
+let user = {}
 
 chai.use(chaiHttp)
 
-describe('User Email Change Request', function () {
-  it('should successfully get a JWT on /users/auth/mobile POST', function (done) {
+describe('User Email Change Request', () => {
+  it('should successfully get a JWT on /users/auth/mobile POST', (done) => {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
         'email': 'user@email.com',
         'password': 'us3r@recov3r'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
         res.headers.should.have.property('jwt')
         res.headers.jwt.should.be.a('string')
         user.jwt = res.headers.jwt
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function (err, decoded) {
+        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
           decoded.should.have.property('_id')
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
@@ -36,32 +34,32 @@ describe('User Email Change Request', function () {
       })
   })
 
-  it('should fail to get a code for email change with invalid email on /users/account/:id/email PATCH', function (done) {
+  it('should fail to get a code for email change with invalid email on /users/account/:id/email PATCH', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/email')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'email': 'user@'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(400)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('email')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('email')
         done()
       })
   })
 
-  it('should successfully get a code for email change on /users/account/:id/account/email PATCH', function (done) {
+  it('should successfully get a code for email change on /users/account/:id/account/email PATCH', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/email')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'email': 'user@email.com'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
         res.headers.should.have.property('code')
         res.headers.code.should.be.a('string')
@@ -71,14 +69,14 @@ describe('User Email Change Request', function () {
       })
   })
 
-  it('should fail to change email with invalid token on /users/account/:id/account/email PUT', function (done) {
+  it('should fail to change email with invalid token on /users/account/:id/account/email PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/email')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': '1234557757'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(403)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4301)
@@ -86,22 +84,16 @@ describe('User Email Change Request', function () {
       })
   })
 
-  it('should successfully change email on /users/account/:id/account/email PUT', function (done) {
+  it('should successfully change email on /users/account/:id/account/email PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/email')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.emailChangeCode
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
         done()
       })
-  })
-})
-
-after(function (done) {
-  userModel.remove({}, function (err, docs) {
-    done()
   })
 })

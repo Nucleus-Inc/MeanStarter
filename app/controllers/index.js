@@ -1,7 +1,7 @@
-module.exports = function (app) {
-  var controller = {}
+module.exports = (app) => {
+  const controller = {}
 
-  controller.render = function (req, res) {
+  controller.render = (req, res) => {
     res.render('index')
   }
 

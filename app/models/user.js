@@ -1,11 +1,10 @@
-var mongoose = require('mongoose')
-var findOrCreate = require('mongoose-findorcreate')
-var bcrypt = require('bcryptjs')
-var beautifyUnique = require('mongoose-beautiful-unique-validation')
-var sanitizerPlugin = require('mongoose-sanitizer')
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const beautifyUnique = require('mongoose-beautiful-unique-validation')
+const sanitizerPlugin = require('mongoose-sanitizer')
 
-module.exports = function () {
-  var schema = mongoose.Schema({
+module.exports = () => {
+  const schema = mongoose.Schema({
     name: {
       type: String,
       required: true
@@ -75,14 +74,13 @@ module.exports = function () {
   })
 
   schema.plugin(sanitizerPlugin)
-  schema.plugin(findOrCreate)
   schema.plugin(beautifyUnique)
 
-  schema.methods.generateHash = function (plainText) {
+  schema.methods.generateHash = (plainText) => {
     return bcrypt.hashSync(plainText, 10)
   }
 
-  schema.methods.compareHash = function (plainText, hash) {
+  schema.methods.compareHash = (plainText, hash) => {
     return bcrypt.compareSync(plainText, hash)
   }
 

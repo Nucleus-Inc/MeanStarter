@@ -1,181 +1,73 @@
-var async = require('async')
 
-module.exports = function (app) {
-  var User = app.models.user
-  var broadcast = app.libs.broadcast
-  var random = app.libs.random
-  var controller = {}
+const { validationResult } = require('express-validator/check')
 
-  controller.getRecoveryCode = function (req, res) {
-    async.waterfall([
-      function (done) {
-        req.checkParams({
-          'phoneNumber': {
-            notEmpty: {
-              errorMessage: 'Phone number is required'
-            },
-            isPhoneNumber: {
-              number: req.body.phoneNumber,
-              errorMessage: 'Invalid phone number'
-            }
-          }
-        })
-        req.getValidationResult().then(function (result) {
-          if (!result.isEmpty()) {
-            res.status(400)
-            res.json({
-              code: 4000,
-              errors: result.array()
-            })
-          } else {
-            done(null)
-          }
-        })
-      },
-      function (done) {
-        var code = random.generate(4, 'numeric')
-        User.findOne({
-          phoneNumber: req.params.phoneNumber
-        }).then(function (data) {
-          if (!data) {
-            res.set('code', code)
-            res.end()
-          } else {
-            User.findByIdAndUpdate(data._id, {
-              token: new User().generateHash(code.toString()),
-              tokenExp: Date.now() + 300000
-            }).then(function (data) {
-              if (req.query.option && req.query.option === 'email') {
-                var mailOptions = {
-                  to: data.email,
-                  subject: 'Reset your account password',
-                  template: 'email-inline',
-                  context: {
-                    username: data.name,
-                    message: 'Reset your password account by clicking the link below',
-                    link: 'http://' + req.headers.host + '/password-reset-link/' + code
-                  }
-                }
-                broadcast.sendEmail(mailOptions)
-                res.end()
-              } else if (process.env.NODE_ENV === 'production') {
-                done(null, code)
-              } else {
-                res.set('code', code)
-                res.end()
-              }
-            }).catch(function (err) {
-              res.status(500)
-              res.json({
-                code: 5000,
-                error: err
-              })
-            })
-          }
-          return null
-        }).catch(function (err) {
-          res.status(500)
-          res.json({
-            code: 5000,
-            error: err
-          })
-        })
-      },
-      function (code, done) {
-        // Your code for sending sms here
+module.exports = (app) => {
+  const User = app.models.user
+  const random = app.libs.random
+
+  const controller = {}
+
+  controller.getRecoveryCode = async (req, res, next) => {
+    try {
+      validationResult(req).throw()
+
+      let code = random.generate(4, 'numeric')
+
+      let user = await User.findOne({
+        phoneNumber: req.params.phoneNumber
+      })
+
+      if (!user) {
+        res.set('code', code)
         res.end()
+      } else {
+        await User.findByIdAndUpdate(user._id, {
+          token: new User().generateHash(code.toString()),
+          tokenExp: Date.now() + 300000
+        })
+
+        if (process.env.NODE_ENV != 'production') {
+          res.set('code', code)
+          res.end()
+        }
       }
-    ],
-    function (err, result) {
-      return err || result
-    })
+    } catch (ex) {
+      next(ex)
+    }
   }
 
-  controller.recoverPassword = function (req, res) {
-    async.waterfall([
-      function (done) {
-        req.checkParams({
-          'phoneNumber': {
-            notEmpty: {
-              errorMessage: 'Phone number is required'
-            },
-            isPhoneNumber: {
-              number: req.body.phoneNumber,
-              errorMessage: 'Invalid phone number'
-            }
-          }
+  controller.recoverPassword = async (req, res, next) => {
+    try {
+      validationResult(req).throw()
+
+      let user = await User.findOne({
+        phoneNumber: req.params.phoneNumber
+      })
+
+      if (!user) {
+        res.status(403)
+        res.json({
+          status: 403,
+          code: 4301
         })
-        req.checkBody({
-          'token': {
-            notEmpty: true
-          },
-          'newPassword': {
-            notEmpty: {
-              errorMessage: 'Password is required'
-            },
-            isValidPassword: {
-              password: req.body.password,
-              errorMessage: 'Password is weak or invalid'
-            }
-          }
+      } else if (new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
+        await User.findByIdAndUpdate(user._id, {
+          token: null,
+          tokenExp: null,
+          isActive: true,
+          password: new User().generateHash(req.body.newPassword)
         })
-        req.getValidationResult().then(function (result) {
-          if (!result.isEmpty()) {
-            res.status(400)
-            res.json({
-              code: 4000,
-              errors: result.array()
-            })
-          } else {
-            done(null)
-          }
-        })
-      },
-      function (done) {
-        User.findOne({
-          phoneNumber: req.params.phoneNumber
-        }).then(function (data) {
-          if (!data) {
-            res.status(403)
-            res.json({
-              status: 403,
-              code: 4301
-            })
-          } else if (new User().compareHash(req.body.token.toString(), data.token) && Date.now() < data.tokenExp) {
-            User.findByIdAndUpdate(data._id, {
-              token: null,
-              tokenExp: null,
-              isActive: true,
-              password: new User().generateHash(req.body.newPassword)
-            }).then(function (data) {
-              res.end()
-            }).catch(function (err) {
-              res.status(500)
-              res.json({
-                code: 5000,
-                error: err
-              })
-            })
-          } else {
-            res.status(403)
-            res.json({
-              status: 403,
-              code: 4301
-            })
-          }
-          return null
-        }).catch(function (err) {
-          res.status(500)
-          res.json({
-            status: 500,
-            code: 5000,
-            error: err
-          })
+        res.end()
+      } else {
+        res.status(403)
+        res.json({
+          status: 403,
+          code: 4301
         })
       }
-    ], function (err, result) {
-      return err || result
-    })
+    } catch (ex) {
+      next(ex)
+    }
   }
 
   return controller

@@ -1,5 +1,7 @@
 # MeanStarter
 
+## ES6
+
 ## Work in progress
 
 [![Build Status](https://travis-ci.org/Nucleus-Inc/MeanStarter.svg?branch=master)](https://travis-ci.org/Nucleus-Inc/MeanStarter)

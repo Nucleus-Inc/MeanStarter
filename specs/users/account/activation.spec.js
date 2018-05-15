@@ -1,28 +1,28 @@
-var chai = require('chai')
-var chaiHttp = require('chai-http')
-var server = require('app.js')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const server = require('app.js')
 should = chai.should()
-var config = require('config/config.js')
-var jwt = require('jsonwebtoken')
+const config = require('config/config.js')
+const jwt = require('jsonwebtoken')
 
-var user = {}
+let user = {}
 
 chai.use(chaiHttp)
 
-describe('User Account Activation', function () {
-  it('should successfully patch a JWT on /users/auth/mobile POST', function (done) {
+describe('User Account Activation', () => {
+  it('should successfully patch a JWT on /users/auth/mobile POST', (done) => {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
         'email': 'user@email.com',
         'password': 'us3r@2017'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
         res.headers.should.have.property('jwt')
         res.headers.jwt.should.be.a('string')
         user.jwt = res.headers.jwt
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function (err, decoded) {
+        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
           decoded.should.have.property('_id')
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
@@ -34,11 +34,11 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should successfully patch a activation code on /users/account/activation/:id patch', function (done) {
+  it('should successfully patch a activation code on /users/account/activation/:id patch', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
         res.headers.should.have.property('code')
         res.headers.code.should.be.a('string')
@@ -48,14 +48,14 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account with an invalid token on /users/account/activation/:id PUT', function (done) {
+  it('should fail to activate an account with an invalid token on /users/account/activation/:id PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': '1234557757'
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(403)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4301)
@@ -63,32 +63,32 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account with a valid id and a missing token on /users/account/activation/:id PUT', function (done) {
+  it('should fail to activate an account with a valid id and a missing token on /users/account/activation/:id PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .send()
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(400)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('token')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('token')
         done()
       })
   })
 
-  it('should successfully activate an account on /users/account/activation/:id PUT', function (done) {
+  it('should successfully activate an account on /users/account/activation/:id PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(200)
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, function (err, decoded) {
+        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
           decoded.should.have.property('_id')
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
@@ -98,11 +98,11 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to patch an activation code for an account that is already active on /users/account/activation/:id patch', function (done) {
+  it('should fail to patch an activation code for an account that is already active on /users/account/activation/:id patch', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(422)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4201)
@@ -110,14 +110,14 @@ describe('User Account Activation', function () {
       })
   })
 
-  it('should fail to activate an account that is already active on /users/account/activation/:id PUT', function (done) {
+  it('should fail to activate an account that is already active on /users/account/activation/:id PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
         'token': user.activationCode
       })
-      .end(function (err, res) {
+      .end((err, res) => {
         res.should.have.status(422)
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4201)

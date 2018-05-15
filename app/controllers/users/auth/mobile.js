@@ -1,72 +1,37 @@
-var jwt = require('jsonwebtoken')
-var config = require('config/config.js')
-var async = require('async')
+const jwt = require('jsonwebtoken')
+const config = require('config/config.js')
+const { validationResult } = require('express-validator/check')
 
-module.exports = function (app) {
-  var User = app.models.user
-  var controller = {}
+module.exports = (app) => {
+  const User = app.models.user
+  const controller = {}
 
-  controller.signIn = function (req, res) {
-    async.waterfall([
-      function (done) {
-        req.checkBody({
-          'email': {
-            notEmpty: {
-              errorMessage: 'Email address is required'
-            },
-            isEmail: {
-              errorMessage: 'Invalid email address'
-            }
-          },
-          'password': {
-            notEmpty: {
-              errorMessage: 'Password is required'
-            }
-          }
+  controller.signIn = async (req, res, next) => {
+    try {
+      validationResult(req).throw()
+
+      let user = await User.findOne({
+        email: req.body.email
+      })
+
+      if (user && new User().compareHash(req.body.password, user.password)) {
+        const token = jwt.sign({
+          _id: user._id,
+          isActive: user.isActive
+        }, config.jwt.jwtSecret, {
+          expiresIn: '1h'
         })
-        req.getValidationResult().then(function (result) {
-          if (!result.isEmpty()) {
-            res.status(400)
-            res.json({
-              code: 4000,
-              errors: result.array()
-            })
-          } else {
-            done(null)
-          }
-        })
-      },
-      function (done) {
-        User.findOne({
-          email: req.body.email
-        }).then(function (data) {
-          if (data && new User().compareHash(req.body.password, data.password)) {
-            var token = jwt.sign({
-              _id: data._id,
-              isActive: data.isActive
-            }, config.jwt.jwtSecret, {
-              expiresIn: '1h'
-            })
-            res.set('JWT', token)
-            res.end()
-          } else {
-            res.status(401)
-            res.json({
-              code: 4100
-            })
-          }
-          return null
-        }).catch(function (err) {
-          res.status(500)
-          res.json({
-            code: 5000,
-            error: err
-          })
+        res.set('JWT', token)
+        res.send(user)
+      } else {
+        res.status(401)
+        res.json({
+          code: 4100
         })
       }
-    ], function (err, result) {
-      return err || result
-    })
+    } catch (ex) {
+      next(ex)
+    }
   }
 
   return controller

@@ -2,11 +2,11 @@ var passport = require('passport')
 
 module.exports = {
 
-  isAuth: function (req, res, next) {
+  isAuth: (req, res, next) => {
     if (req.headers.authorization) {
       passport.authenticate('jwt', {
         session: false
-      }, function (err, user) {
+      }, (err, user) => {
         if (!err && user) {
           req.user = user
           return next()

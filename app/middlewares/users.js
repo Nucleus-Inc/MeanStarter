@@ -1,6 +1,6 @@
 module.exports = {
 
-  verifyOwner: function (req, res, next) {
+  verifyOwner: (req, res, next) => {
     if (req.params.id === req.user.user || req.user._id) {
       next()
     } else {
