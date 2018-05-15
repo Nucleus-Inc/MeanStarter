@@ -18,8 +18,7 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else if (user.isActive) {
-        res.status(422)
-        res.json({
+        res.status(422).send({
           code: 4201
         })
       } else {
@@ -29,8 +28,7 @@ module.exports = (app) => {
         })
 
         if (process.env.NODE_ENV != 'production') {
-          res.set('code', code)
-          res.end()
+          res.set('code', code).end()
         }
       }
     } catch (ex) {
@@ -45,8 +43,7 @@ module.exports = (app) => {
       let user = await User.findById(req.params.id)
 
       if (user.isActive) {
-        res.status(422)
-        res.json({
+        res.status(422).send({
           code: 4201
         })
       } else if (user.token && new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
@@ -63,11 +60,9 @@ module.exports = (app) => {
           expiresIn: '1h'
         })
 
-        res.set('JWT', token)
-        res.end()
+        res.set('JWT', token).end()
       } else {
-        res.status(403)
-        res.json({
+        res.status(403).send({
           status: 403,
           code: 4301
         })
