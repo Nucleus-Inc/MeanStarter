@@ -31,8 +31,8 @@ describe('User Account Recovery', function () {
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('phoneNumber')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('phoneNumber')
         done()
       })
   })
@@ -83,7 +83,6 @@ describe('User Account Recovery', function () {
     chai.request(server)
       .put('/users/account/recovery/55859999')
       .send({
-        'token': '',
         'newPassword': 'us3r@recov3r'
       })
       .end(function (err, res) {
@@ -91,9 +90,9 @@ describe('User Account Recovery', function () {
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('phoneNumber')
-        res.body.errors[1].param.should.be.eql('token')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('phoneNumber')
+        res.body.errors.should.have.property('token')
         done()
       })
   })
@@ -110,8 +109,8 @@ describe('User Account Recovery', function () {
         res.body.should.have.property('code')
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
-        res.body.errors.should.be.a('array')
-        res.body.errors[0].param.should.be.eql('newPassword')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('newPassword')
         done()
       })
   })
