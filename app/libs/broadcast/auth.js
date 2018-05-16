@@ -33,7 +33,7 @@ module.exports = (app) => {
         }
       })
     } else if (options.transport === 'sms') {
-      console.log('No SMS has been sent. You need to use your custom function here in order to send sms messages ' + new Error().stack)
+      console.log('No SMS has been sent. You need to use your custom function here in order to send sms messages - ' + new Error().stack)
 
       // Your code to send sms here ...
       return true
