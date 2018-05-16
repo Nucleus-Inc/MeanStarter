@@ -1,31 +1,43 @@
-var config = require('config/config.js')
-var nodemailer = require('nodemailer')
-var hbs = require('nodemailer-express-handlebars')
+const config = require('config/config.js')
+const nodemailer = require('nodemailer')
+const hbs = require('nodemailer-express-handlebars')
 
-module.exports = function (app) {
-  var broadcast = {}
+module.exports = (app) => {
+  const broadcast = {}
 
-  broadcast.sendEmail = function (mailOptions) {
-    var smtpTransporter = nodemailer.createTransport({
-      service: config.email.service,
-      auth: {
-        user: config.email.user,
-        pass: config.email.pass
-      }
-    }, {
-      from: config.email.from
-    })
-    smtpTransporter.use('compile', hbs({
-      viewPath: 'app/views/',
-      extName: '.hbs'
-    }))
-    smtpTransporter.sendMail(mailOptions, function (err, data) {
-      return err || data
-    })
-  }
+  const smtpTransporter = nodemailer.createTransport({
+    service: config.libs.nodeMailer.service,
+    auth: {
+      user: config.libs.nodeMailer.user,
+      pass: config.libs.nodeMailer.password
+    }
+  }, {
+    from: config.libs.nodeMailer.from
+  })
 
-  broadcast.sendSms = function (recipient, message) {
-    // Your code to send SMS here ..
+  broadcast.sendCode = (data, options) => {
+    if (options.transport === 'email') {
+      smtpTransporter.use('compile', hbs({
+        viewPath: 'app/views/',
+        extName: '.hbs'
+      }))
+
+      return smtpTransporter.sendMail({
+        to: data.recipient,
+        subject: 'Test',
+        template: 'email-inline',
+        context: {
+          username: data.username,
+          message: 'Here is your confirmation code: ',
+          code: data.code
+        }
+      })
+    } else if (options.transport === 'sms') {
+      // Your code to send sms here ...
+      return true
+    } else {
+      throw new Error('Transport option is invalid or has not been set')
+    }
   }
 
   return broadcast

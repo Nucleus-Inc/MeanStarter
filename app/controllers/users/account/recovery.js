@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator/check')
 module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
-
+  const broadcast = app.libs.broadcast
   const controller = {}
 
   controller.getRecoveryCode = async (req, res, next) => {
@@ -26,8 +26,7 @@ module.exports = (app) => {
         .lean()
 
       if (!user) {
-        res.set('code', code)
-        res.end()
+        res.set('code', code).end()
       } else {
         await User.findByIdAndUpdate(user._id, {
           token: new User().generateHash(code.toString()),
@@ -39,8 +38,17 @@ module.exports = (app) => {
 
         if (process.env.NODE_ENV != 'production') {
           res.set('code', code)
-          res.end()
         }
+
+        broadcast.sendCode({
+          recipient: user.email,
+          username: user.name,
+          code: code
+        }, {
+          transport: 'email'
+        })
+
+        res.end()
       }
     } catch (ex) {
       next(ex)

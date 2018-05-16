@@ -31,6 +31,7 @@ module.exports = (app) => {
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
+
         res.end()
       }
     } catch (ex) {

@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator/check')
 module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
+  const broadcast = app.libs.broadcast
   const controller = {}
 
   controller.setActivationCode = async (req, res, next) => {
@@ -33,6 +34,14 @@ module.exports = (app) => {
         if (process.env.NODE_ENV != 'production') {
           res.set('code', code)
         }
+
+        broadcast.sendCode({
+          recipient: user.email,
+          username: user.name,
+          code: code
+        }, {
+          transport: 'email'
+        })
 
         res.end()
       }
