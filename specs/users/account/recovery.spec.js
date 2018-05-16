@@ -10,9 +10,12 @@ let user = {}
 chai.use(chaiHttp)
 
 describe('User Account Recovery', () => {
-  it('should successfully get a recovery code on /users/account/recovery/:phoneNumber GET', (done) => {
+  it('should successfully get a recovery code on /users/account/recovery PATCH', (done) => {
     chai.request(server)
-      .get('/users/account/recovery/5585999999999')
+      .patch('/users/account/recovery')
+      .send({
+        'recoveryKey': '5585999999999'
+      })
       .end((err, res) => {
         res.should.have.status(200)
         res.headers.should.have.property('code')
@@ -23,102 +26,11 @@ describe('User Account Recovery', () => {
       })
   })
 
-  it('should fail to get a recovery code with invalid phoneNumber on /users/account/activation/:phoneNumber GET', (done) => {
+  it('should successfully recover an account on /users/account/recovery PUT', (done) => {
     chai.request(server)
-      .get('/users/account/recovery/55859999')
-      .end((err, res) => {
-        res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
-        res.body.should.have.property('errors')
-        res.body.errors.should.be.a('object')
-        res.body.errors.should.have.property('phoneNumber')
-        done()
-      })
-  })
-
-  it('should still get a recovery code with valid but non-existent phoneNumber on /users/account/activation/:phoneNumber GET', (done) => {
-    chai.request(server)
-      .get('/users/account/recovery/5585999999990')
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.headers.should.have.property('code')
-        res.headers.code.should.be.a('string')
-        res.headers.code.length.should.be.eql(4)
-        done()
-      })
-  })
-
-  it('should fail to recover an account with an invalid token and valid phoneNumber on /users/account/recovery/:phoneNumber PUT', (done) => {
-    chai.request(server)
-      .put('/users/account/recovery/5585999999999')
+      .put('/users/account/recovery')
       .send({
-        'token': '1234567890',
-        'newPassword': 'us3r@recov3r'
-      })
-      .end((err, res) => {
-        res.should.have.status(403)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4301)
-        done()
-      })
-  })
-
-  it('should fail to recover an account with a valid but non-existent phoneNumber and an invalid token on /users/account/recovery/:phoneNumber PUT', (done) => {
-    chai.request(server)
-      .put('/users/account/recovery/5585999999990')
-      .send({
-        'token': '1234567890',
-        'newPassword': 'us3r@recov3r'
-      })
-      .end((err, res) => {
-        res.should.have.status(403)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4301)
-        done()
-      })
-  })
-
-  it('should fail to recover an account with invalid phoneNumber and token on /users/account/recovery/:phoneNumber PUT', (done) => {
-    chai.request(server)
-      .put('/users/account/recovery/55859999')
-      .send({
-        'newPassword': 'us3r@recov3r'
-      })
-      .end((err, res) => {
-        res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
-        res.body.should.have.property('errors')
-        res.body.errors.should.be.a('object')
-        res.body.errors.should.have.property('phoneNumber')
-        res.body.errors.should.have.property('token')
-        done()
-      })
-  })
-
-  it('should fail to recover an account with valid phoneNumber and token but weak password on /users/account/recovery/:phoneNumber PUT', (done) => {
-    chai.request(server)
-      .put('/users/account/recovery/5585999999999')
-      .send({
-        'token': user.recoveryCode,
-        'newPassword': 'lame'
-      })
-      .end((err, res) => {
-        res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
-        res.body.should.have.property('errors')
-        res.body.errors.should.be.a('object')
-        res.body.errors.should.have.property('newPassword')
-        done()
-      })
-  })
-
-  it('should successfully recover an account on /users/account/recovery/:phoneNumber PUT', (done) => {
-    chai.request(server)
-      .put('/users/account/recovery/5585999999999')
-      .send({
+        'recoveryKey': '5585999999999',
         'token': user.recoveryCode,
         'newPassword': 'us3r@recov3r'
       })

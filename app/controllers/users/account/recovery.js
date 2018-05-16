@@ -14,7 +14,12 @@ module.exports = (app) => {
       let code = random.generate(4, 'numeric')
 
       let user = await User.findOne({
-        phoneNumber: req.params.phoneNumber
+        $or: [{
+          'email': req.body.recoveryKey
+        },
+        {
+          'phoneNumber': req.body.recoveryKey
+        }]
       })
 
       if (!user) {
@@ -41,10 +46,16 @@ module.exports = (app) => {
       validationResult(req).throw()
 
       let user = await User.findOne({
-        phoneNumber: req.params.phoneNumber
+        $or: [{
+          'email': req.body.recoveryKey
+        },
+        {
+          'phoneNumber': req.body.recoveryKey
+        }]
       })
 
       if (!user) {
+        console.log(req.body.recoveryKey)
         res.status(403)
         res.json({
           status: 403,
