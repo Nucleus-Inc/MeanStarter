@@ -12,7 +12,7 @@ module.exports = (app) => {
 
       let code = random.generate(4, 'numeric')
 
-      let user = await User.findById(req.params.id).lean()
+      let user = await User.findById(req.params.id)
 
       if (!user) {
         res.status(404).end()
@@ -23,7 +23,10 @@ module.exports = (app) => {
             'changeRequests.email.token': new User().generateHash(code.toString()),
             'changeRequests.email.tokenExp': Date.now() + 300000
           }
-        })
+        }, {
+            new: true
+          })
+
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
@@ -39,7 +42,7 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id).lean()
+      let user = await User.findById(req.params.id)
 
       if (!user) {
         res.status(404).end()
@@ -59,7 +62,6 @@ module.exports = (app) => {
         }, {
             new: true
           })
-          .lean()
 
         res.end()
       } else {

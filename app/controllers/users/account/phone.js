@@ -17,13 +17,20 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else {
-        let changeRequests = user.changeRequests
-        changeRequests.phoneNumber.newNumber = req.body.phoneNumber
+        //let changeRequests = user.changeRequests
+        /*changeRequests.phoneNumber.newNumber = req.body.phoneNumber
         changeRequests.phoneNumber.token = new User().generateHash(code.toString())
-        changeRequests.phoneNumber.tokenExp = Date.now() + 300000
+        changeRequests.phoneNumber.tokenExp = Date.now() + 300000*/
         await User.findByIdAndUpdate(user._id, {
-          changeRequests: changeRequests
-        })
+          $set: {
+            'changeRequests.phoneNumber.newNumber': req.body.phoneNumber,
+            'changeRequests.phoneNumber.token': new User().generateHash(code.toString()),
+            'changeRequests.phoneNumber.tokenExp': Date.now() + 300000
+          }
+        }, {
+            new: true
+          })
+
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
@@ -44,14 +51,19 @@ module.exports = (app) => {
         res.status(404).end()
       } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.phoneNumber.token) &&
         Date.now() < user.changeRequests.phoneNumber.tokenExp) {
-        var changeRequests = user.changeRequests
-        var newNumber = changeRequests.phoneNumber.newNumber
-        changeRequests.phoneNumber = {}
+
+        let newNumber = user.changeRequests.phoneNumber.newNumber
+
         await User.findByIdAndUpdate(user._id, {
-          isActive: true,
-          phoneNumber: newNumber,
-          changeRequests: changeRequests
+          $set: {
+            isActive: true,
+            phoneNumber: newNumber,
+            'changeRequests.phoneNumber.newNumber': null,
+            'changeRequests.phoneNumber.token': null,
+            'changeRequests.phoneNumber.tokenExp': null
+          }
         })
+
         res.end()
       } else {
         res.status(403)

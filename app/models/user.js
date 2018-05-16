@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const beautifyUnique = require('mongoose-beautiful-unique-validation')
-const sanitizerPlugin = require('mongoose-sanitizer')
+/* const sanitizerPlugin = require('mongoose-sanitizer') */
 
 module.exports = () => {
   const schema = mongoose.Schema({
@@ -44,7 +44,8 @@ module.exports = () => {
       },
       email: {
         newEmail: {
-          type: String
+          type: String,
+          lowercase: true
         },
         token: {
           type: String
@@ -73,7 +74,7 @@ module.exports = () => {
     }
   })
 
-  schema.plugin(sanitizerPlugin)
+  /* schema.plugin(sanitizerPlugin) */
   schema.plugin(beautifyUnique)
 
   schema.methods.generateHash = (plainText) => {
