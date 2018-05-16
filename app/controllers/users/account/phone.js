@@ -18,7 +18,7 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else {
-        await User.findByIdAndUpdate(user._id, {
+        user = await User.findByIdAndUpdate(user._id, {
           $set: {
             'changeRequests.phoneNumber.newNumber': req.body.phoneNumber,
             'changeRequests.phoneNumber.token': new User().generateHash(code.toString()),
@@ -34,7 +34,7 @@ module.exports = (app) => {
         }
 
         broadcast.sendCode({
-          recipient: user.email,
+          recipient: user.changeRequests.phoneNumber.newNumber,
           username: user.name,
           code: code
         }, {
