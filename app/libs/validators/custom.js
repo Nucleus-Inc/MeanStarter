@@ -14,7 +14,6 @@ module.exports = (app) => {
       var numberExp = new RegExp(/(55)[0-9]{11}/)
       return numberExp.test(number)
     }
-
   }
 
   return custom
