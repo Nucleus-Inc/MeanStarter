@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator/check')
 module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
-  const broadcast = app.libs.broadcast
+  const broadcast = app.libs.broadcast.auth
   const controller = {}
 
   controller.setEmailChangeCode = async (req, res, next) => {
