@@ -17,7 +17,6 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else {
-
         await User.findByIdAndUpdate(user._id, {
           $set: {
             'changeRequests.phoneNumber.newNumber': req.body.phoneNumber,
@@ -25,8 +24,8 @@ module.exports = (app) => {
             'changeRequests.phoneNumber.tokenExp': Date.now() + 300000
           }
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         if (process.env.NODE_ENV !== 'production') {
@@ -49,7 +48,6 @@ module.exports = (app) => {
         res.status(404).end()
       } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.phoneNumber.token) &&
         Date.now() < user.changeRequests.phoneNumber.tokenExp) {
-
         let newNumber = user.changeRequests.phoneNumber.newNumber
 
         await User.findByIdAndUpdate(user._id, {
@@ -61,8 +59,8 @@ module.exports = (app) => {
             'changeRequests.phoneNumber.tokenExp': null
           }
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         res.end()

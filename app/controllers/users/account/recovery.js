@@ -20,7 +20,10 @@ module.exports = (app) => {
         {
           'phoneNumber': req.body.recoveryKey
         }]
+      }, {
+        new: true
       })
+        .lean()
 
       if (!user) {
         res.set('code', code)
@@ -29,7 +32,10 @@ module.exports = (app) => {
         await User.findByIdAndUpdate(user._id, {
           token: new User().generateHash(code.toString()),
           tokenExp: Date.now() + 300000
+        }, {
+          new: true
         })
+          .lean()
 
         if (process.env.NODE_ENV != 'production') {
           res.set('code', code)
@@ -53,9 +59,9 @@ module.exports = (app) => {
           'phoneNumber': req.body.recoveryKey
         }]
       })
+        .lean()
 
       if (!user) {
-        console.log(req.body.recoveryKey)
         res.status(403)
         res.json({
           status: 403,
@@ -67,7 +73,11 @@ module.exports = (app) => {
           tokenExp: null,
           isActive: true,
           password: new User().generateHash(req.body.newPassword)
+        }, {
+          new: true
         })
+          .lean()
+
         res.end()
       } else {
         res.status(403)

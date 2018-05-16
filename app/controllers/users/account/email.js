@@ -24,8 +24,8 @@ module.exports = (app) => {
             'changeRequests.email.tokenExp': Date.now() + 300000
           }
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         if (process.env.NODE_ENV !== 'production') {
@@ -60,8 +60,8 @@ module.exports = (app) => {
             'changeRequests.email.tokenExp': null
           }
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         res.end()

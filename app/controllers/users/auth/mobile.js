@@ -13,6 +13,7 @@ module.exports = (app) => {
       let user = await User.findOne({
         email: req.body.email
       })
+        .lean()
 
       if (user && new User().compareHash(req.body.password, user.password)) {
         const token = jwt.sign({
