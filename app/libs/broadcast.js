@@ -18,14 +18,14 @@ module.exports = (app) => {
   broadcast.sendCode = (data, options) => {
     if (options.transport === 'email') {
       smtpTransporter.use('compile', hbs({
-        viewPath: 'app/views/',
+        viewPath: 'app/views/broadcast',
         extName: '.hbs'
       }))
 
       return smtpTransporter.sendMail({
         to: data.recipient,
         subject: 'Test',
-        template: 'email-inline',
+        template: 'transactional',
         context: {
           username: data.username,
           message: 'Here is your confirmation code: ',
