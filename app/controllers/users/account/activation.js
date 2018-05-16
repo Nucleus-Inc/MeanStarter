@@ -26,8 +26,8 @@ module.exports = (app) => {
           token: new User().generateHash(code.toString()),
           tokenExp: Date.now() + 300000
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         if (process.env.NODE_ENV != 'production') {
@@ -57,16 +57,16 @@ module.exports = (app) => {
           tokenExp: null,
           isActive: true
         }, {
-            new: true
-          })
+          new: true
+        })
           .lean()
 
         let token = jwt.sign({
           _id: user._id,
           isActive: user.isActive
         }, config.jwt.jwtSecret, {
-            expiresIn: '1h'
-          })
+          expiresIn: '1h'
+        })
 
         res.set('JWT', token).end()
       } else {
