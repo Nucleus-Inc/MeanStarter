@@ -16,8 +16,7 @@ module.exports = (User) => {
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-  },
-  (req, email, password, done) => {
+  }, (req, email, password, done) => {
     User.findOne({
       'email': email
     }, (err, user) => {
