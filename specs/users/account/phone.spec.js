@@ -78,8 +78,8 @@ describe('User Phone Number Change Request', () => {
       })
       .end((err, res) => {
         res.should.have.status(403)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4301)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('AUT-004')
         done()
       })
   })

@@ -72,6 +72,7 @@ module.exports = () => {
     cwd: 'app'
   })
     .include('models')
+    .then('errors')
     .then('libs')
     .then('controllers')
     .then('routes')

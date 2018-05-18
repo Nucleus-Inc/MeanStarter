@@ -44,8 +44,8 @@ describe('User Account Password Update', () => {
       })
       .end((err, res) => {
         res.should.have.status(422)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4200)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-003')
         done()
       })
   })
@@ -60,8 +60,8 @@ describe('User Account Password Update', () => {
       })
       .end((err, res) => {
         res.should.have.status(401)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4100)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('AUT-001')
         done()
       })
   })

@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator/check')
 
 module.exports = (app) => {
   const User = app.models.user
+  const errors = app.errors.custom
   const controller = {}
 
   controller.updatePassword = async (req, res, next) => {
@@ -13,14 +14,9 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else if (!new User().compareHash(req.body.currentPassword, user.password)) {
-        res.status(401)
-        res.json({
-          code: 4100
-        })
+        res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       } else if (new User().compareHash(req.body.newPassword, user.password)) {
-        res.status(422).send({
-          code: 4200
-        })
+        res.status(errors.REQ003.httpCode).send(errors.REQ003.response)
       } else {
         await User.findByIdAndUpdate(user._id, {
           password: new User().generateHash(req.body.newPassword)

@@ -6,6 +6,7 @@ module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
+  const errors = app.errors.custom
   const controller = {}
 
   controller.setActivationCode = async (req, res, next) => {
@@ -19,9 +20,7 @@ module.exports = (app) => {
       if (!user) {
         res.status(404).end()
       } else if (user.isActive) {
-        res.status(422).send({
-          code: 4201
-        })
+        res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
       } else {
         await User.findByIdAndUpdate(user._id, {
           token: new User().generateHash(code.toString()),
@@ -57,9 +56,7 @@ module.exports = (app) => {
       let user = await User.findById(req.params.id).lean()
 
       if (user.isActive) {
-        res.status(422).send({
-          code: 4201
-        })
+        res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
       } else if (user.token && new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
         await User.findByIdAndUpdate(user._id, {
           token: null,
@@ -79,10 +76,7 @@ module.exports = (app) => {
 
         res.set('JWT', token).end()
       } else {
-        res.status(403).send({
-          status: 403,
-          code: 4301
-        })
+        res.status(errors.AUT004.httpCode).send(errors.AUT004.response)
       }
     } catch (ex) {
       next(ex)

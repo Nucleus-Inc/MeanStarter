@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator/check')
 
 module.exports = (app) => {
   const User = app.models.user
+  const errors = app.errors.custom
   const controller = {}
 
   controller.signIn = async (req, res, next) => {
@@ -25,10 +26,7 @@ module.exports = (app) => {
         res.set('JWT', token)
         res.send(user)
       } else {
-        res.status(401)
-        res.json({
-          code: 4100
-        })
+        res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       }
     } catch (ex) {
       next(ex)

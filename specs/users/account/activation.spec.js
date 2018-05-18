@@ -57,8 +57,8 @@ describe('User Account Activation', () => {
       })
       .end((err, res) => {
         res.should.have.status(403)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4301)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('AUT-004')
         done()
       })
   })
@@ -103,9 +103,9 @@ describe('User Account Activation', () => {
       .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
       .end((err, res) => {
-        res.should.have.status(422)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4201)
+        res.should.have.status(403)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('AUT-006')
         done()
       })
   })
@@ -118,9 +118,9 @@ describe('User Account Activation', () => {
         'token': user.activationCode
       })
       .end((err, res) => {
-        res.should.have.status(422)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4201)
+        res.should.have.status(403)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('AUT-006')
         done()
       })
   })

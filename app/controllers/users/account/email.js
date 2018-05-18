@@ -5,6 +5,7 @@ module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
+  const errors = app.errors.custom
   const controller = {}
 
   controller.setEmailChangeCode = async (req, res, next) => {
@@ -75,10 +76,7 @@ module.exports = (app) => {
 
         res.end()
       } else {
-        res.status(403).send({
-          status: 403,
-          code: 4301
-        })
+        res.status(errors.AUT004.httpCode).send(errors.AUT004.response)
       }
     } catch (ex) {
       next(ex)

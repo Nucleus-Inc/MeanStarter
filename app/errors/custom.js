@@ -17,7 +17,7 @@ module.exports = {
     httpCode: 422,
     response: {
       errorCode: 'REQ-003',
-      description: 'Duplicated keys'
+      description: 'Duplicated resource'
     }
   },
   AUT001: {
@@ -38,7 +38,7 @@ module.exports = {
     httpCode: 403,
     response: {
       errorCode: 'AUT-003',
-      description: 'You do not have permission to perfom this action.'
+      description: 'User new password must not be the current one.'
     }
   },
   AUT004: {
@@ -51,14 +51,14 @@ module.exports = {
   AUT005: {
     httpCode: 403,
     response: {
-      errorCode: 'AUT-006',
+      errorCode: 'AUT-005',
       description: 'This request could not be processed. The user account is not active.'
     }
   },
   AUT006: {
     httpCode: 403,
     response: {
-      errorCode: 'AUT-007',
+      errorCode: 'AUT-006',
       description: 'This request could not be processed. The user account is already active.'
     }
   },
