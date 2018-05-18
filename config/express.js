@@ -3,7 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const flash = require('connect-flash')
-const load = require('express-load')
+const consign = require('consign')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const bodyParserError = require('bodyparser-json-error')
@@ -68,9 +68,10 @@ module.exports = () => {
   app.use(flash())
 
   /* Express load */
-  load('models', {
+  consign({
     cwd: 'app'
   })
+    .include('models')
     .then('libs')
     .then('controllers')
     .then('routes')
