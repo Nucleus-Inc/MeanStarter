@@ -10,31 +10,7 @@ let user = require('specs/resources/schemas/user.js')
 chai.use(chaiHttp)
 
 describe('User Account Activation', () => {
-  it('should successfully patch a JWT on /users/auth/mobile POST', (done) => {
-    chai.request(server)
-      .post('/users/auth/mobile')
-      .send({
-        'email': user.email,
-        'password': user.password
-      })
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.headers.should.have.property('jwt')
-        res.headers.jwt.should.be.a('string')
-        user.jwt = res.headers.jwt
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          user._id = decoded._id
-          user.jwt = res.headers.jwt
-          done()
-        })
-      })
-  })
-
-  it('should successfully patch a activation code on /users/account/activation/:id patch', (done) => {
+  it('should successfully get a activation code on /users/account/activation/:id PATCH', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
@@ -98,7 +74,7 @@ describe('User Account Activation', () => {
       })
   })
 
-  it('should fail to patch an activation code for an account that is already active on /users/account/activation/:id patch', (done) => {
+  it('should fail to get an activation code for an account that is already active on /users/account/activation/:id PATCH', (done) => {
     chai.request(server)
       .patch('/users/' + user._id + '/account/activation')
       .set('Authorization', 'JWT ' + user.jwt)
