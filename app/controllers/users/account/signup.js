@@ -6,6 +6,7 @@ module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
+  const responses = app.libs.responses.users
   const controller = {}
 
   controller.registerUser = async (req, res, next) => {
@@ -46,7 +47,7 @@ module.exports = (app) => {
         transport: 'email'
       })
 
-      res.status(201).send(user)
+      res.status(201).send(responses.getAccount(user))
     } catch (ex) {
       next(ex)
     }

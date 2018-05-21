@@ -6,6 +6,7 @@ module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
+  const responses = app.libs.responses.users
   const errors = app.errors.custom
   const controller = {}
 
@@ -60,7 +61,7 @@ module.exports = (app) => {
       if (user.account.isActive) {
         res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
       } else if (user.account.token && new User().compareHash(req.body.token.toString(), user.account.token) && Date.now() < user.account.tokenExp) {
-        await User.findByIdAndUpdate(user._id, {
+        user = await User.findByIdAndUpdate(user._id, {
           $set: {
             'account.token': null,
             'account.tokenExp': null,
@@ -78,7 +79,8 @@ module.exports = (app) => {
           expiresIn: '1h'
         })
 
-        res.set('JWT', token).end()
+        res.set('JWT', token)
+        res.send(responses.getAccount(user))
       } else {
         res.status(errors.AUT004.httpCode).send(errors.AUT004.response)
       }

@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator/check')
 
 module.exports = (app) => {
   const User = app.models.user
+  const responses = app.libs.responses.users
   const errors = app.errors.custom
   const controller = {}
 
@@ -24,7 +25,7 @@ module.exports = (app) => {
           expiresIn: '1h'
         })
         res.set('JWT', token)
-        res.send(user)
+        res.send(responses.getAccount(user))
       } else {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       }

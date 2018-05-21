@@ -5,6 +5,7 @@ module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
+  const responses = app.libs.responses.users
   const errors = app.errors.custom
   const controller = {}
 
@@ -61,7 +62,7 @@ module.exports = (app) => {
         Date.now() < user.account.changeRequests.email.tokenExp) {
         let newEmail = user.account.changeRequests.email.newEmail
 
-        await User.findByIdAndUpdate(user._id, {
+        user = await User.findByIdAndUpdate(user._id, {
           $set: {
             email: newEmail,
             isActive: true,
@@ -74,7 +75,7 @@ module.exports = (app) => {
         })
           .lean()
 
-        res.end()
+        res.send(responses.getAccount(user))
       } else {
         res.status(errors.AUT004.httpCode).send(errors.AUT004.response)
       }
