@@ -1,6 +1,4 @@
-/* 
-    Specs will follow the order below
-*/
+/* Specs will follow the order below */
 
 /* Hooks */
 require('./hooks.js')
