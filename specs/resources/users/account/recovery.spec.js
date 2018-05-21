@@ -5,7 +5,7 @@ should = chai.should()
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 
-let user = {}
+let user = require('specs/resources/schemas/user.js')
 
 chai.use(chaiHttp)
 
@@ -14,7 +14,7 @@ describe('User Account Recovery', () => {
     chai.request(server)
       .patch('/users/account/recovery')
       .send({
-        'recoveryKey': '5585999999999'
+        'recoveryKey': user.phoneNumber
       })
       .end((err, res) => {
         res.should.have.status(200)
@@ -30,12 +30,13 @@ describe('User Account Recovery', () => {
     chai.request(server)
       .put('/users/account/recovery')
       .send({
-        'recoveryKey': '5585999999999',
+        'recoveryKey': user.phoneNumber,
         'token': user.recoveryCode,
         'newPassword': 'us3r@recov3r'
       })
       .end((err, res) => {
         res.should.have.status(200)
+        user.password = 'us3r@recov3r'
         done()
       })
   })
@@ -44,8 +45,8 @@ describe('User Account Recovery', () => {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
-        'email': 'user@email.com',
-        'password': 'us3r@recov3r'
+        'email': user.email,
+        'password': user.password
       })
       .end((err, res) => {
         res.should.have.status(200)

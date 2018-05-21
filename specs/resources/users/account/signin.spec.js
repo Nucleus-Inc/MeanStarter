@@ -5,7 +5,7 @@ should = chai.should()
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 
-let user = {}
+let user = require('specs/resources/schemas/user.js')
 
 chai.use(chaiHttp)
 
@@ -14,8 +14,8 @@ describe('User SignIn', () => {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
-        'email': 'user@email.com',
-        'password': 'us3r@2017'
+        'email': user.email,
+        'password': user.password
       })
       .end((err, res) => {
         res.should.have.status(200)
@@ -27,6 +27,7 @@ describe('User SignIn', () => {
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
           decoded.should.have.property('exp')
+          user.jwt = res.headers.jwt
           done()
         })
       })

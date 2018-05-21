@@ -5,6 +5,8 @@ should = chai.should()
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 
+let user = require('specs/resources/schemas/user.js')
+
 chai.use(chaiHttp)
 
 describe('User Signup', () => {
@@ -12,10 +14,10 @@ describe('User Signup', () => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
-        'name': 'User name',
-        'email': 'user@email.com',
-        'password': 'us3r@2017',
-        'phoneNumber': '5585999999999'
+        'name': user.name,
+        'email': user.email,
+        'password': user.password,
+        'phoneNumber': user.phoneNumber
       })
       .end((err, res) => {
         res.should.have.status(201)
@@ -27,6 +29,7 @@ describe('User Signup', () => {
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
           decoded.should.have.property('exp')
+          user._id = res.body._id
           done()
         })
       })
@@ -58,10 +61,10 @@ describe('User Signup', () => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
-        'name': 'User name',
-        'email': 'user@email.com',
-        'password': 'us3r@2017',
-        'phoneNumber': '5585999999999'
+        'name': user.name,
+        'email': user.email,
+        'password': user.password,
+        'phoneNumber': user.phoneNumber
       })
       .end((err, res) => {
         res.should.have.status(422)
@@ -78,10 +81,10 @@ describe('User Signup', () => {
     chai.request(server)
       .post('/users/account/signup')
       .send({
-        'name': 'User name',
+        'name': user.name,
         'email': 'user2@email.com',
-        'password': 'us3r@2017',
-        'phoneNumber': '5585999999999'
+        'password': user.password,
+        'phoneNumber': user.phoneNumber
       })
       .end((err, res) => {
         res.should.have.status(422)

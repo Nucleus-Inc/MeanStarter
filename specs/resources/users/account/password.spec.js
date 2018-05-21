@@ -5,42 +5,18 @@ should = chai.should()
 const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 
-let user = {}
+let user = require('specs/resources/schemas/user.js')
 
 chai.use(chaiHttp)
 
 describe('User Account Password Update', () => {
-  it('should successfully get a JWT on /users/auth/mobile POST', (done) => {
-    chai.request(server)
-      .post('/users/auth/mobile')
-      .send({
-        'email': 'user@email.com',
-        'password': 'us3r@2017'
-      })
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.headers.should.have.property('jwt')
-        res.headers.jwt.should.be.a('string')
-        user.jwt = res.headers.jwt
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          user._id = decoded._id
-          user.jwt = res.headers.jwt
-          done()
-        })
-      })
-  })
-
   it('should fail to update account new password with current password on /users/account/:id/account/password PUT', (done) => {
     chai.request(server)
       .put('/users/' + user._id + '/account/password')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
-        'currentPassword': 'us3r@2017',
-        'newPassword': 'us3r@2017'
+        'currentPassword': user.password,
+        'newPassword': user.password
       })
       .end((err, res) => {
         res.should.have.status(422)
@@ -71,7 +47,7 @@ describe('User Account Password Update', () => {
       .put('/users/' + user._id + '/account/password')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
-        'currentPassword': 'us3r@2017',
+        'currentPassword': user.password,
         'newPassword': 'weak'
       })
       .end((err, res) => {
@@ -90,11 +66,12 @@ describe('User Account Password Update', () => {
       .put('/users/' + user._id + '/account/password')
       .set('Authorization', 'JWT ' + user.jwt)
       .send({
-        'currentPassword': 'us3r@2017',
+        'currentPassword': user.password,
         'newPassword': 'us3r@NeW'
       })
       .end((err, res) => {
         res.should.have.status(200)
+        user.password = 'us3r@NeW'
         done()
       })
   })
@@ -103,8 +80,8 @@ describe('User Account Password Update', () => {
     chai.request(server)
       .post('/users/auth/mobile')
       .send({
-        'email': 'user@email.com',
-        'password': 'us3r@NeW'
+        'email': user.email,
+        'password': user.password
       })
       .end((err, res) => {
         res.should.have.status(200)
