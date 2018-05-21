@@ -76,9 +76,9 @@ describe('User Account Password Update', () => {
       })
   })
 
-  it('should successfully get a JWT with new password on /users/auth/mobile POST', (done) => {
+  it('should successfully get a JWT with new password on /users/auth/jwt/signin POST', (done) => {
     chai.request(server)
-      .post('/users/auth/mobile')
+      .post('/users/auth/jwt/signin')
       .send({
         'email': user.email,
         'password': user.password

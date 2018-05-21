@@ -10,9 +10,9 @@ let user = require('specs/resources/schemas/user.js')
 chai.use(chaiHttp)
 
 describe('User SignIn', () => {
-  it('should successfully get a JWT on /users/auth/mobile POST', (done) => {
+  it('should successfully get a JWT on /users/auth/jwt/signin POST', (done) => {
     chai.request(server)
-      .post('/users/auth/mobile')
+      .post('/users/auth/jwt/signin')
       .send({
         'email': user.email,
         'password': user.password
@@ -33,9 +33,9 @@ describe('User SignIn', () => {
       })
   })
 
-  it('should fail to get a JWT with invalid credentials on /users/auth/mobile POST', (done) => {
+  it('should fail to get a JWT with invalid credentials on /users/auth/jwt/signin POST', (done) => {
     chai.request(server)
-      .post('/users/auth/mobile')
+      .post('/users/auth/jwt/signin')
       .send({
         'email': 'user@email.com',
         'password': 'inv4lidPwD'

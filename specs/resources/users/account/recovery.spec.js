@@ -41,9 +41,9 @@ describe('User Account Recovery', () => {
       })
   })
 
-  it('should successfully get a JWT with the new credentials on /users/auth/mobile POST', (done) => {
+  it('should successfully get a JWT with the new credentials on /users/auth/jwt/signin POST', (done) => {
     chai.request(server)
-      .post('/users/auth/mobile')
+      .post('/users/auth/jwt/signin')
       .send({
         'email': user.email,
         'password': user.password
