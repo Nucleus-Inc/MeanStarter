@@ -18,3 +18,7 @@ require('./resources/users/account/email.spec.js')
 /* User Profile */
 require('./resources/users/profile/profile.spec.js')
 require('./resources/users/profile/index.spec.js')
+
+/* Verifications */
+require('./resources/verifications/password.spec.js')
+require('./resources/verifications/user.spec.js')
