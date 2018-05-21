@@ -69,6 +69,7 @@ describe('User Account Activation', () => {
           decoded.should.have.property('isActive')
           decoded.should.have.property('iat')
           decoded.should.have.property('exp')
+          user.isActive = true
           done()
         })
       })
