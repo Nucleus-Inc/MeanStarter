@@ -1,7 +1,9 @@
+/* 
+    Specs will follow the order below
+*/
+
 /* Hooks */
 require('./hooks.js')
-
-/* Define specs order */
 
 /* User Account */
 require('./resources/users/account/signup.spec.js')
