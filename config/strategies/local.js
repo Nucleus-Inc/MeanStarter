@@ -18,11 +18,11 @@ module.exports = (User) => {
     passReqToCallback: true
   }, (req, email, password, done) => {
     User.findOne({
-      'email': email
+      'account.email': email
     }, (err, user) => {
       if (err) {
         return done(err)
-      } else if (user && new User().compareHash(password, user.password)) {
+      } else if (user && new User().compareHash(password, user.account.password)) {
         return done(null, user)
       } else {
         return done(null, false)
