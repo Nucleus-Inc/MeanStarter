@@ -64,7 +64,7 @@ module.exports = () => {
       }
     },
     profile: {
-      profilePicture: {
+      pictureUrl: {
         type: String
       }
     }
