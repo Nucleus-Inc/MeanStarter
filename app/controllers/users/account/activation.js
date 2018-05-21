@@ -13,18 +13,20 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let code = req.query.option && req.query.option === 'email' ? random.generate(20, 'alphanumeric') : random.generate(4, 'numeric')
+      let code = random.generate(4, 'numeric')
 
       let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
-      } else if (user.isActive) {
+      } else if (user.account.isActive) {
         res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
       } else {
         await User.findByIdAndUpdate(user._id, {
-          token: new User().generateHash(code.toString()),
-          tokenExp: Date.now() + 300000
+          $set: {
+            'account.token': new User().generateHash(code.toString()),
+            'account.tokenExp': Date.now() + 300000
+          }
         }, {
           new: true
         })
@@ -35,8 +37,8 @@ module.exports = (app) => {
         }
 
         broadcast.sendCode({
-          recipient: user.email,
-          username: user.name,
+          recipient: user.account.email,
+          username: user.account.name,
           code: code
         }, {
           transport: 'email'
@@ -55,13 +57,15 @@ module.exports = (app) => {
 
       let user = await User.findById(req.params.id).lean()
 
-      if (user.isActive) {
+      if (user.account.isActive) {
         res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
-      } else if (user.token && new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
+      } else if (user.account.token && new User().compareHash(req.body.token.toString(), user.account.token) && Date.now() < user.account.tokenExp) {
         await User.findByIdAndUpdate(user._id, {
-          token: null,
-          tokenExp: null,
-          isActive: true
+          $set: {
+            'account.token': null,
+            'account.tokenExp': null,
+            'account.isActive': true
+          }
         }, {
           new: true
         })
@@ -69,7 +73,7 @@ module.exports = (app) => {
 
         let token = jwt.sign({
           _id: user._id,
-          isActive: user.isActive
+          isActive: user.account.isActive
         }, config.jwt.jwtSecret, {
           expiresIn: '1h'
         })

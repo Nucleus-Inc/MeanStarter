@@ -15,17 +15,19 @@ module.exports = (app) => {
       let code = random.generate(4, 'numeric')
 
       let user = await User.create({
-        name: req.body.name,
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber,
-        password: new User().generateHash(req.body.password),
-        token: new User().generateHash(code.toString()),
-        tokenExp: Date.now() + 300000
+        account: {
+          name: req.body.name,
+          email: req.body.email,
+          phoneNumber: req.body.phoneNumber,
+          password: new User().generateHash(req.body.password),
+          token: new User().generateHash(code.toString()),
+          tokenExp: Date.now() + 300000
+        }
       })
 
       let token = jwt.sign({
         _id: user._id,
-        isActive: user.isActive
+        isActive: user.account.isActive
       }, config.jwt.jwtSecret, {
         expiresIn: '1h'
       })

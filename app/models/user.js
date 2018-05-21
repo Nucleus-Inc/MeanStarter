@@ -5,73 +5,71 @@ const beautifyUnique = require('mongoose-beautiful-unique-validation')
 
 module.exports = () => {
   const schema = mongoose.Schema({
-    name: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true,
-      index: {
-        unique: true
-      }
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    isActive: {
-      type: Boolean,
-      default: false
-    },
-    token: {
-      type: String
-    },
-    tokenExp: {
-      type: Number
-    },
-    changeRequests: {
-      phoneNumber: {
-        newNumber: {
-          type: String
-        },
-        token: {
-          type: String
-        },
-        tokenExp: {
-          type: Number
-        }
+    account: {
+      name: {
+        type: String,
+        required: true
       },
       email: {
-        newEmail: {
-          type: String,
-          lowercase: true
+        type: String,
+        required: true,
+        index: {
+          unique: true
+        }
+      },
+      phoneNumber: {
+        type: String,
+        index: {
+          unique: true
+        }
+      },
+      password: {
+        type: String,
+        required: true
+      },
+      isActive: {
+        type: Boolean,
+        default: false
+      },
+      token: {
+        type: String
+      },
+      tokenExp: {
+        type: Number
+      },
+      changeRequests: {
+        phoneNumber: {
+          newNumber: {
+            type: String
+          },
+          token: {
+            type: String
+          },
+          tokenExp: {
+            type: Number
+          }
         },
-        token: {
-          type: String
-        },
-        tokenExp: {
-          type: Number
+        email: {
+          newEmail: {
+            type: String,
+            lowercase: true
+          },
+          token: {
+            type: String
+          },
+          tokenExp: {
+            type: Number
+          }
         }
       }
     },
-    genre: {
-      type: String,
-      enum: ['male', 'female']
-    },
-    profilePicture: {
-      type: String
-    },
-    phoneNumber: {
-      type: String,
-      index: {
-        unique: true
+    profile: {
+      profilePicture: {
+        type: String
       }
-    },
-    memberSince: {
-      type: Date,
-      default: Date.now
     }
+  }, {
+    timestamps: true
   })
 
   /* schema.plugin(sanitizerPlugin) */

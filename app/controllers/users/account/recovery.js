@@ -16,22 +16,21 @@ module.exports = (app) => {
 
       let user = await User.findOne({
         $or: [{
-          'email': req.body.recoveryKey
+          'account.email': req.body.recoveryKey
         },
         {
-          'phoneNumber': req.body.recoveryKey
+          'account.phoneNumber': req.body.recoveryKey
         }]
-      }, {
-        new: true
       })
-        .lean()
 
       if (!user) {
         res.set('code', code).end()
       } else {
         await User.findByIdAndUpdate(user._id, {
-          token: new User().generateHash(code.toString()),
-          tokenExp: Date.now() + 300000
+          $set: {
+            'account.token': new User().generateHash(code.toString()),
+            'account.tokenExp': Date.now() + 300000
+          }
         }, {
           new: true
         })
@@ -42,8 +41,8 @@ module.exports = (app) => {
         }
 
         broadcast.sendCode({
-          recipient: user.email,
-          username: user.name,
+          recipient: user.account.email,
+          username: user.account.name,
           code: code
         }, {
           transport: 'email'
@@ -62,10 +61,10 @@ module.exports = (app) => {
 
       let user = await User.findOne({
         $or: [{
-          'email': req.body.recoveryKey
+          'account.email': req.body.recoveryKey
         },
         {
-          'phoneNumber': req.body.recoveryKey
+          'account.phoneNumber': req.body.recoveryKey
         }]
       })
         .lean()
@@ -76,12 +75,14 @@ module.exports = (app) => {
           status: 403,
           code: 4301
         })
-      } else if (new User().compareHash(req.body.token.toString(), user.token) && Date.now() < user.tokenExp) {
+      } else if (new User().compareHash(req.body.token.toString(), user.account.token) && Date.now() < user.account.tokenExp) {
         await User.findByIdAndUpdate(user._id, {
-          token: null,
-          tokenExp: null,
-          isActive: true,
-          password: new User().generateHash(req.body.newPassword)
+          $set: {
+            'account.token': null,
+            'account.tokenExp': null,
+            'account.isActive': true,
+            'account.password': new User().generateHash(req.body.newPassword)
+          }
         }, {
           new: true
         })

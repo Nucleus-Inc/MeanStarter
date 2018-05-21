@@ -12,14 +12,14 @@ module.exports = (app) => {
       validationResult(req).throw()
 
       let user = await User.findOne({
-        email: req.body.email
+        'account.email': req.body.email
       })
         .lean()
 
-      if (user && new User().compareHash(req.body.password, user.password)) {
+      if (user && new User().compareHash(req.body.password, user.account.password)) {
         const token = jwt.sign({
           _id: user._id,
-          isActive: user.isActive
+          isActive: user.account.isActive
         }, config.jwt.jwtSecret, {
           expiresIn: '1h'
         })

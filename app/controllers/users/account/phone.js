@@ -21,9 +21,9 @@ module.exports = (app) => {
       } else {
         user = await User.findByIdAndUpdate(user._id, {
           $set: {
-            'changeRequests.phoneNumber.newNumber': req.body.phoneNumber,
-            'changeRequests.phoneNumber.token': new User().generateHash(code.toString()),
-            'changeRequests.phoneNumber.tokenExp': Date.now() + 300000
+            'account.changeRequests.phoneNumber.newNumber': req.body.phoneNumber,
+            'account.changeRequests.phoneNumber.token': new User().generateHash(code.toString()),
+            'account.changeRequests.phoneNumber.tokenExp': Date.now() + 300000
           }
         }, {
           new: true
@@ -35,8 +35,8 @@ module.exports = (app) => {
         }
 
         broadcast.sendCode({
-          recipient: user.changeRequests.phoneNumber.newNumber,
-          username: user.name,
+          recipient: user.account.changeRequests.phoneNumber.newNumber,
+          username: user.account.name,
           code: code
         }, {
           transport: 'sms'
@@ -57,17 +57,17 @@ module.exports = (app) => {
 
       if (!user) {
         res.status(404).end()
-      } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.phoneNumber.token) &&
-        Date.now() < user.changeRequests.phoneNumber.tokenExp) {
-        let newNumber = user.changeRequests.phoneNumber.newNumber
+      } else if (new User().compareHash(req.body.token.toString(), user.account.changeRequests.phoneNumber.token) &&
+        Date.now() < user.account.changeRequests.phoneNumber.tokenExp) {
+        let newNumber = user.account.changeRequests.phoneNumber.newNumber
 
         await User.findByIdAndUpdate(user._id, {
           $set: {
             isActive: true,
             phoneNumber: newNumber,
-            'changeRequests.phoneNumber.newNumber': null,
-            'changeRequests.phoneNumber.token': null,
-            'changeRequests.phoneNumber.tokenExp': null
+            'account.changeRequests.phoneNumber.newNumber': null,
+            'account.changeRequests.phoneNumber.token': null,
+            'account.changeRequests.phoneNumber.tokenExp': null
           }
         }, {
           new: true

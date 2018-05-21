@@ -13,13 +13,15 @@ module.exports = (app) => {
 
       if (!user) {
         res.status(404).end()
-      } else if (!new User().compareHash(req.body.currentPassword, user.password)) {
+      } else if (!new User().compareHash(req.body.currentPassword, user.account.password)) {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
-      } else if (new User().compareHash(req.body.newPassword, user.password)) {
+      } else if (new User().compareHash(req.body.newPassword, user.account.password)) {
         res.status(errors.REQ003.httpCode).send(errors.REQ003.response)
       } else {
         await User.findByIdAndUpdate(user._id, {
-          password: new User().generateHash(req.body.newPassword)
+          $set: {
+            'account.password': new User().generateHash(req.body.newPassword)
+          }
         }, {
           new: true
         })

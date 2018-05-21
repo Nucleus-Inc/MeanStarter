@@ -21,9 +21,9 @@ module.exports = (app) => {
       } else {
         user = await User.findByIdAndUpdate(user._id, {
           $set: {
-            'changeRequests.email.newEmail': req.body.email,
-            'changeRequests.email.token': new User().generateHash(code.toString()),
-            'changeRequests.email.tokenExp': Date.now() + 300000
+            'account.changeRequests.email.newEmail': req.body.email,
+            'account.changeRequests.email.token': new User().generateHash(code.toString()),
+            'account.changeRequests.email.tokenExp': Date.now() + 300000
           }
         }, {
           new: true
@@ -35,8 +35,8 @@ module.exports = (app) => {
         }
 
         broadcast.sendCode({
-          recipient: user.changeRequests.email.newEmail,
-          username: user.name,
+          recipient: user.account.changeRequests.email.newEmail,
+          username: user.account.name,
           code: code
         }, {
           transport: 'email'
@@ -57,17 +57,17 @@ module.exports = (app) => {
 
       if (!user) {
         res.status(404).end()
-      } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.email.token) &&
-        Date.now() < user.changeRequests.email.tokenExp) {
-        let newEmail = user.changeRequests.email.newEmail
+      } else if (new User().compareHash(req.body.token.toString(), user.account.changeRequests.email.token) &&
+        Date.now() < user.account.changeRequests.email.tokenExp) {
+        let newEmail = user.account.changeRequests.email.newEmail
 
         await User.findByIdAndUpdate(user._id, {
           $set: {
             email: newEmail,
             isActive: true,
-            'changeRequests.email.newEmail': null,
-            'changeRequests.email.token': null,
-            'changeRequests.email.tokenExp': null
+            'account.changeRequests.email.newEmail': null,
+            'account.changeRequests.email.token': null,
+            'account.changeRequests.email.tokenExp': null
           }
         }, {
           new: true
