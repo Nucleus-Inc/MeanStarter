@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_PATH=. NODE_ENV=travis mocha specs/index.js",
+    "test": "NODE_PATH=. NODE_ENV=travis nyc mocha specs/index.js",
     "lint": "eslint app.js app/** config/** specs/** --ext .js"
   },
   "repository": {
@@ -32,10 +32,11 @@
     "body-parser": "^1.17.2",
     "bodyparser-json-error": "^1.0.0",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.1",
+    "consign": "^0.1.6",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
     "express": "^4.15.3",
-    "express-load": "^1.1.16",
     "express-session": "^1.15.5",
     "express-validator": "^5.1.2",
     "express-winston": "^2.4.0",
@@ -53,6 +54,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "randomstring": "^1.1.5",
+    "validator": "^10.2.0",
     "winston": "^2.3.1",
     "winston-mongodb": "^2.0.10",
     "zxcvbn": "^4.4.2"
@@ -67,6 +69,7 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "nyc": "^11.8.0"
   }
 }

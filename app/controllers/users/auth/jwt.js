@@ -4,6 +4,8 @@ const { validationResult } = require('express-validator/check')
 
 module.exports = (app) => {
   const User = app.models.user
+  const responses = app.libs.responses.users
+  const errors = app.errors.custom
   const controller = {}
 
   controller.signIn = async (req, res, next) => {
@@ -11,23 +13,21 @@ module.exports = (app) => {
       validationResult(req).throw()
 
       let user = await User.findOne({
-        email: req.body.email
+        'account.email': req.body.email
       })
+        .lean()
 
-      if (user && new User().compareHash(req.body.password, user.password)) {
+      if (user && new User().compareHash(req.body.password, user.account.password)) {
         const token = jwt.sign({
           _id: user._id,
-          isActive: user.isActive
+          isActive: user.account.isActive
         }, config.jwt.jwtSecret, {
           expiresIn: '1h'
         })
         res.set('JWT', token)
-        res.send(user)
+        res.send(responses.getAccount(user))
       } else {
-        res.status(401)
-        res.json({
-          code: 4100
-        })
+        res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       }
     } catch (ex) {
       next(ex)

@@ -5,13 +5,21 @@ module.exports = (app) => {
   const responses = app.libs.responses.users
   const controller = {}
 
-  controller.getAccount = async (req, res, next) => {
+  controller.updateUserPicture = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id).lean()
+      let user = await User.findByIdAndUpdate(req.params.id, {
 
-      res.send(responses.getAccount(user))
+        $set: {
+          'profile.pictureUrl': req.body.pictureUrl
+        }
+      }, {
+        new: true
+      })
+        .lean()
+
+      res.send(responses.getProfile(user))
     } catch (ex) {
       next(ex)
     }

@@ -5,13 +5,13 @@ module.exports = (app) => {
   const responses = app.libs.responses.users
   const controller = {}
 
-  controller.getAccount = async (req, res, next) => {
+  controller.getProfile = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
       let user = await User.findById(req.params.id).lean()
 
-      res.send(responses.getAccount(user))
+      res.send(responses.getProfile(user))
     } catch (ex) {
       next(ex)
     }
