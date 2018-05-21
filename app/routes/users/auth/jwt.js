@@ -1,7 +1,7 @@
 const { check } = require('express-validator/check')
 
 module.exports = (app) => {
-  const controller = app.controllers.users.auth.mobile
+  const controller = app.controllers.users.auth.jwt
 
   app.route('/users/auth/jwt/signin')
     .post([
