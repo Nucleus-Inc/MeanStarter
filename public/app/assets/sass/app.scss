@@ -1,4 +1,18 @@
-h1 {
-  background-color: black;
-  color: white;
-}
+@import "_variables";
+@import "_mixins";
+@import "_components";
+
+@import "cards";
+@import "navbar";
+@import "inputs";
+@import "buttons";
+@import "links";
+@import "pages";
+@import "alerts";
+@import "meter";
+@import "scrollbars";
+@import "tables";
+@import "modals";
+@import "profile";
+@import "loader";
+@import "slick-cloudinary";

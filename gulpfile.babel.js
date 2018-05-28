@@ -8,7 +8,7 @@ import rename from 'gulp-rename'
 import yarn from 'gulp-yarn'
 import ngConstant from 'gulp-ng-constant'
 import sass from 'gulp-sass'
-import htmlToJs from 'gulp-html-to-js'
+import htmlToJs from 'gulp-angular-html2js'
 import concat from 'gulp-concat'
 import uglify from 'gulp-uglify'
 import clean from 'gulp-clean'
@@ -16,18 +16,79 @@ import nodemon from 'gulp-nodemon'
 
 import config from './public/config/env.js'
 
+const env = 'development'
+
 gulp.task('yarn', () => {
   return gulp.src(['./package.json'])
     .pipe(yarn());
 })
 
 gulp.task('constants', () => {
-  const env = config[process.env] //process.env
+  const envConf = config[env] //process.env
   return ngConstant({
-    name: 'config',
-    constants: env,
+    name: 'dashboard',
+    constants: envConf,
     stream: true
-  }).pipe(gulp.dest('public/dist'))
+  })
+  .pipe(rename({
+    basename: 'config'
+  }))
+  .pipe(gulp.dest('public/dist'))
+})
+
+gulp.task('copyJs', () => {
+  return gulp.src([
+    'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/angular/angular.min.js',
+    'node_modules/angular/angular.js',
+    'node_modules/angular-animate/angular-animate.min.js',
+    'node_modules/angular-br-filters/release/angular-br-filters.min.js',
+    'node_modules/angular-chart.js/dist/angular-chart.min.js',
+    'node_modules/angular-input-masks/releases/angular-input-masks-standalone.min.js',
+    'node_modules/angular-loaders/dist/angular-loaders.min.js',
+    'node_modules/angular-local-storage/dist/angular-local-storage.min.js',
+    'node_modules/angular-locale-pt-br/angular-locale_pt-br.js',
+    'node_modules/angular-messages/angular-messages.min.js',
+    'node_modules/angular-mocks/angular-mocks.js',
+    'node_modules/angular-modal-service/dst/angular-modal-service.min.js',
+    'node_modules/angular-moment/angular-moment.min.js',
+    'node_modules/angular-route/angular-route.min.js',
+    'node_modules/angular-sanitize/angular-sanitize.min.js',
+    'node_modules/angular-table/dist/angular-table.min.js',
+    'node_modules/angular-validation-match/dist/angular-validation-match.min.js',
+    'node_modules/zxcvbn/dist/zxcvbn.js',
+    'node_modules/angular-zxcvbn/dist/angular-zxcvbn.min.js',
+    'node_modules/tether/dist/js/tether.min.js',
+    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+    'node_modules/daemonite-material/js/material.min.js',
+    'node_modules/chart.js/dist/Chart.min.js',
+    'node_modules/angular-notify/dist/angular-notify.min.js',
+    'node_modules/string-mask/src/string-mask.js',
+    'node_modules/ngstorage/ngStorage.min.js',
+    'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
+    'node_modules/bootstrap-layout/dist/bootstrap-layout.js',
+    'node_modules/moment/min/moment.min.js',
+    'node_modules/socket.io-client/dist/socket.io.js',
+    'node_modules/moment/locale/pt-br.js',
+    'node_modules/@cgross/angular-notify/dist/angular-notify.min.js',
+    'node_modules/cloudinary-core/cloudinary-core-shrinkwrap.min.js',
+    'node_modules/cloudinary_ng/js/angular.cloudinary.js',
+    'node_modules/slick-carousel/slick/slick.min.js',
+    'node_modules/angular-slick-carousel/dist/angular-slick.min.js'
+  ])
+    .pipe(gulp.dest('public/vendors/js'))
+})
+
+gulp.task('copyCss', () => {
+  return gulp.src([
+    'node_modules/bootstrap-layout/dist/bootstrap-layout.css',
+    'node_modules/font-awesome/css/font-awesome.min.css',
+    'node_modules/@cgross/angular-notify/dist/angular-notify.min.css',
+    'node_modules/slick-carousel/slick/slick-theme.css',
+    'node_modules/slick-carousel/slick/slick.css',
+    'node_modules/daemonite-material/css/material.min.css'
+  ])
+    .pipe(gulp.dest('public/vendors/css'))
 })
 
 gulp.task('sass', () => {
@@ -42,17 +103,23 @@ gulp.task('sass', () => {
 })
 
 gulp.task('htmlToJs', () => {
-  return gulp.src(['public/app/**/**/*.html'])
-    .pipe(htmlToJs())
-    .pipe(rename({
-      dirname: '/',
-      basename: 'views'
-    }))
-    .pipe(gulp.dest('public/tmp'))
+  gulp.src(["public/app/views/**/*.html","public/app/directives/**/*.html"])
+      .pipe(htmlToJs({
+          moduleName:function(filename,subpath){
+              return subpath.replace(/^public\/app\//,'')
+          },
+          templateUrl: function (filename) {
+              return 'templates/'+filename
+          },
+          rename:function(fileName){
+              return fileName+'.js'
+          }
+      }))
+      .pipe(gulp.dest('public/tmp'))
 })
 
 gulp.task('concat', () => {
-  return gulp.src(['public/dist/config.js', 'public/tmp/views.js'])
+  return gulp.src([ 'public/app/app.js', 'public/dist/config.js', 'public/tmp/**/*.html.js', 'public/app/**/**/*.js'])
     .pipe(concat({
       newLine: ';',
       path: 'app.js'
@@ -79,7 +146,7 @@ gulp.task('nodemon', () => {
   nodemon({
     script: 'app.js',
     ext: 'js',
-    env: { 'NODE_ENV': 'development' }
+    env: { 'NODE_ENV': env }
   })
 })
 
@@ -94,5 +161,9 @@ gulp.task('watch', () => {
 })
 
 gulp.task('dev', () => {
-  runSequence(['yarn','constants','sass','htmlToJs'],'concat','minify','clean',['nodemon','watch'])
+  runSequence('yarn',['copyJs','copyCss'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
+})
+
+gulp.task('default', () => {
+  runSequence('yarn',['copyJs','copyCss'],['constants','sass','htmlToJs'],'concat','minify','clean',['nodemon','watch'])
 })

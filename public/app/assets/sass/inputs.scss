@@ -1,0 +1,7 @@
+.custom-select:focus, .form-control:focus {
+  border-bottom: 2px solid $secondary-color;
+}
+
+.custom-select, .form-control {
+  height: auto;
+}

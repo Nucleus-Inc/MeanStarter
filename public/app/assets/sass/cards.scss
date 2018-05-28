@@ -1,0 +1,148 @@
+.cards {
+    padding: 20px;
+    position:relative;
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -webkit-flex-direction:column;
+    -ms-flex-direction:column;
+    flex-direction:column;
+    background-color:#fff;
+    border:1px solid rgba(0,0,0,.125);
+    border-radius:.25rem
+}
+
+.card-style {
+  min-width: 60%;
+  width: 60%;
+  margin-right: 20px;
+  margin-top: 10px;
+  @media only screen and (max-width: 768px) {
+    & {
+      min-width: 95%;
+    }
+  }
+}
+
+.card-style-graph {
+  min-width: 30%;
+  width: 30%;
+  margin-top: 10px;
+  max-width: 50%;
+  @media only screen and (max-width: 768px) {
+    & {
+      min-width: 75%;
+    }
+  }
+}
+
+.title-notify {
+  padding-left: 21%;
+  margin-top: -20px;
+  font-size: small;
+}
+
+.card-row-style {
+  margin-left: 3px;
+}
+
+.card-layout-style {
+  padding-bottom: 20px !important;
+}
+
+.card-title {
+  color: $secondary-color;
+  padding: 7px 0;
+}
+
+.cards-title {
+  font-family: "Montserrat", sans-serif;
+}
+
+.card-label {
+  color: $secondary-color;
+}
+
+.cards-dash>.row>.col-md-3>a {
+  text-decoration: none;
+  color: black;
+}
+
+.card-heading {
+  height: 6em;
+}
+
+.card-heading>.card-box>i {
+  transition: all .2s ease-in-out;
+}
+
+.card-heading:hover>.card-box>i {
+  transform: scale(1.2);
+}
+
+.card-box {
+  display: inline-block;
+  width: 90px;
+  height: 100%;
+  text-align: center;
+  float: left;
+  margin-right: 7px;
+}
+
+.bg-thunderbird {
+  background-color: #f44336;
+}
+
+.bg-shamrock {
+  background-color: #4CAF50;
+}
+
+.bg-picton {
+  background-color: #4051b5;
+}
+
+.bg-sandstorm {
+  background-color: #FFC107;
+}
+
+.bg-tokyo {
+  background-color: #20A8D8;
+}
+
+.bg-rio {
+  background-color: #63C2DE;
+}
+
+.bg-berlim {
+  background-color: #FFC107;
+}
+
+.bg-moscou {
+  background-color: #F86C6B;
+}
+
+.bg-nairobi {
+  background-color: #4FFF87;
+}
+
+.bg-denver {
+  background-color: #F86C6B;
+}
+
+.cards-dash {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.icon-card {
+    color: white;
+    position: relative;
+    top: 50%;
+    font-size: 48px;
+    margin-top: -24px;
+    margin-right: auto;
+    margin-left: auto;
+}
