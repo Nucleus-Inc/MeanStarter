@@ -8,10 +8,7 @@
     "test": "NODE_PATH=. NODE_ENV=travis nyc mocha specs/index.js",
     "lint": "eslint app.js app/** config/** specs/** --ext .js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Igor-Lopes/MeanStarter.git"
-  },
+  "repository": "git+https://github.com/Igor-Lopes/MeanStarter.git",
   "keywords": [
     "mean-stack",
     "rest-api",
@@ -25,12 +22,14 @@
   },
   "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
   "dependencies": {
+    "angular": "^1.7.0",
     "app-module-path": "^2.2.0",
     "async": "^2.4.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "bodyparser-json-error": "^1.0.0",
+    "bootstrap": "^4.1.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.1",
     "consign": "^0.1.6",
@@ -41,6 +40,7 @@
     "express-validator": "^5.1.2",
     "express-winston": "^2.4.0",
     "helmet": "^3.6.1",
+    "jquery": "^3.3.1",
     "jsonwebtoken": "^7.4.1",
     "lodash": "^4.17.4",
     "method-override": "^2.3.9",
@@ -60,6 +60,8 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
     "chai": "^4.0.2",
     "chai-http": "^3.0.0",
     "eslint": "^4.3.0",
@@ -69,7 +71,21 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-html-to-js": "0.0.6",
+    "gulp-ng-constant": "^1.2.0",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-rename": "^1.2.3",
+    "gulp-run-sequence": "^0.3.2",
+    "gulp-sass": "^4.0.1",
+    "gulp-series": "^1.0.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-yarn": "^2.0.0",
     "mocha": "^3.4.2",
-    "nyc": "^11.8.0"
+    "nyc": "^11.8.0",
+    "r": "0.0.5"
   }
 }
