@@ -10,7 +10,7 @@ abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
 
-accepts@~1.3.5:
+accepts@~1.3.4, accepts@~1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.5.tgz#eb777df6011723a3b14e8a72c0805c8e86746bd2"
   dependencies:
@@ -128,9 +128,11 @@ angular-slick-carousel@^3.1.7:
   version "3.1.7"
   resolved "https://registry.yarnpkg.com/angular-slick-carousel/-/angular-slick-carousel-3.1.7.tgz#9894fc23b37b90833758731ba488f60cd4cc890a"
 
-angular-table@^1.0.4:
+"angular-table@https://github.com/Igor-Lopes/angular-table.git#v1.0.8":
   version "1.0.4"
-  resolved "https://registry.yarnpkg.com/angular-table/-/angular-table-1.0.4.tgz#87c602bd64ef03206f9a9398893dc37574bb65b3"
+  resolved "https://github.com/Igor-Lopes/angular-table.git#d3fa15d46f7ba42b8a87fd13a805f32b0635c710"
+  dependencies:
+    angular "~1.2.9"
 
 angular-validation-match@^1.9.0:
   version "1.9.0"
@@ -145,6 +147,10 @@ angular-zxcvbn@^3.2.2:
 angular@1.x, "angular@>=1.3.0 <2.0.0", angular@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.0.tgz#e45d679fc8d81040a4894c7ccc16a4e1ad0a9ca6"
+
+angular@~1.2.9:
+  version "1.2.32"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.2.32.tgz#df52625a5167919931418dda3a9208b9f5fa3db4"
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -808,6 +814,10 @@ balanced-match@^1.0.0:
 base64-arraybuffer@0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-0.1.5.tgz#73926771923b5a19747ad666aa5cd4bf9c6e9ce8"
+
+base64id@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/base64id/-/base64id-1.0.0.tgz#47688cb99bb6804f0e06d3e763b1c32e57d8e6b6"
 
 base@^0.11.1:
   version "0.11.2"
@@ -1835,7 +1845,7 @@ engine.io-client@~3.2.0:
     xmlhttprequest-ssl "~1.5.4"
     yeast "0.1.2"
 
-engine.io-parser@~2.1.1:
+engine.io-parser@~2.1.0, engine.io-parser@~2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-2.1.2.tgz#4c0f4cff79aaeecbbdcfdea66a823c6085409196"
   dependencies:
@@ -1844,6 +1854,17 @@ engine.io-parser@~2.1.1:
     base64-arraybuffer "0.1.5"
     blob "0.0.4"
     has-binary2 "~1.0.2"
+
+engine.io@~3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-3.2.0.tgz#54332506f42f2edc71690d2f2a42349359f3bf7d"
+  dependencies:
+    accepts "~1.3.4"
+    base64id "1.0.0"
+    cookie "0.3.1"
+    debug "~3.1.0"
+    engine.io-parser "~2.1.0"
+    ws "~3.3.1"
 
 entities@1.0:
   version "1.0.0"
@@ -3722,6 +3743,10 @@ load-json-file@^2.0.0:
     parse-json "^2.2.0"
     pify "^2.0.0"
     strip-bom "^3.0.0"
+
+loaders.css@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/loaders.css/-/loaders.css-0.1.2.tgz#3a9fb43726c73334a38142af9d0629019b658743"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -5603,7 +5628,11 @@ sntp@1.x.x:
   dependencies:
     hoek "2.x.x"
 
-socket.io-client@^2.1.1:
+socket.io-adapter@~1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-1.1.1.tgz#2a805e8a14d6372124dd9159ad4502f8cb07f06b"
+
+socket.io-client@2.1.1, socket.io-client@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-2.1.1.tgz#dcb38103436ab4578ddb026638ae2f21b623671f"
   dependencies:
@@ -5629,6 +5658,17 @@ socket.io-parser@~3.2.0:
     component-emitter "1.2.1"
     debug "~3.1.0"
     isarray "2.0.1"
+
+socket.io@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-2.1.1.tgz#a069c5feabee3e6b214a75b40ce0652e1cfb9980"
+  dependencies:
+    debug "~3.1.0"
+    engine.io "~3.2.0"
+    has-binary2 "~1.0.2"
+    socket.io-adapter "~1.1.0"
+    socket.io-client "2.1.1"
+    socket.io-parser "~3.2.0"
 
 source-map-resolve@^0.5.0:
   version "0.5.2"

@@ -1,4 +1,5 @@
-angular.module("dashboard", [])
+(function(angular, undefined) {
+  angular.module("dashboard")
 
 .constant("url_base", "http://localhost:5000")
 
@@ -15,3 +16,4 @@ angular.module("dashboard", [])
 ])
 
 ;
+})(angular);

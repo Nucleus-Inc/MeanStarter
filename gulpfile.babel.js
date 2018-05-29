@@ -16,19 +16,21 @@ import nodemon from 'gulp-nodemon'
 
 import config from './public/config/env.js'
 
-const env = 'development'
+let env = 'development'
 
 gulp.task('yarn', () => {
   return gulp.src(['./package.json'])
-    .pipe(yarn());
+    .pipe(yarn())
 })
 
 gulp.task('constants', () => {
-  const envConf = config[env] //process.env
+  const envConf = config[env]
   return ngConstant({
     name: 'dashboard',
     constants: envConf,
-    stream: true
+    stream: true,
+    deps: false,
+    wrap: true
   })
   .pipe(rename({
     basename: 'config'
@@ -83,12 +85,36 @@ gulp.task('copyCss', () => {
   return gulp.src([
     'node_modules/bootstrap-layout/dist/bootstrap-layout.css',
     'node_modules/font-awesome/css/font-awesome.min.css',
+    'node_modules/loaders.css/loaders.min.css',
     'node_modules/@cgross/angular-notify/dist/angular-notify.min.css',
     'node_modules/slick-carousel/slick/slick-theme.css',
     'node_modules/slick-carousel/slick/slick.css',
-    'node_modules/daemonite-material/css/material.min.css'
+    'node_modules/daemonite-material/css/material.min.css',
+    'node_modules/slick-carousel/slick/ajax-loader.gif'
   ])
     .pipe(gulp.dest('public/vendors/css'))
+})
+
+gulp.task('copySlickFonts', () => {
+  return gulp.src([
+    'node_modules/slick-carousel/slick/fonts/slick.eot',
+    'node_modules/slick-carousel/slick/fonts/slick.svg',
+    'node_modules/slick-carousel/slick/fonts/slick.ttf',
+    'node_modules/slick-carousel/slick/fonts/slick.woff'
+  ])
+    .pipe(gulp.dest('public/vendors/css/fonts'))
+})
+
+gulp.task('copyFonts', () => {
+  return gulp.src([
+    'node_modules/font-awesome/fonts/fontawesome-webfont.eot',
+    'node_modules/font-awesome/fonts/fontawesome-webfont.svg',
+    'node_modules/font-awesome/fonts/fontawesome-webfont.ttf',
+    'node_modules/font-awesome/fonts/fontawesome-webfont.woff',
+    'node_modules/font-awesome/fonts/fontawesome-webfont.woff2',
+    'node_modules/font-awesome/fonts/FontAwesome.otf'
+  ])
+    .pipe(gulp.dest('public/vendors/fonts'))
 })
 
 gulp.task('sass', () => {
@@ -119,7 +145,7 @@ gulp.task('htmlToJs', () => {
 })
 
 gulp.task('concat', () => {
-  return gulp.src([ 'public/app/app.js', 'public/dist/config.js', 'public/tmp/**/*.html.js', 'public/app/**/**/*.js'])
+  return gulp.src([ 'public/app/app.js', 'public/app/**/**/*.js', 'public/tmp/**/*.html.js', 'public/dist/config.js'])
     .pipe(concat({
       newLine: ';',
       path: 'app.js'
@@ -132,7 +158,9 @@ gulp.task('minify', () => {
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(uglify())
+    .pipe(uglify({
+      mangle: false
+    }))
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('public/dist'))
 })
@@ -161,9 +189,9 @@ gulp.task('watch', () => {
 })
 
 gulp.task('dev', () => {
-  runSequence('yarn',['copyJs','copyCss'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
+  runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
 })
 
 gulp.task('default', () => {
-  runSequence('yarn',['copyJs','copyCss'],['constants','sass','htmlToJs'],'concat','minify','clean',['nodemon','watch'])
+  runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify','clean',['nodemon','watch'])
 })
