@@ -8,8 +8,8 @@
       },
       controller: ['$scope','Verification','Auth','Account', function($scope, Verification, Auth, Account) {
 
-        $scope.adminVerifyEmail = function(email,view){
-          Verification.adminVerifyEmail(email).then(function(res){
+        $scope.userVerifyEmail = function(email,view){
+          Verification.userVerifyEmail(email).then(function(res){
             view.$setValidity("emailExists",true);
           }).catch(function(err){
             if(err.status==422){
@@ -31,7 +31,7 @@
                   view.$setValidity("emailExists",false);
               });
             }else
-              $scope.adminVerifyEmail(email,view);
+              $scope.userVerifyEmail(email,view);
           });
         };
 
@@ -46,7 +46,7 @@
               ngModelCtrl.$setValidity("invalidEmail",true);
               if(iAttrs.uiEmail){ //uiEmail defined
                 if(iAttrs.uiEmail == 'registered'){ //uiEmail equals registered
-                  scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
+                  scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
                 }else{
                   if(iAttrs.uiEmail == 'no-registered'){ //uiEmail equals no-registered
 
@@ -54,13 +54,13 @@
                     if(iAttrs.uiEmail == 'logged'){
                       scope.verifyEmail(scope.ngModel,ngModelCtrl);
                     }else{ //uiEmail exists and is empty
-                      scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
+                      scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
                     }
                   }
                 }
               }else //uiEmail no defined
-                scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
-              /*scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);*/
+                scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
+              /*scope.userVerifyEmail(scope.ngModel,ngModelCtrl);*/
             }else{ //email no match
               ngModelCtrl.$setValidity("invalidEmail",false);
               ngModelCtrl.$setValidity("emailExists",true);

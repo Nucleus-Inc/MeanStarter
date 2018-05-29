@@ -15,6 +15,10 @@
         return 'Planos';
       if(string === 'offers')
         return 'Ofertas';
+      if(string === 'clients')
+        return 'Clientes';
+      if(string === 'sales')
+        return 'Vendas';
       return string;
     };
   });

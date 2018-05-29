@@ -1,14 +1,19 @@
 (function() {
-  angular.module('dashboard').controller('HomeCtrl', ['Bi', function(Bi) {
+  angular.module('dashboard').controller('HomeCtrl', [ function() {
 
     var vm = this;
 
-    Bi.getNumbers().then(function(res){
-      vm.numbers = res.data;
-      var total = res.data.offers+res.data.categories+res.data.partners+res.data.plans;
-      vm.donutLabels = ['Ofertas', 'Categorias', 'Parceiros', 'Planos'];
-      vm.donutData = [parseFloat((res.data.offers/total)*100).toFixed(2), parseFloat((res.data.categories/total)*100).toFixed(2), parseFloat((res.data.partners/total)*100).toFixed(2), parseFloat((res.data.plans/total)*100).toFixed(2)];
-    });
+    var total = 10;
+
+    vm.numbers = {
+      'clients': 2,
+      'sales': 4,
+      'partners': 3,
+      'plans': 1
+    }
+
+    vm.donutLabels = ['Clientes','Vendas','Parceiros','Planos'];
+    vm.donutData = [parseFloat((vm.numbers.clients/total)*100).toFixed(2),parseFloat((vm.numbers.sales/total)*100).toFixed(2), parseFloat((vm.numbers.partners/total)*100).toFixed(2), parseFloat((vm.numbers.plans/total)*100).toFixed(2)]
 
     vm.labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
     vm.series = ['Cadastradas', 'Vendidas'];

@@ -6,87 +6,100 @@
       scope: {
         ngModel: '=ngModel'
       },
-      controller: ['$scope', function($scope) {
-
-        $scope.verifyPartnerPhoneNumber = function(phoneNumber,view){
-          view.$setValidity("phoneNumberExists",true);
-        };
-
-      }],
+      controller: 'UiBrCellphoneCtrl as uiBrCellphoneCtrl',
       link: function(scope, iElement, iAttrs, ngModelCtrl) {
 
-        //Input accept numbers-only
-        function parserName(number) {
-          var input = number.replace(/[^0-9]/g,'');
-          if(input !== number) {
-              ngModelCtrl.$setViewValue(input);
-              ngModelCtrl.$render();
-          }
-          return Number(input);
-        }
-        ngModelCtrl.$parsers.push(parserName);
+        var phoneMask8D = {
+      		countryCode : new StringMask('+00 (00) 0000-0000'),   //with country code
+      		areaCode    : new StringMask('(00) 0000-0000'),       //with area code
+      		simple      : new StringMask('0000-0000')             //without area code
+      	}, phoneMask9D = {
+      		countryCode : new StringMask('+00 (00) 00000-0000'), //with country code
+      		areaCode    : new StringMask('(00) 00000-0000'),     //with area code
+      		simple      : new StringMask('00000-0000')           //without area code
+      	}, phoneMask0800 = {
+      		countryCode : null,                                   //N/A
+      		areaCode    : null,                                   //N/A
+      		simple      : new StringMask('0000-000-0000')         //N/A, so it's "simple"
+      	};
 
-        //Validation cellphone number
-        scope.$watch('ngModel', function (value) {
-          if(value){
-            var str = ""+value;
-            var len = str.length;
-            if(len<11 || len>11){
-              if(len==19){
-                var country = str.slice(1,3);
-                if(country=='55'){
-                  var state = str.slice(5,7);
-                  if(state=='11'||state=='12'||state=='13'||state=='14'||state=='15'||state=='16'||state=='17'||state=='18'||state=='19'||state=='21'||
-                     state=='22'||state=='24'||state=='27'||state=='28'||state=='31'||state=='32'||state=='33'||state=='34'||state=='35'||state=='37'||
-                     state=='38'||state=='41'||state=='42'||state=='43'||state=='44'||state=='45'||state=='46'||state=='47'||state=='48'||state=='49'||
-                     state=='51'||state=='53'||state=='54'||state=='55'||state=='61'||state=='62'||state=='63'||state=='64'||state=='65'||state=='66'||
-                     state=='67'||state=='68'||state=='69'||state=='71'||state=='73'||state=='74'||state=='75'||state=='77'||state=='79'||state=='81'||
-                     state=='82'||state=='83'||state=='84'||state=='85'||state=='86'||state=='87'||state=='88'||state=='89'||state=='91'||state=='92'||
-                     state=='93'||state=='94'||state=='95'||state=='96'||state=='97'||state=='98'||state=='99'){
-                       ngModelCtrl.$setValidity("invalidCellphone",true);
-                       scope.verifyPartnerPhoneNumber(value,ngModelCtrl);
-                  }else
-                    ngModelCtrl.$setValidity("invalidCellphone",false);
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-              }else{
-                if(len==13){
-                  var country = str.slice(0,2);
-                  if(country=='55'){
-                    var state = '('+str.slice(2,4)+')';
-                    var initial = str.slice(4,9);
-                    var finish = str.slice(9,13);
-                    var mask = '+'+country+' '+state+' '+initial+'-'+finish;
-                    scope.ngModel = mask;
-                  }else{
-                    ngModelCtrl.$setValidity("phoneNumberExists",true);
-                    ngModelCtrl.$setValidity("invalidCellphone",false);
-                  }
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-              }
-            }else{
-                var momentCountry = str.slice(0,2);
-                if(momentCountry!='55'){
-                  var country = '+55';
-                  var state = '('+str.slice(0,2)+')';
-                  var initial = str.slice(2,7);
-                  var finish = str.slice(7,11);
-                  var mask = country+' '+state+' '+initial+'-'+finish;
-                  scope.ngModel = mask;
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-            }
-          }else{
-            ngModelCtrl.$setValidity("phoneNumberExists",true);
-            ngModelCtrl.$setValidity("invalidCellphone",true);
+        var clearValue = function(rawValue) {
+      		return rawValue.toString().replace(/[^0-9]/g, '').slice(0, 13);
+      	};
+
+        var format = function(cleanValue) {
+          var formattedValue;
+      		if (cleanValue.indexOf('0800') === 0) {
+      			formattedValue = phoneMask0800.simple.apply(cleanValue);
+      		} else if (cleanValue.length < 9) {
+      			formattedValue = phoneMask8D.simple.apply(cleanValue) || '';
+      		} else if (cleanValue.length < 10) {
+      			formattedValue = phoneMask9D.simple.apply(cleanValue);
+      		} else if (cleanValue.length < 11) {
+      			formattedValue = phoneMask8D.areaCode.apply(cleanValue);
+      		} else if (cleanValue.length < 12) {
+      			formattedValue = phoneMask9D.areaCode.apply(cleanValue);
+      		} else if (cleanValue.length < 13) {
+      			formattedValue = phoneMask8D.countryCode.apply(cleanValue);
+      		} else {
+      			formattedValue = phoneMask9D.countryCode.apply(cleanValue);
+      		}
+      		return formattedValue.trim().replace(/[^0-9]$/, '');
+      	};
+
+        var getModelValue = function(formattedValue, originalModelType) {
+      		var cleanValue = this.clearValue(formattedValue);
+      		return originalModelType === 'number' ? parseInt(cleanValue) : cleanValue;
+      	};
+
+        var validations = function(value) {
+          var valueLength = value && value.toString().length;
+          //8- 8D without AC
+          //9- 9D without AC
+          //10- 8D with AC
+          //11- 9D with AC and 0800
+          //12- 8D with AC plus CC
+          //13- 9D with AC plus CC
+          return valueLength >= 10 && valueLength <= 13;
+        };
+
+        ngModelCtrl.$formatters.push(function formatter(value) {
+          if (ngModelCtrl.$isEmpty(value)) {
+            return value;
           }
+          var cleanValue = clearValue(value.toString());
+          return format(cleanValue);
+        });
+
+        ngModelCtrl.$parsers.push(function parser(value) {
+          if (ngModelCtrl.$isEmpty(value)) {
+            ngModelCtrl.$setValidity('phoneNumberExists', true)
+            ngModelCtrl.$setValidity('invalidCellphone', true)
+            return value;
+          }
+          var cleanValue = clearValue(value.toString());
+          var formattedValue = format(cleanValue);
+          if(!validations(cleanValue)){
+            ngModelCtrl.$setValidity('invalidCellphone', false)
+            ngModelCtrl.$setValidity('phoneNumberExists', true)
+          }else{
+            ngModelCtrl.$setValidity('invalidCellphone', true)
+            scope.verifyPhoneNumber(cleanValue).then(function(res){
+              if(res.status == 422)
+                ngModelCtrl.$setValidity('phoneNumberExists', false)
+              else
+                ngModelCtrl.$setValidity('phoneNumberExists', true)
+            });
+          }
+          if (ngModelCtrl.$viewValue !== formattedValue) {
+            ngModelCtrl.$setViewValue(formattedValue);
+            ngModelCtrl.$render();
+          }
+          if (angular.isUndefined(ngModelCtrl.getModelValue)) {
+            return cleanValue;
+          }
+          var actualModelType = typeof ngModelCtrl.$modelValue;
+          return ngModelCtrl.getModelValue(formattedValue, actualModelType);
         });
 
       }

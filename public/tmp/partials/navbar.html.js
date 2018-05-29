@@ -4,7 +4,8 @@ angular.module("views/partials/navbar.html",[]).run(["$templateCache",function($
     "    <button sidebar-toogler class=\"navbar-toggler\" type=\"button\">"+
     "      &#9776;"+
     "    </button>"+
-    "    <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
+    "    <menu-dropdown></menu-dropdown>"+
+    "    <!-- <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
     "        <ul class=\"navbar-nav ml-auto\">"+
     "            <li ng-hide=\"true\" class=\"nav-item dropdown \">"+
     "                <a class=\"nav-link dropdown-toggle\" href=\"#\" target=\"_self\" data-toggle=\"dropdown\""+
@@ -87,12 +88,12 @@ angular.module("views/partials/navbar.html",[]).run(["$templateCache",function($
     "                            <small>Show all</small>"+
     "                        </a></div>"+
     "                </div>"+
-    "            </li>"+
+    "            </li> "+
     "            <li class=\"nav-item dropdown\">"+
-    "              <menu-dropdown></menu-dropdown>"+
+    ""+
     "            </li>"+
     "        </ul>"+
-    "    </div>"+
+    "    </div> -->"+
     "</nav>"+
     "");
 }]);

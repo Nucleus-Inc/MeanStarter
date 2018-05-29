@@ -15,7 +15,11 @@
     "boilerplate",
     "boilerplate-project"
   ],
-  "author": "Igor Lopes",
+  "author": [
+    "Nucleus.eti",
+    "Igor Lopes",
+    "Eduardo Castro"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Igor-Lopes/MeanStarter/issues"

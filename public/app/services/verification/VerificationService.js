@@ -3,8 +3,14 @@
 
     var url_base = Config.url_base;
 
-    this.adminVerifyEmail = function(email) {
-      return $http.get(url_base+'/verifications/admins?email=' + email).then(function(result){
+    this.userVerifyEmail = function(email) {
+      return $http.get(url_base+'/verifications/user?email=' + email).then(function(result){
+        return result;
+      });
+    };
+
+    this.userVerifyPhoneNumber = function(phoneNumber) {
+      return $http.get(url_base+'/verifications/user?phoneNumber=' + phoneNumber).then(function(result){
         return result;
       });
     };

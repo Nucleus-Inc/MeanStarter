@@ -261,6 +261,8 @@
 
 .dropdown-menu, .menu {
   min-width: 15rem;
+  margin-right: 6px;
+  padding-top: 0;
 }
 
 .dropdown-toggle::after, .menu-toggle::after {

@@ -1,6 +1,6 @@
 (function() {
-  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','notify','$localStorage','Config','Auth','$location','cloudinary','ModalService','Socket',
-    function($scope, $timeout, $window, Upload, Account, notify, $localStorage, Config, Auth, $location, cloudinary, ModalService, Socket) {
+  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','Profile','notify','$localStorage','Config','Auth','$location','cloudinary','ModalService','Socket',
+    function($scope, $timeout, $window, Upload, Account, Profile, notify, $localStorage, Config, Auth, $location, cloudinary, ModalService, Socket) {
 
       var vm = this;
 
@@ -15,15 +15,17 @@
       Auth.isAuthenticated().then(function(res){
         vm.inputs = {
           '_id': res.data._id,
-          'name': res.data.name,
-          'email': res.data.email
-        }
+          'name': res.data.account.name,
+          'email': res.data.account.email,
+          'phoneNumber': res.data.account.phoneNumber,
+          'isActive': res.data.account.isActive
+        };
         var cachedFile = $window.localStorage.getItem('persistentCache:imageProfile');
         if(cachedFile == null || cachedFile === ''){
-          Account.getAccount(res.data._id).then(function(result){
-            if(result.data.profilePicture){
-              $window.localStorage.setItem('persistentCache:imageProfile',result.data.profilePicture);
-              display(result.data.profilePicture, true);
+          Profile.getProfile(res.data._id).then(function(result){
+            if(res.data.profile!=null && result.data.profilePicture){
+              $window.localStorage.setItem('persistentCache:imageProfile',result.data.profile.profilePicture);
+              display(result.data.profile.profilePicture, true);
             }else
               display(null,false);
           }).catch(function(err){

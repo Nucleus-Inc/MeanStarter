@@ -30,6 +30,15 @@ angular.module("views/auth/register.html",[]).run(["$templateCache",function($te
     "          </div>"+
     "        </div>"+
     "        <div class=\"form-group\">"+
+    "          <label class=\"card-label\" for=\"formGroupExampleInput\">Celular</label>"+
+    "          <input type=\"tel\" name=\"phoneNumber\" ng-model=\"registerCtrl.user.phoneNumber\" class=\"form-control\" placeholder=\"(xx) XXXXX-XXXX\" ng-class=\"{'has-error': RegisterForm.phoneNumber.$invalid && RegisterForm.phoneNumber.$dirty}\" ui-br-cellphone required>"+
+    "          <div class=\"error-container\" ng-show=\"RegisterForm.phoneNumber.$dirty && RegisterForm.phoneNumber.$invalid\">"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.required\" class=\"form-text text-muted text-danger\">O celular é obrigatório.</small>"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.invalidCellphone\" class=\"form-text text-muted text-danger\">Digite um celular válido.</small>"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.phoneNumberExists\" class=\"form-text text-muted text-danger\">Este celular já foi utilizado por outra conta.</small>"+
+    "          </div>"+
+    "        </div>"+
+    "        <div class=\"form-group\">"+
     "          <label class=\"card-label\" for=\"formGroupExampleInput\">Senha</label>"+
     "          <input type=\"{{registerCtrl.hidepasswordA ? 'password' : 'text'}}\" name=\"password\" ng-model=\"registerCtrl.user.password\" class=\"form-control\" placeholder=\"Digite sua senha aqui\" ng-class=\"{'has-error': RegisterForm.password.$invalid && RegisterForm.password.$dirty}\" zxcvbn=\"registerCtrl.passwordStrength\" required>"+
     "          <i ng-click=\"registerCtrl.toggle('hideA')\" ng-show=\"registerCtrl.hideA\" class=\"fa fa-eye-slash fa-position\" aria-hidden=\"true\"></i>"+

@@ -1,5 +1,7 @@
 .custom-select:focus, .form-control:focus {
   border-bottom: 2px solid $secondary-color;
+  box-shadow: none;
+  outline: 0;
 }
 
 .custom-select, .form-control {

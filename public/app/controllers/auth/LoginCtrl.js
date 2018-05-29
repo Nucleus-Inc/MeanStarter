@@ -29,7 +29,7 @@
       if(!$scope.LoginForm.$invalid) {
         vm.start = true;
         Auth.login(vm.user.email,vm.user.password).then(function(res){
-          if(res.status == 200 && res.data && res.data.isActive){
+          if(res.status == 200 && res.data){
             $localStorage.id = res.data._id;
             Socket.emit('login success', res.data);
             $location.path('/');

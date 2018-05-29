@@ -11,30 +11,6 @@
   padding-bottom: 0px;
 }
 
-.pagination {
-  float: right;
-
-  li:nth-child(2),
-  li:nth-child(8) {
-    display: none !important;
-    a {
-
-    }
-  }
-}
-
-@media all and (max-width: 768px) {
-  .page-link {
-    padding: 8px !important;
-  }
-}
-
-@media all and (max-width: 442px) {
-  .page-link {
-    padding: 9px !important;
-  }
-}
-
 @media screen and (max-width: 600px) {
   table {
     width: 90%;

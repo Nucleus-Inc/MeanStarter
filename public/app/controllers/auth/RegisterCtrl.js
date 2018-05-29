@@ -44,7 +44,8 @@
     vm.submit = function() {
       if(!$scope.RegisterForm.$invalid) {
         vm.start = true;
-        Account.signup(vm.user.name,vm.user.email,vm.user.password).then(function(res){
+        var phoneNumber = '55' + vm.user.phoneNumber.toString().replace(/[^0-9]/g, '');
+        Account.signup(vm.user.name,vm.user.email,phoneNumber,vm.user.password).then(function(res){
           if(res.data){
             _id = res.data._id;
             vm.user._id = _id;

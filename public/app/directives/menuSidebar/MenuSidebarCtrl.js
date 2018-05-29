@@ -6,15 +6,8 @@
     vm.menuItens = [
       {
         "icon": "dashboard",
-        "label": "Dashboard",
+        "label": "Home",
         "href": "/",
-        "hasSubmenu": false,
-        "submenu": []
-      },
-      {
-        "icon": "apps",
-        "label": "Categorias",
-        "href": "/categorias",
         "hasSubmenu": false,
         "submenu": []
       },
@@ -25,61 +18,69 @@
         "hasSubmenu": false,
         "submenu": []
       },
-      // {
-      //   "icon": "loyalty",
-      //   "label": "Destaques",
-      //   "href": "",
-      //   "hasSubmenu": true,
-      //   "submenu": [
-      //     {
-      //       "label": "Banner",
-      //       "href": "/destaques/banner"
-      //     },
-      //     {
-      //       "label": "Card",
-      //       "href": "/destaques/card"
-      //     },
-      //     {
-      //       "label": "Menu",
-      //       "href": "/destaques/menu"
-      //     },
-      //     {
-      //       "label": "Ofertas",
-      //       "href": "/destaques/ofertas"
-      //     },
-      //     {
-      //       "label": "Slide",
-      //       "href": "/destaques/slide"
-      //     }
-      //   ]
-      // },
       {
-        "icon": "shopping_cart",
-        "label": "Ofertas",
-        "href": "/ofertas",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "face",
+        "label": "Clientes",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/clientes/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/clientes"
+          }
+        ]
       },
       {
-        "icon": "contacts",
+        "icon": "store_mall_directory",
         "label": "Parceiros",
-        "href": "/parceiros",
-        "hasSubmenu": false,
-        "submenu": []
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/parceiros/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/parceiros"
+          }
+        ]
       },
       {
-        "icon": "assignment",
-        "label": "Planos",
-        "href": "/planos",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "content_cut",
+        "label": "Serviços",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/servicos/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/servicos"
+          }
+        ]
       },
       {
-        "icon": "list",
-        "label": "Subcategorias",
-        "href": "/subcategorias",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "code",
+        "label": "Desenvolvimento",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Suporte",
+            "href": "/suporte"
+          },
+          {
+            "label": "Log de Erros",
+            "href": "/logs"
+          }
+        ]
       }
     ];
 

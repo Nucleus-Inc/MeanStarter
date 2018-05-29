@@ -46,7 +46,7 @@
           angular.element('.no-login').removeClass('full-height');
         });
 
-        Socket.on('logout success', function(msg) {
+        Socket.on('logout success',function(msg){
           removeSidebar();
           angular.element('.no-login').addClass('full-height');
         });

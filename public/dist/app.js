@@ -56,98 +56,8 @@ angular
         }
       })
       .when('/consultores',{
-        templateUrl: 'app/views/admins/admins.html',
-        controller: 'AdminsCtrl as adminsCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/parceiros',{
-        templateUrl: 'app/views/partnes/partnes.html',
-        controller: 'PartnesCtrl as partnesCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/categorias',{
-        templateUrl: 'app/views/categories/categories.html',
-        controller: 'CategoriesCtrl as categoriesCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/subcategorias',{
-        templateUrl: 'app/views/subcategories/subcategories.html',
-        controller: 'SubcategoriesCtrl as subcategoriesCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/planos',{
-        templateUrl: 'app/views/plans/plans.html',
-        controller: 'PlansCtrl as plansCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/ofertas',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/destaques/banner',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/destaques/card',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/destaques/menu',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/destaques/ofertas',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
-        resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
-          }
-        }
-      })
-      .when('/destaques/slide',{
-        templateUrl: 'app/views/offers/offers.html',
-        controller: 'OffersCtrl as offersCtrl',
+        templateUrl: 'app/views/users/users.html',
+        controller: 'UsersCtrl as usersCtrl',
         resolve: {
           access: function(Auth) {
             return Auth.isAuthenticated();
@@ -234,138 +144,6 @@ angular
     });
 
   });
-
-(function() {
-  angular.module('dashboard').controller('AdminsCtrl', ['$scope','$filter','Admins','Account','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Admins, Account, ModalService, Notify, Socket, Tables) {
-
-      var vm = this;
-
-      vm.predicates = [
-        {
-          _id: 0,
-          value: null,
-          label: 'Filtros'
-        },
-        {
-          _id: 1,
-          value: true,
-          label: 'Consultores Ativos'
-        },
-        {
-          _id: 2,
-          value: false,
-          label: 'Consultores Pendentes'
-        }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
-
-      vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
-      };
-
-      var buffer = [];
-      vm.filteredList = [];
-      Admins.getAdmins().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-        vm.showTable = true;
-      });
-
-      Socket.on('admin add',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            flag = false;
-        });
-        if(flag)
-          vm.filteredList.push(msg);
-        buffer = vm.filteredList;
-      });
-
-      Socket.on('admin active',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = true;
-        });
-      });
-
-      Socket.on('admin inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = false;
-        });
-      });
-
-      var search = function(value){
-        Tables.search([value.name,value.email],vm.key,function(res){
-          if(res){
-            buffer.filter(function(item){
-              if(item.email == value.email){
-                vm.filteredList.push(item);
-              }
-            });
-          }
-        });
-      };
-
-      vm.update = function() {
-        Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
-          var account = [];
-          buffer.filter(function(item){
-            account.push(item);
-          });
-          vm.filteredList = [];
-          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
-            if(res!=null){
-              search(res);
-            }
-          });
-        });
-      };
-
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
-
-      vm.active = function(_id, email, isActive) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/alert.html',
-          controller: 'AlertModalCtrl as alertModalCtrl',
-            inputs: {
-              title: isActive ? 'Desativar usuário' : 'Ativar usuário',
-              question: isActive ? 'Você desja realmente desativar este usuário?' : 'Você deseja realmente ativar este usuário?',
-              user: email
-            }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.status){
-              if(isActive){
-                Account.inactivate(_id).then(function(res){
-                  Notify.run('Consultor desativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('admin inactivate',_id);
-                  });
-                });
-              }else{
-                Account.active(_id).then(function(res){
-                  Notify.run('Consultor ativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('admin active',_id);
-                  });
-                });
-              }
-            }
-          });
-        });
-      };
-
-  }]);
-}());
 
 (function() {
   angular.module('dashboard').controller('ActivationCtrl', ['$scope', function($scope) {
@@ -496,7 +274,7 @@ angular
       if(!$scope.LoginForm.$invalid) {
         vm.start = true;
         Auth.login(vm.user.email,vm.user.password).then(function(res){
-          if(res.status == 200 && res.data && res.data.isActive){
+          if(res.status == 200 && res.data){
             $localStorage.id = res.data._id;
             Socket.emit('login success', res.data);
             $location.path('/');
@@ -562,7 +340,8 @@ angular
     vm.submit = function() {
       if(!$scope.RegisterForm.$invalid) {
         vm.start = true;
-        Account.signup(vm.user.name,vm.user.email,vm.user.password).then(function(res){
+        var phoneNumber = '55' + vm.user.phoneNumber.toString().replace(/[^0-9]/g, '');
+        Account.signup(vm.user.name,vm.user.email,phoneNumber,vm.user.password).then(function(res){
           if(res.data){
             _id = res.data._id;
             vm.user._id = _id;
@@ -666,207 +445,21 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').controller('CategoriesCtrl', ['$scope','$filter','Categories','Account','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Categories, Account, ModalService, Notify, Socket, Tables) {
-
-      var vm = this;
-
-      vm.predicates = [
-        {
-          _id: 0,
-          value: null,
-          label: 'Filtros'
-        },
-        {
-          _id: 1,
-          value: true,
-          label: 'Categorias Ativadas'
-        },
-        {
-          _id: 2,
-          value: false,
-          label: 'Categorias Desativadas'
-        }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
-
-      vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
-      };
-
-      var buffer = [];
-      vm.filteredList = [];
-      Categories.getCategories().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-        vm.showTable = true;
-      });
-
-      Socket.on('showCreateCategory',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            flag = false;
-        });
-        if(flag)
-          vm.filteredList.push(msg);
-        buffer = vm.filteredList;
-      });
-
-      Socket.on('showUpdateCategory',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            item.title = msg.title;
-        });
-      });
-
-      Socket.on('category active',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = true;
-        });
-      });
-
-      Socket.on('category inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = false;
-        });
-      });
-
-      var search = function(value){
-        Tables.search([value.title],vm.key,function(res){
-          if(res){
-            buffer.filter(function(item){
-              if(item.title == value.title){
-                vm.filteredList.push(item);
-              }
-            });
-          }
-        });
-      };
-
-      vm.update = function() {
-        Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
-          var account = [];
-          buffer.filter(function(item){
-            account.push(item);
-          });
-          vm.filteredList = [];
-          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
-            if(res!=null){
-              search(res);
-            }
-          });
-        });
-      };
-
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
-
-      vm.active = function(_id, title, isActive) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/alert.html',
-          controller: 'AlertModalCtrl as alertModalCtrl',
-          inputs: {
-            title: isActive ? 'Desativar categoria' : 'Ativar categoria',
-            question: isActive ? 'Você desja realmente desativar esta categoria?' : 'Você deseja realmente ativar esta categoria?',
-            user: title
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.status){
-              if(isActive){
-                Categories.inactivateCategory(_id).then(function(res){
-                  Notify.run('Categoria desativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('category inactivate',_id);
-                  });
-                });
-              }else{
-                Categories.activateCategory(_id).then(function(res){
-                  Notify.run('Categoria ativada com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('category active',_id);
-                  });
-                });
-              }
-            }
-          });
-        });
-      };
-
-      vm.create = function(){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/category-form-modal.html',
-          controller: 'CategoryFormModalCtrl as categoryFormModalCtrl',
-          inputs: {
-            title: 'Aqui você cria suas categorias',
-            input: '',
-            label: 'Criar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Categories.createCategory(result.name).then(function(response){
-                Notify.run('Categoria criada com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('createCategory',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar criar categoria','alert-danger',null,null,null,function(res){});
-              });
-            }
-          });
-        });
-      };
-
-      vm.edit = function(_id,title){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/category-form-modal.html',
-          controller: 'CategoryFormModalCtrl as categoryFormModalCtrl',
-          inputs: {
-            title: 'Atualize sua categoria abaixo',
-            input: title,
-            label: 'Atualizar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Categories.updateCategory(_id,result.name).then(function(response){
-                Notify.run('Categoria atualizada com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('updateCategory',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar atualizar categoria','alert-danger',null,null,null,function(res){});
-              });
-            }
-          });
-        });
-      };
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('HomeCtrl', ['Bi', function(Bi) {
+  angular.module('dashboard').controller('HomeCtrl', [ function() {
 
     var vm = this;
 
-    Bi.getNumbers().then(function(res){
-      vm.numbers = res.data;
-      var total = res.data.offers+res.data.categories+res.data.partners+res.data.plans;
-      vm.donutLabels = ['Ofertas', 'Categorias', 'Parceiros', 'Planos'];
-      vm.donutData = [parseFloat((res.data.offers/total)*100).toFixed(2), parseFloat((res.data.categories/total)*100).toFixed(2), parseFloat((res.data.partners/total)*100).toFixed(2), parseFloat((res.data.plans/total)*100).toFixed(2)];
-    });
+    var total = 10;
+
+    vm.numbers = {
+      'clients': 2,
+      'sales': 4,
+      'partners': 3,
+      'plans': 1
+    }
+
+    vm.donutLabels = ['Clientes','Vendas','Parceiros','Planos'];
+    vm.donutData = [parseFloat((vm.numbers.clients/total)*100).toFixed(2),parseFloat((vm.numbers.sales/total)*100).toFixed(2), parseFloat((vm.numbers.partners/total)*100).toFixed(2), parseFloat((vm.numbers.plans/total)*100).toFixed(2)]
 
     vm.labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
     vm.series = ['Cadastradas', 'Vendidas'];
@@ -885,14 +478,6 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').controller('IndexCtrl', ['Auth', function(Auth) {
-
-    var vm = this;
-
-  }]);
-}());
-
-(function() {
   angular.module('dashboard').controller('AlertModalCtrl', ['$scope', 'ModalService', 'close', 'title', 'question','user',
     function($scope, ModalService, close, title, question, user) {
 
@@ -904,27 +489,6 @@ angular
 
       vm.close = function(result) {
         close({'status': result}, 500); // close, but give 500ms for bootstrap to animate
-        angular.element('.modal').modal('hide');
-      };
-
-    }
-  ]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('CategoryFormModalCtrl', ['$scope', 'ModalService', 'close', 'title', 'input','label',
-    function($scope, ModalService, close, title, input, label) {
-
-      var vm = this;
-
-      vm.title = title;
-      vm.label = label;
-      vm.inputs = {
-        'name': input
-      }
-
-      vm.close = function(result) {
-        close(result ? vm.inputs : null, 500); // close, but give 500ms for bootstrap to animate
         angular.element('.modal').modal('hide');
       };
 
@@ -971,749 +535,6 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').controller('OffersModalCtrl', ['$scope', 'ModalService', 'close', 'title', 'input',
-    function($scope, ModalService, close, title, input) {
-
-      var vm = this;
-
-      vm.title = title;
-      vm.inputs = input;
-      vm.inputs.price.full = parseFloat((vm.inputs.price.full)/100).toFixed(2);
-      vm.inputs.price.current = parseFloat((vm.inputs.price.current)/100).toFixed(2);
-      vm.tab = 1;
-
-      vm.close = function(result) {
-        if(result!=null){
-          closed({
-            _id: vm.inputs._id,
-            title: vm.inputs.title,
-            approve: result
-          });
-        }else
-          closed(null);
-        angular.element('.modal').modal('hide');
-      };
-
-      var closed = function(json) {
-        close(json,500);
-      };
-
-      vm.setTab = function(newTab) {
-        vm.tab = newTab;
-      };
-
-      vm.isSet = function(tabNum) {
-        return vm.tab === tabNum;
-      };
-
-    }
-  ]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('PartnerFormModalCtrl', ['$scope', 'ModalService', 'close', 'title', 'input','label','Socket','Plans',
-    function($scope, ModalService, close, title, input, label, Socket, Plans) {
-
-      var vm = this;
-
-      vm.title = title;
-      vm.label = label;
-      vm.inputs = input;
-      vm.plans = [];
-      vm.tab = 1;
-
-      if(vm.inputs.plan!=null && vm.inputs.plan.title==null){
-        Plans.getPlan(vm.inputs.plan).then(function(res){
-          console.log(res.data);
-        });
-      }
-
-      Socket.on('cep complete',function(msg){
-        vm.inputs.address.addressLine1 = msg.logradouro;
-        vm.inputs.address.area = msg.bairro;
-        vm.inputs.address.city = msg.cidade;
-        vm.inputs.address.uf = msg.estado;
-      });
-
-      Plans.getPlans().then(function(res){
-        Object.assign(vm.plans, res.data);
-      });
-
-      vm.close = function(result) {
-        vm.inputs.plan = getPlanId(vm.inputs.plan.title)[0]._id;
-        if(vm.inputs!=null && vm.inputs.taxDocument!=null && vm.inputs.taxDocument.documentNumber!=null)
-          vm.inputs.taxDocument.documentType = vm.inputs.taxDocument.documentNumber.length < 12 ? 'cpf' : 'cnpj';
-        close(result ? vm.inputs : undefined, 500); // close, but give 500ms for bootstrap to animate
-        angular.element('.modal').modal('hide');
-      };
-
-      vm.setTab = function(newTab) {
-        vm.tab = newTab;
-      };
-
-      vm.isSet = function(tabNum) {
-        return vm.tab === tabNum;
-      };
-
-      var getPlanId = function(value){
-        return vm.plans.filter(function(item){
-          return (item.title.toLowerCase() === value.toLowerCase() ? item : undefined);
-        });
-      };
-
-    }
-  ]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('PlanFormModalCtrl', ['$scope', 'ModalService', 'close', 'title', 'input','label',
-    function($scope, ModalService, close, title, input, label) {
-
-      var vm = this;
-
-      vm.title = title;
-      vm.label = label;
-      vm.inputs = {
-        'name': input.title,
-        'desc': input.description
-      };
-
-      vm.close = function(result) {
-        close(result ? vm.inputs : null, 500); // close, but give 500ms for bootstrap to animate
-        angular.element('.modal').modal('hide');
-      };
-
-    }
-  ]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('SubcategoryFormModalCtrl', ['$scope', 'ModalService', 'Categories', 'close', 'title', 'input','label',
-    function($scope, ModalService, Categories, close, title, input, label) {
-
-      var vm = this;
-
-      vm.title = title;
-      vm.label = label;
-      // vm.disabledCategory = vm.label === 'Atualizar' ? true : false;
-      vm.inputs = {
-        'name': input.name,
-        'category': input.category
-      };
-
-      vm.categories = [];
-
-      vm.categories.push({_id: '0', title: 'Categorias'});
-      vm.selectedCategory = vm.inputs.category == '' ? vm.categories[0].title : vm.inputs.category;
-      vm.inputs.category = vm.selectedCategory;
-
-      Categories.getCategories().then(function(res){
-        for(var i=0;i<res.data.length;i++){
-          vm.categories.push(res.data[i]);
-        }
-      });
-
-      var getIdCategory = function(title){
-        var i = 0;
-        while(vm.categories[i].title != title && i < vm.categories.length){
-          i++;
-        }
-        return vm.categories[i]._id;
-      };
-
-      vm.close = function(result) {
-        var response = result ? { _id: getIdCategory(vm.inputs.category), name: vm.inputs.name } : null;
-        close(response, 500); // close, but give 500ms for bootstrap to animate
-        angular.element('.modal').modal('hide');
-      };
-
-    }
-  ]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('OffersCtrl', ['$scope','$filter','Offers','Account','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Offers, Account, ModalService, Notify, Socket, Tables) {
-
-      var vm = this;
-
-      vm.predicates = [
-        {
-          _id: 0,
-          value: null,
-          label: 'Filtros'
-        },
-        {
-          _id: 3,
-          value: 'pending',
-          label: 'Ofertas Pendentes'
-        },
-        {
-          _id: 4,
-          value: 'reproved',
-          label: 'Ofertas Reprovadas'
-        },
-        {
-          _id: 5,
-          value: 'approved',
-          label : 'Ofertas Aprovadas'
-        }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
-
-      var selectedCondition = function(selectedPredicate) {
-
-        var i=0;
-        var item = vm.predicates[i];
-
-        do{
-          item = vm.predicates[i];
-          i++;
-        }while(i < vm.predicates.length && item.label != selectedPredicate);
-
-        if(item._id == 1 || item._id == 2 || item._id == 0)
-          return 'isActive';
-        return 'status';
-
-      };
-
-      vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
-      };
-
-      var buffer = [];
-      vm.filteredList = [];
-      Offers.getOffers().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-        vm.showTable = true;
-      });
-
-      Socket.on('showCreateOffers',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            flag = false;
-        });
-        if(flag)
-          vm.filteredList.push(msg);
-        buffer = vm.filteredList;
-      });
-
-      Socket.on('showUpdateOffers',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id){
-            item.title = msg.title;
-          }
-        });
-      });
-
-      Socket.on('offers active',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.approval.status = "approved";
-        });
-      });
-
-      Socket.on('offers inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.approval.status = "reproved";
-        });
-      });
-
-      var search = function(value){
-        Tables.search([value.status,value.title,value.partner,value.duration,value.companyName],vm.key,function(res){
-          if(res){
-            buffer.filter(function(item){
-              if(item._id == value._id){
-                vm.filteredList.push(item);
-              }
-            });
-          }
-        });
-      };
-
-      vm.update = function() {
-
-        var condition = selectedCondition(vm.selectedPredicate);
-
-        var offers = [];
-        buffer.filter(function(item){
-          offers.push({
-            _id: item._id,
-            status: item.approval.status,
-            duration: item.duration.expireDate,
-            title: item.title,
-            partner: item.partner.name,
-            companyName: item.partner.companyName
-          });
-        });
-
-        vm.filteredList = [];
-        Tables.update(offers,vm.predicates,vm.selectedPredicate,condition,function(res){
-          if(res!=null)
-            search(res);
-        });
-
-      };
-
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
-
-      vm.active = function(_id, title, isActive) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/alert.html',
-          controller: 'AlertModalCtrl as alertModalCtrl',
-            inputs: {
-              title: isActive == 'approved' || isActive == 'approv' ? 'Desativar oferta' : 'Aprovar oferta',
-              question: isActive == 'approved' || isActive == 'approv' ? 'Você desja realmente desativar esta oferta?' : 'Você desja realmente aprovar esta oferta?',
-              user: title
-            }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.status){
-              if(isActive=='approved' || isActive=='approv'){
-                Offers.reproveOffer(_id).then(function(res){
-                  Notify.run('Oferta desativada com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('offers inactivate',_id);
-                  });
-                });
-              }else{
-                Offers.approveOffer(_id).then(function(res){
-                  Notify.run('Oferta aprovada com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('offers active',_id);
-                  });
-                });
-              }
-            }
-          });
-        });
-      };
-
-      var getOfferId = function(id){
-        var i = 0;
-        while(i<vm.filteredList.length && vm.filteredList[i]._id != id)
-          i++;
-        return i < vm.filteredList.length ? vm.filteredList[i] : null;
-      }
-
-      vm.view = function(offerId) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/offers.html',
-          controller: 'OffersModalCtrl as offersModalCtrl',
-          inputs: {
-            title: 'Detalhes',
-            input: getOfferId(offerId)
-          }
-        }).then(function(modal){
-          modal.element.modal();
-          modal.close.then(function(result){
-            if(result){
-              console.log(result);
-            }
-          });
-        })
-      };
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('NavCtrl', ['$scope','Socket','Auth', function($scope, Socket, Auth) {
-
-    var vm = this;
-
-    Auth.isAuthenticated().then(function(res){
-      vm.logged = true;
-    }).catch(function(err){
-      vm.logged = false;
-    });
-
-    Socket.on('login success',function(msg){
-      vm.logged = true;
-    });
-
-    Socket.on('logout success',function(msg){
-      vm.logged = false;
-    });
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('PartnesCtrl', ['$scope','$filter','Partnes','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Partnes, ModalService, Notify, Socket, Tables) {
-
-      var vm = this;
-
-      vm.predicates = [
-        {
-          _id: 0,
-          value: null,
-          label: 'Filtros'
-        },
-        {
-          _id: 1,
-          value: true,
-          label: 'Parceiros Ativos'
-        },
-        {
-          _id: 2,
-          value: false,
-          label: 'Parceiros Pendentes'
-        }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
-
-      vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
-      };
-
-      var buffer = [];
-      vm.filteredList = [];
-      Partnes.getPartnes().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-        vm.showTable = true;
-      });
-
-      Socket.on('partners add',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            flag = false;
-        });
-        if(flag)
-          vm.filteredList.push(msg);
-        buffer = vm.filteredList;
-      });
-
-      Socket.on('partners inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = false;
-        });
-      });
-
-      //Socket.emit('partners update',_id);
-      Socket.on('partners activate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = true;
-        });
-      });
-
-      Socket.on('partners update',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id == msg._id)
-            Object.assign(item, msg);
-        });
-      });
-
-      var search = function(value){
-        Tables.search([value.name,value.email],vm.key,function(res){
-          if(res){
-            buffer.filter(function(item){
-              if(item.email == value.email){
-                vm.filteredList.push(item);
-              }
-            });
-          }
-        });
-      };
-
-      vm.update = function() {
-        Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
-          var account = [];
-          buffer.filter(function(item){
-            account.push(item);
-          });
-          vm.filteredList = [];
-          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
-            if(res!=null){
-              search(res);
-            }
-          });
-        });
-      };
-
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
-
-      vm.active = function(_id, email, isActive) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/alert.html',
-          controller: 'AlertModalCtrl as alertModalCtrl',
-            inputs: {
-              title: isActive ? 'Desativar usuário' : 'Ativar usuário',
-              question: isActive ? 'Você desja realmente desativar este usuário?' : 'Você deseja realmente ativar este usuário?',
-              user: email
-            }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.status){
-              if(isActive){
-                Partnes.inactivate(_id).then(function(res){
-                  Notify.run('Parceiro desativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('partners inactivate',_id);
-                  });
-                });
-              }else{
-                Partnes.active(_id).then(function(res){
-                  Notify.run('Parceiro ativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('partners activate',_id);
-                  });
-                });
-              }
-            }
-          });
-        });
-      };
-
-        vm.edit = function(_id) {
-          vm.input = {};
-          vm.filteredList.filter(function(item){
-            if(item._id == _id){
-              Object.assign(vm.input, item);
-              ModalService.showModal({
-                templateUrl: 'app/views/modals/partner-form-modal.html',
-                controller: 'PartnerFormModalCtrl as partnerFormModalCtrl',
-                inputs: {
-                  title: 'Atualize o cadastro do parceiro',
-                  input: vm.input,
-                  label: 'Atualizar'
-                }
-              }).then(function(modal){
-                modal.element.modal();
-                modal.close.then(function(result) {
-                  if(result && result.email){
-                    Partnes.updateProfile(_id,result).then(function(response){
-                      Notify.run('Parceiro atualizado com sucesso','alert-success',null,null,null,function(res){
-                        if(res)
-                          Socket.emit('partners update',response.data);
-                      });
-                    }).catch(function(err){
-                      Notify.run('Erro ao atualizar parceiro','alert-danger',null,null,null,function(res){});
-                    });
-                  }
-                });
-              });
-            }
-          });
-        };
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').controller('PlansCtrl', ['$scope','$filter','Plans','Account','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Plans, Account, ModalService, Notify, Socket, Tables) {
-
-      var vm = this;
-
-      vm.predicates = [
-        {
-          _id: 0,
-          value: null,
-          label: 'Filtros'
-        },
-        {
-          _id: 1,
-          value: true,
-          label: 'Planos Ativados'
-        },
-        {
-          _id: 2,
-          value: false,
-          label: 'Planos Desativados'
-        }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
-
-      vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
-      };
-
-      var buffer = [];
-      vm.filteredList = [];
-      Plans.getPlans().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-        vm.showTable = true;
-      });
-
-      Socket.on('create plan',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            flag = false;
-        });
-        if(flag)
-          vm.filteredList.push(msg);
-        buffer = vm.filteredList;
-      });
-
-      Socket.on('update plan',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg._id){
-            item.title = msg.title;
-            item.description = msg.description;
-          }
-        });
-      });
-
-      Socket.on('plan active',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = true;
-        });
-      });
-
-      Socket.on('plan inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = false;
-        });
-      });
-
-      var search = function(value){
-        Tables.search([value.title],vm.key,function(res){
-          if(res){
-            buffer.filter(function(item){
-              if(item.title == value.title){
-                vm.filteredList.push(item);
-              }
-            });
-          }
-        });
-      };
-
-      vm.update = function() {
-        Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
-          var account = [];
-          buffer.filter(function(item){
-            account.push(item);
-          });
-          vm.filteredList = [];
-          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
-            if(res!=null){
-              search(res);
-            }
-          });
-        });
-      };
-
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
-
-      vm.active = function(_id, title, isActive) {
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/alert.html',
-          controller: 'AlertModalCtrl as alertModalCtrl',
-          inputs: {
-            title: isActive ? 'Desativar plano' : 'Ativar plano',
-            question: isActive ? 'Você desja realmente desativar este plano?' : 'Você deseja realmente ativar este plano?',
-            user: title
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.status){
-              if(isActive){
-                Plans.inactivatePlan(_id).then(function(res){
-                  Notify.run('Plano desativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('plan inactivate',_id);
-                  });
-                });
-              }else{
-                Plans.activatePlan(_id).then(function(res){
-                  Notify.run('Plano ativado com sucesso','alert-success',null,null,null,function(res){
-                    if(res)
-                      Socket.emit('plan active',_id);
-                  });
-                });
-              }
-            }
-          });
-        });
-      };
-
-      vm.create = function(){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/plan-form-modal.html',
-          controller: 'PlanFormModalCtrl as planFormModalCtrl',
-          inputs: {
-            title: 'Aqui você cria seus planos',
-            input: '',
-            label: 'Criar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Plans.createPlan(result.name, result.desc).then(function(response){
-                Notify.run('Plano criada com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('create plan',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar criar plano','alert-danger',null,null,null,function(res){});
-              });
-            }
-          });
-        });
-      };
-
-      vm.edit = function(_id,plan){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/plan-form-modal.html',
-          controller: 'PlanFormModalCtrl as planFormModalCtrl',
-          inputs: {
-            title: 'Atualize seu plano abaixo',
-            input: plan,
-            label: 'Atualizar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Plans.updatePlan(_id,result.name, result.desc).then(function(response){
-                Notify.run('Plano atualizado com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('update plan',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar atualizar plano','alert-danger',null,null,null,function(res){});
-              });
-            }
-          });
-        });
-      };
-
-  }]);
-}());
-
-(function() {
   angular.module('dashboard').controller('ProfileCtrl', ['$scope', function($scope) {
 
     var vm = this;
@@ -1722,8 +543,8 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','notify','$localStorage','Config','Auth','$location','cloudinary','ModalService','Socket',
-    function($scope, $timeout, $window, Upload, Account, notify, $localStorage, Config, Auth, $location, cloudinary, ModalService, Socket) {
+  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','Profile','notify','$localStorage','Config','Auth','$location','cloudinary','ModalService','Socket',
+    function($scope, $timeout, $window, Upload, Account, Profile, notify, $localStorage, Config, Auth, $location, cloudinary, ModalService, Socket) {
 
       var vm = this;
 
@@ -1738,15 +559,17 @@ angular
       Auth.isAuthenticated().then(function(res){
         vm.inputs = {
           '_id': res.data._id,
-          'name': res.data.name,
-          'email': res.data.email
-        }
+          'name': res.data.account.name,
+          'email': res.data.account.email,
+          'phoneNumber': res.data.account.phoneNumber,
+          'isActive': res.data.account.isActive
+        };
         var cachedFile = $window.localStorage.getItem('persistentCache:imageProfile');
         if(cachedFile == null || cachedFile === ''){
-          Account.getAccount(res.data._id).then(function(result){
-            if(result.data.profilePicture){
-              $window.localStorage.setItem('persistentCache:imageProfile',result.data.profilePicture);
-              display(result.data.profilePicture, true);
+          Profile.getProfile(res.data._id).then(function(result){
+            if(res.data.profile!=null && result.data.profilePicture){
+              $window.localStorage.setItem('persistentCache:imageProfile',result.data.profile.profilePicture);
+              display(result.data.profile.profilePicture, true);
             }else
               display(null,false);
           }).catch(function(err){
@@ -1919,8 +742,8 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').controller('SubcategoriesCtrl', ['$scope','$filter','Categories','Subcategories','Account','ModalService','Notify','Socket','Tables',
-    function($scope, $filter, Categories, Subcategories, Account, ModalService, Notify, Socket, Tables) {
+  angular.module('dashboard').controller('UsersCtrl', ['$scope','$filter','Users','Account','ModalService','Socket','Tables','Notify',
+    function($scope, $filter, Users, Account, ModalService, Socket, Tables, Notify) {
 
       var vm = this;
 
@@ -1933,78 +756,57 @@ angular
         {
           _id: 1,
           value: true,
-          label: 'Categorias Ativadas'
+          label: 'Consultores Ativos'
         },
         {
           _id: 2,
           value: false,
-          label: 'Categorias Desativadas'
+          label: 'Consultores Pendentes'
         }
       ];
       vm.selectedPredicate = vm.predicates[0].label;
-      vm.showTable = false;
 
       vm.config = {
-        itemsPerPage: 10,
-        maxPages: 3
+        itemsPerPage: 10
       };
 
       var buffer = [];
       vm.filteredList = [];
-      Subcategories.getSubcategories().then(function(res){
-        res.data.filter(function(item){
-          vm.filteredList.push(item);
-        });
+      Users.getUsers().then(function(res){
+        for(var i=0;i<res.data.length;i++)
+          vm.filteredList.push(res.data[i]);
         buffer = vm.filteredList;
-        vm.showTable = true;
       });
 
-      Socket.on('createSubcategory',function(msg){
+      Socket.on('admin add',function(msg){
         var flag = true;
         vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
+          if(item._id === msg.id)
             flag = false;
         });
-        if(flag){
-          Categories.getCategory(msg.category).then(function(res){
-            msg.category = {
-              "_id": msg.category,
-              "title": res.data.title
-            };          
-            vm.filteredList.push(msg);
-          }).catch(function(err){
-            vm.filteredList.push(msg);
-          });
-        }
-        buffer = vm.filteredList;
+        if(flag)
+          vm.filteredList.push(msg);
       });
 
-      Socket.on('updateSubcategory',function(msg){
+      Socket.on('admin active',function(msg){
         vm.filteredList.filter(function(item){
-          if(item._id === msg._id)
-            item.title = msg.title;
+          if(item._id === msg)
+            item.account.isActive = true;
         });
       });
 
-      Socket.on('subcategory active',function(msg){
+      Socket.on('admin inactivate',function(msg){
         vm.filteredList.filter(function(item){
           if(item._id === msg)
-            item.isActive = true;
-        });
-      });
-
-      Socket.on('subcategory inactivate',function(msg){
-        vm.filteredList.filter(function(item){
-          if(item._id === msg)
-            item.isActive = false;
+            item.account.isActive = false;
         });
       });
 
       var search = function(value){
-        Tables.search([value.title],vm.key,function(res){
+        Tables.search([value.name,value.email],vm.key,function(res){
           if(res){
             buffer.filter(function(item){
-              if(item.title == value.title){
+              if(item.account.email == value.email){
                 vm.filteredList.push(item);
               }
             });
@@ -2016,13 +818,12 @@ angular
         Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
           var account = [];
           buffer.filter(function(item){
-            account.push(item);
+            account.push(item.account);
           });
           vm.filteredList = [];
           Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
-            if(res!=null){
+            if(res!=null)
               search(res);
-            }
           });
         });
       };
@@ -2031,86 +832,34 @@ angular
         Tables.clean(vm,buffer,function(res){});
       };
 
-      vm.active = function(_id, category, title, isActive) {
+      vm.active = function(id, email, isActive) {
         ModalService.showModal({
           templateUrl: 'app/views/modals/alert.html',
           controller: 'AlertModalCtrl as alertModalCtrl',
           inputs: {
-            title: isActive ? 'Desativar subcategoria' : 'Ativar subcategoria',
-            question: isActive ? 'Você desja realmente desativar esta subcategoria?' : 'Você deseja realmente ativar esta subcategoria?',
-            user: title
+            title: isActive ? 'Desativar usuário' : 'Ativar usuário',
+            question: isActive ? 'Você desja realmente desativar este usuário?' : 'Você deseja realmente ativar este usuário?',
+            user: email
           }
         }).then(function(modal) {
           modal.element.modal();
           modal.close.then(function(result) {
-            if(result && result.status){
+            if(result){
               if(isActive){
-                Subcategories.inactivateSubcategory(category._id, _id).then(function(res){
-                  Notify.run('Subcategoria desativada com sucesso','alert-success',null,null,null,function(res){
+                Account.inactivate(id).then(function(res){
+                  Notify.run('Usuário desativado com sucesso','alert-success',null,null,null,function(res){
                     if(res)
-                      Socket.emit('subcategory inactivate',_id);
+                      Socket.emit('admin inactivate',id);
                   });
                 });
               }else{
-                Subcategories.activateSubcategory(category._id, _id).then(function(res){
-                  Notify.run('Subcategoria ativada com sucesso','alert-success',null,null,null,function(res){
+                Account.active(id).then(function(res){
+                  Notify.run('Usuário ativado com sucesso','alert-success',null,null,null,function(res){
                     if(res)
-                      Socket.emit('subcategory active',_id);
+                      Socket.emit('admin active',id);
                   });
                 });
               }
-            }
-          });
-        });
-      };
-
-      vm.create = function(){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/subcategory-form-modal.html',
-          controller: 'SubcategoryFormModalCtrl as subcategoryFormModalCtrl',
-          inputs: {
-            title: 'Aqui você cria suas subcategorias',
-            input: {'name': '', 'category': ''},
-            label: 'Criar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Subcategories.createSubcategory(result._id, result.name).then(function(response){
-                Notify.run('Subcategoria criada com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('createSubcategory',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar criar subcategoria','alert-danger',null,null,null,function(res){});
-              });
-            }
-          });
-        });
-      };
-
-      vm.edit = function(_id, category, title){
-        ModalService.showModal({
-          templateUrl: 'app/views/modals/subcategory-form-modal.html',
-          controller: 'SubcategoryFormModalCtrl as subcategoryFormModalCtrl',
-          inputs: {
-            title: 'Atualize sua subcategoria abaixo',
-            input: {'name': title, 'category': category.title},
-            label: 'Atualizar'
-          }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result && result.name){
-              Subcategories.updateSubcategory(category._id, _id, result.name).then(function(response){
-                Notify.run('Subcategoria atualizada com sucesso','alert-success',null,null,null,function(res){
-                  if(res)
-                    Socket.emit('updateSubcategory',response.data);
-                });
-              }).catch(function(err){
-                Notify.run('Erro ao tentar atualizar subcategoria','alert-danger',null,null,null,function(res){});
-              });
             }
           });
         });
@@ -2157,6 +906,10 @@ angular
         return 'Planos';
       if(string === 'offers')
         return 'Ofertas';
+      if(string === 'clients')
+        return 'Clientes';
+      if(string === 'sales')
+        return 'Vendas';
       return string;
     };
   });
@@ -2432,16 +1185,18 @@ angular
       Auth.isAuthenticated().then(function(res){
         vm.user = {
           '_id': res.data._id,
-          'name': res.data.name,
-          'email': res.data.email
+          'name': res.data.account.name,
+          'email': res.data.account.email,
+          'phoneNumber': res.data.account.phoneNumber,
+          'isActive': res.data.account.isActive
         };
         var cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile');
         if(cachedFile == null || cachedFile === ''){
           Profile.getProfile(res.data._id).then(function(res){
-            if(res.data.profilePicture){
-              var formatedImage = formatImage(res.data.profilePicture);
-              $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
-              vm.user.picture = formatedImage;
+            if(res.data.profile!=null && res.data.profile.profilePicture){
+               var formatedImage = formatImage(res.data.profile.profilePicture);
+               $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
+               vm.user.picture = formatedImage;
             }
           }).catch(function(err){
             console.log(err);
@@ -2546,15 +1301,8 @@ angular
     vm.menuItens = [
       {
         "icon": "dashboard",
-        "label": "Dashboard",
+        "label": "Home",
         "href": "/",
-        "hasSubmenu": false,
-        "submenu": []
-      },
-      {
-        "icon": "apps",
-        "label": "Categorias",
-        "href": "/categorias",
         "hasSubmenu": false,
         "submenu": []
       },
@@ -2565,61 +1313,69 @@ angular
         "hasSubmenu": false,
         "submenu": []
       },
-      // {
-      //   "icon": "loyalty",
-      //   "label": "Destaques",
-      //   "href": "",
-      //   "hasSubmenu": true,
-      //   "submenu": [
-      //     {
-      //       "label": "Banner",
-      //       "href": "/destaques/banner"
-      //     },
-      //     {
-      //       "label": "Card",
-      //       "href": "/destaques/card"
-      //     },
-      //     {
-      //       "label": "Menu",
-      //       "href": "/destaques/menu"
-      //     },
-      //     {
-      //       "label": "Ofertas",
-      //       "href": "/destaques/ofertas"
-      //     },
-      //     {
-      //       "label": "Slide",
-      //       "href": "/destaques/slide"
-      //     }
-      //   ]
-      // },
       {
-        "icon": "shopping_cart",
-        "label": "Ofertas",
-        "href": "/ofertas",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "face",
+        "label": "Clientes",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/clientes/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/clientes"
+          }
+        ]
       },
       {
-        "icon": "contacts",
+        "icon": "store_mall_directory",
         "label": "Parceiros",
-        "href": "/parceiros",
-        "hasSubmenu": false,
-        "submenu": []
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/parceiros/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/parceiros"
+          }
+        ]
       },
       {
-        "icon": "assignment",
-        "label": "Planos",
-        "href": "/planos",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "content_cut",
+        "label": "Serviços",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Pendentes",
+            "href": "/servicos/pendentes"
+          },
+          {
+            "label": "Geral",
+            "href": "/servicos"
+          }
+        ]
       },
       {
-        "icon": "list",
-        "label": "Subcategorias",
-        "href": "/subcategorias",
-        "hasSubmenu": false,
-        "submenu": []
+        "icon": "code",
+        "label": "Desenvolvimento",
+        "href": "",
+        "hasSubmenu": true,
+        "submenu": [
+          {
+            "label": "Suporte",
+            "href": "/suporte"
+          },
+          {
+            "label": "Log de Erros",
+            "href": "/logs"
+          }
+        ]
       }
     ];
 
@@ -2674,7 +1430,7 @@ angular
           angular.element('.no-login').removeClass('full-height');
         });
 
-        Socket.on('logout success', function(msg) {
+        Socket.on('logout success',function(msg){
           removeSidebar();
           angular.element('.no-login').addClass('full-height');
         });
@@ -2704,8 +1460,10 @@ angular
       restrict: 'AEC',
       link: function(scope, iElement, iAttrs, ngModelCtrl) {
         iElement.bind('click',function(){
-          angular.element('#sidebar').toggleClass('sidebar-visible');
-          angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up');
+          setTimeout(function(){
+            angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up');
+            angular.element('#sidebar').toggleClass('sidebar-visible');
+          },1);
         });
       }
     };
@@ -2799,6 +1557,20 @@ angular
 }());
 
 (function() {
+  angular.module('dashboard').controller('UiBrCellphoneCtrl', ['$scope','Verification', function($scope, Verification) {
+
+    $scope.verifyPhoneNumber = function(value){
+      return Verification.userVerifyPhoneNumber(value).then(function(res){
+        return res;
+      }).catch(function(err){
+        return err;
+      })
+    };
+
+  }]);
+}());
+
+(function() {
   angular.module('dashboard').directive('uiBrCellphone', function() {
     return {
       restrict: 'AEC',
@@ -2806,87 +1578,100 @@ angular
       scope: {
         ngModel: '=ngModel'
       },
-      controller: ['$scope', function($scope) {
-
-        $scope.verifyPartnerPhoneNumber = function(phoneNumber,view){
-          view.$setValidity("phoneNumberExists",true);
-        };
-
-      }],
+      controller: 'UiBrCellphoneCtrl as uiBrCellphoneCtrl',
       link: function(scope, iElement, iAttrs, ngModelCtrl) {
 
-        //Input accept numbers-only
-        function parserName(number) {
-          var input = number.replace(/[^0-9]/g,'');
-          if(input !== number) {
-              ngModelCtrl.$setViewValue(input);
-              ngModelCtrl.$render();
-          }
-          return Number(input);
-        }
-        ngModelCtrl.$parsers.push(parserName);
+        var phoneMask8D = {
+      		countryCode : new StringMask('+00 (00) 0000-0000'),   //with country code
+      		areaCode    : new StringMask('(00) 0000-0000'),       //with area code
+      		simple      : new StringMask('0000-0000')             //without area code
+      	}, phoneMask9D = {
+      		countryCode : new StringMask('+00 (00) 00000-0000'), //with country code
+      		areaCode    : new StringMask('(00) 00000-0000'),     //with area code
+      		simple      : new StringMask('00000-0000')           //without area code
+      	}, phoneMask0800 = {
+      		countryCode : null,                                   //N/A
+      		areaCode    : null,                                   //N/A
+      		simple      : new StringMask('0000-000-0000')         //N/A, so it's "simple"
+      	};
 
-        //Validation cellphone number
-        scope.$watch('ngModel', function (value) {
-          if(value){
-            var str = ""+value;
-            var len = str.length;
-            if(len<11 || len>11){
-              if(len==19){
-                var country = str.slice(1,3);
-                if(country=='55'){
-                  var state = str.slice(5,7);
-                  if(state=='11'||state=='12'||state=='13'||state=='14'||state=='15'||state=='16'||state=='17'||state=='18'||state=='19'||state=='21'||
-                     state=='22'||state=='24'||state=='27'||state=='28'||state=='31'||state=='32'||state=='33'||state=='34'||state=='35'||state=='37'||
-                     state=='38'||state=='41'||state=='42'||state=='43'||state=='44'||state=='45'||state=='46'||state=='47'||state=='48'||state=='49'||
-                     state=='51'||state=='53'||state=='54'||state=='55'||state=='61'||state=='62'||state=='63'||state=='64'||state=='65'||state=='66'||
-                     state=='67'||state=='68'||state=='69'||state=='71'||state=='73'||state=='74'||state=='75'||state=='77'||state=='79'||state=='81'||
-                     state=='82'||state=='83'||state=='84'||state=='85'||state=='86'||state=='87'||state=='88'||state=='89'||state=='91'||state=='92'||
-                     state=='93'||state=='94'||state=='95'||state=='96'||state=='97'||state=='98'||state=='99'){
-                       ngModelCtrl.$setValidity("invalidCellphone",true);
-                       scope.verifyPartnerPhoneNumber(value,ngModelCtrl);
-                  }else
-                    ngModelCtrl.$setValidity("invalidCellphone",false);
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-              }else{
-                if(len==13){
-                  var country = str.slice(0,2);
-                  if(country=='55'){
-                    var state = '('+str.slice(2,4)+')';
-                    var initial = str.slice(4,9);
-                    var finish = str.slice(9,13);
-                    var mask = '+'+country+' '+state+' '+initial+'-'+finish;
-                    scope.ngModel = mask;
-                  }else{
-                    ngModelCtrl.$setValidity("phoneNumberExists",true);
-                    ngModelCtrl.$setValidity("invalidCellphone",false);
-                  }
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-              }
-            }else{
-                var momentCountry = str.slice(0,2);
-                if(momentCountry!='55'){
-                  var country = '+55';
-                  var state = '('+str.slice(0,2)+')';
-                  var initial = str.slice(2,7);
-                  var finish = str.slice(7,11);
-                  var mask = country+' '+state+' '+initial+'-'+finish;
-                  scope.ngModel = mask;
-                }else{
-                  ngModelCtrl.$setValidity("phoneNumberExists",true);
-                  ngModelCtrl.$setValidity("invalidCellphone",false);
-                }
-            }
-          }else{
-            ngModelCtrl.$setValidity("phoneNumberExists",true);
-            ngModelCtrl.$setValidity("invalidCellphone",true);
+        var clearValue = function(rawValue) {
+      		return rawValue.toString().replace(/[^0-9]/g, '').slice(0, 13);
+      	};
+
+        var format = function(cleanValue) {
+          var formattedValue;
+      		if (cleanValue.indexOf('0800') === 0) {
+      			formattedValue = phoneMask0800.simple.apply(cleanValue);
+      		} else if (cleanValue.length < 9) {
+      			formattedValue = phoneMask8D.simple.apply(cleanValue) || '';
+      		} else if (cleanValue.length < 10) {
+      			formattedValue = phoneMask9D.simple.apply(cleanValue);
+      		} else if (cleanValue.length < 11) {
+      			formattedValue = phoneMask8D.areaCode.apply(cleanValue);
+      		} else if (cleanValue.length < 12) {
+      			formattedValue = phoneMask9D.areaCode.apply(cleanValue);
+      		} else if (cleanValue.length < 13) {
+      			formattedValue = phoneMask8D.countryCode.apply(cleanValue);
+      		} else {
+      			formattedValue = phoneMask9D.countryCode.apply(cleanValue);
+      		}
+      		return formattedValue.trim().replace(/[^0-9]$/, '');
+      	};
+
+        var getModelValue = function(formattedValue, originalModelType) {
+      		var cleanValue = this.clearValue(formattedValue);
+      		return originalModelType === 'number' ? parseInt(cleanValue) : cleanValue;
+      	};
+
+        var validations = function(value) {
+          var valueLength = value && value.toString().length;
+          //8- 8D without AC
+          //9- 9D without AC
+          //10- 8D with AC
+          //11- 9D with AC and 0800
+          //12- 8D with AC plus CC
+          //13- 9D with AC plus CC
+          return valueLength >= 10 && valueLength <= 13;
+        };
+
+        ngModelCtrl.$formatters.push(function formatter(value) {
+          if (ngModelCtrl.$isEmpty(value)) {
+            return value;
           }
+          var cleanValue = clearValue(value.toString());
+          return format(cleanValue);
+        });
+
+        ngModelCtrl.$parsers.push(function parser(value) {
+          if (ngModelCtrl.$isEmpty(value)) {
+            ngModelCtrl.$setValidity('phoneNumberExists', true)
+            ngModelCtrl.$setValidity('invalidCellphone', true)
+            return value;
+          }
+          var cleanValue = clearValue(value.toString());
+          var formattedValue = format(cleanValue);
+          if(!validations(cleanValue)){
+            ngModelCtrl.$setValidity('invalidCellphone', false)
+            ngModelCtrl.$setValidity('phoneNumberExists', true)
+          }else{
+            ngModelCtrl.$setValidity('invalidCellphone', true)
+            scope.verifyPhoneNumber(cleanValue).then(function(res){
+              if(res.status == 422)
+                ngModelCtrl.$setValidity('phoneNumberExists', false)
+              else
+                ngModelCtrl.$setValidity('phoneNumberExists', true)
+            });
+          }
+          if (ngModelCtrl.$viewValue !== formattedValue) {
+            ngModelCtrl.$setViewValue(formattedValue);
+            ngModelCtrl.$render();
+          }
+          if (angular.isUndefined(ngModelCtrl.getModelValue)) {
+            return cleanValue;
+          }
+          var actualModelType = typeof ngModelCtrl.$modelValue;
+          return ngModelCtrl.getModelValue(formattedValue, actualModelType);
         });
 
       }
@@ -3076,8 +1861,8 @@ angular
       },
       controller: ['$scope','Verification','Auth','Account', function($scope, Verification, Auth, Account) {
 
-        $scope.adminVerifyEmail = function(email,view){
-          Verification.adminVerifyEmail(email).then(function(res){
+        $scope.userVerifyEmail = function(email,view){
+          Verification.userVerifyEmail(email).then(function(res){
             view.$setValidity("emailExists",true);
           }).catch(function(err){
             if(err.status==422){
@@ -3099,7 +1884,7 @@ angular
                   view.$setValidity("emailExists",false);
               });
             }else
-              $scope.adminVerifyEmail(email,view);
+              $scope.userVerifyEmail(email,view);
           });
         };
 
@@ -3114,7 +1899,7 @@ angular
               ngModelCtrl.$setValidity("invalidEmail",true);
               if(iAttrs.uiEmail){ //uiEmail defined
                 if(iAttrs.uiEmail == 'registered'){ //uiEmail equals registered
-                  scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
+                  scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
                 }else{
                   if(iAttrs.uiEmail == 'no-registered'){ //uiEmail equals no-registered
 
@@ -3122,13 +1907,13 @@ angular
                     if(iAttrs.uiEmail == 'logged'){
                       scope.verifyEmail(scope.ngModel,ngModelCtrl);
                     }else{ //uiEmail exists and is empty
-                      scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
+                      scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
                     }
                   }
                 }
               }else //uiEmail no defined
-                scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);
-              /*scope.adminVerifyEmail(scope.ngModel,ngModelCtrl);*/
+                scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
+              /*scope.userVerifyEmail(scope.ngModel,ngModelCtrl);*/
             }else{ //email no match
               ngModelCtrl.$setValidity("invalidEmail",false);
               ngModelCtrl.$setValidity("emailExists",true);
@@ -3562,12 +2347,12 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').service('Admins', ['$http','Config', function($http,Config) {
+  angular.module('dashboard').service('Users', ['$http','Config', function($http,Config) {
 
     var url_base = Config.url_base;
 
-    this.getAdmins = function(){
-      return $http.get(url_base+'/admins').then(function(result){
+    this.getUsers = function(){
+      return $http.get(url_base+'/users').then(function(result){
         return result;
       });
     };
@@ -3580,8 +2365,14 @@ angular
 
     var url_base = Config.url_base;
 
-    this.adminVerifyEmail = function(email) {
-      return $http.get(url_base+'/verifications/admins?email=' + email).then(function(result){
+    this.userVerifyEmail = function(email) {
+      return $http.get(url_base+'/verifications/user?email=' + email).then(function(result){
+        return result;
+      });
+    };
+
+    this.userVerifyPhoneNumber = function(phoneNumber) {
+      return $http.get(url_base+'/verifications/user?phoneNumber=' + phoneNumber).then(function(result){
         return result;
       });
     };
@@ -3598,49 +2389,15 @@ angular
 }());
 
 (function() {
-  angular.module('dashboard').service('Auth', ['$http','$q','Config', function($http,$q,Config) {
-
-    var url_base = Config.url_base;
-
-    this.login = function(email,password){
-      return $http.post(url_base+'/admins/auth/local/login',{
-        'email': email,
-        'password': password
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.isAuthenticated = function() {
-      return $http.get(url_base+'/admins/auth/local/login').then(function(result) {
-        if (result.status == 200) {
-          return result;
-        } else {
-          return $q.reject("Not Authenticated");
-        }
-      });
-    };
-
-    this.logout = function() {
-      return $http.post(url_base+'/admins/auth/local/logout').then(function(result) {
-        return result;
-      }).catch(function(err){
-        console.log(err);
-      });
-    };
-
-  }]);
-}());
-
-(function() {
   angular.module('dashboard').service('Account', ['$http','$q','Config', function($http,$q,Config) {
 
     var url_base = Config.url_base;
 
-    this.signup = function(name,email,password){
-      return $http.post(url_base+'/admins/account/signup',{
+    this.signup = function(name,email,phoneNumber,password){
+      return $http.post(url_base+'/users/account/signup',{
         'name': name,
         'email': email,
+        'phoneNumber': phoneNumber,
         'password': password
       }).then(function(result){
         return result;
@@ -3648,31 +2405,31 @@ angular
     };
 
     this.active = function(_id){
-      return $http.put(url_base+'/admins/'+_id+'/account/activation').then(function(result){
+      return $http.put(url_base+'/users/'+_id+'/account/activation').then(function(result){
         return result;
       });
     };
 
     this.inactivate = function(_id){
-      return $http.put(url_base+'/admins/'+_id+'/account/inactivation').then(function(result){
+      return $http.put(url_base+'/users/'+_id+'/account/inactivation').then(function(result){
         return result;
       });
     };
 
     this.setActivationCode = function(_id){
-      return $http.put(url_base+'/admins/'+_id+'/account/activation').then(function(result){
+      return $http.put(url_base+'/users/'+_id+'/account/activation').then(function(result){
         return result;
       });
     };
 
     this.setRecoveryToken = function(recoveryKey) {
-      return $http.patch(url_base+'/admins/account/recovery',recoveryKey).then(function(result){
+      return $http.patch(url_base+'/users/account/recovery',recoveryKey).then(function(result){
         return result;
       });
     };
 
     this.recoverPassword = function(recoveryKey, token, newPassword) {
-      return $http.put(url_base+'/admins/account/recovery',{
+      return $http.put(url_base+'/users/account/recovery',{
         'recoveryKey': recoveryKey,
         'token': token,
         'newPassword': newPassword
@@ -3682,7 +2439,7 @@ angular
     };
 
     this.setEmailChangeToken = function(id,email){
-      return $http.patch(url_base+'/admins/'+id+'/account/email',{
+      return $http.patch(url_base+'/users/'+id+'/account/email',{
         'email': email
       }).then(function(result){
         return result;
@@ -3690,7 +2447,7 @@ angular
     };
 
     this.updateEmail = function(id,token){
-      return $http.put(url_base+'/admins/'+id+'/account/email',{
+      return $http.put(url_base+'/users/'+id+'/account/email',{
         'token': token
       }).then(function(result){
         return result;
@@ -3698,7 +2455,7 @@ angular
     };
 
     this.updatePassword = function(id,currentPassword,newPassword){
-      return $http.put(url_base+'/admins/'+id+'/account/password',{
+      return $http.put(url_base+'/users/'+id+'/account/password',{
         'currentPassword': currentPassword,
         'newPassword': newPassword
       }).then(function(result){
@@ -3707,16 +2464,51 @@ angular
     };
 
     this.getAccount = function(id){
-      return $http.get(url_base+'/admins/'+id+'/account').then(function(result){
+      return $http.get(url_base+'/users/'+id+'/account').then(function(result){
         return result;
       });
     };
 
     this.updatePicture = function(id,profilePicture){
-      return $http.put(url_base+'/admins/'+id+'/account/picture',{
+      return $http.put(url_base+'/users/'+id+'/account/picture',{
         'profilePicture': profilePicture
       }).then(function(result){
         return result;
+      });
+    };
+
+  }]);
+}());
+
+(function() {
+  angular.module('dashboard').service('Auth', ['$http','$q','Config', function($http,$q,Config) {
+
+    var url_base = Config.url_base;
+
+    this.login = function(email,password){
+      return $http.post(url_base+'/users/auth/local/login',{
+        'email': email,
+        'password': password
+      }).then(function(result){
+        return result;
+      });
+    };
+
+    this.isAuthenticated = function() {
+      return $http.get(url_base+'/users/auth/local/login').then(function(result) {
+        if (result.status == 200) {
+          return result;
+        } else {
+          return $q.reject("Not Authenticated");
+        }
+      });
+    };
+
+    this.logout = function() {
+      return $http.post(url_base+'/users/auth/local/logout').then(function(result) {
+        return result;
+      }).catch(function(err){
+        console.log(err);
       });
     };
 
@@ -3729,19 +2521,19 @@ angular
     var url_base = Config.url_base;
 
     this.updatePicture = function(_id, pictureUrl){
-      return $http.put(url_base+'/admins/'+_id+'/profile/picture', pictureUrl).then(function(result){
+      return $http.put(url_base+'/users/'+_id+'/profile/picture', pictureUrl).then(function(result){
         return result;
       });
     };
 
     this.deletePicture = function(_id){
-      return $http.delete(url_base+'/admins/'+_id+'/profile/picture').then(function(result){
+      return $http.delete(url_base+'/users/'+_id+'/profile/picture').then(function(result){
         return result;
       });
     };
 
     this.getProfile = function(_id){
-      return $http.get(url_base+'/admins/'+_id+'/profile').then(function(result){
+      return $http.get(url_base+'/users/'+_id+'/profile').then(function(result){
         return result;
       });
     };
@@ -3755,264 +2547,7 @@ angular
     var url_base = Config.url_base;
 
     this.getNumbers = function(){
-      return $http.get(url_base+'/admins/management/bi/numbers').then(function(result){
-        return result;
-      });
-    };
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').service('Categories', ['$http','Config', function($http,Config) {
-
-    var url_base = Config.url_base;
-
-    this.createCategory = function(title){
-      return $http.post(url_base+'/admins/management/categories',{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.updateCategory = function(_id,title){
-      return $http.put(url_base+'/admins/management/categories/'+_id,{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.getCategories = function(){
-      return $http.get(url_base+'/categories').then(function(result){
-        return result;
-      });
-    };
-
-    this.getCategory = function(_id){
-      return $http.get(url_base+'/categories/'+_id).then(function(result){
-        return result;
-      });
-    };
-
-    this.activateCategory = function(_id){
-      return $http.put(url_base+'/admins/management/categories/'+_id+'/activation').then(function(result){
-        return result;
-      });
-    };
-
-    this.inactivateCategory = function(_id){
-      return $http.put(url_base+'/admins/management/categories/'+_id+'/inactivation').then(function(result){
-        return result;
-      });
-    };
-
-    /*this.deleteCategory = function(id){
-      return $http.delete(url_base+'/categories/'+id).then(function(result){
-        return result;
-      });
-    };*/
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').service('Offers', ['$http','Config', function($http,Config) {
-
-    var url_base = Config.url_base;
-
-    this.getOffers = function(){
-      return $http.get(url_base+'/admins/management/offers').then(function(result){
-        return result;
-      });
-    };
-
-    this.getOffer = function(id){
-      return $http.get(url_base+'/admins/management/offers/'+id).then(function(result){
-        return result;
-      });
-    };
-
-    this.createOffer = function(title){
-      return $http.post(url_base+'/admins/management/offers',{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.updateOffer = function(id,title){
-      return $http.put(url_base+'/admins/management/offers/'+id,{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.approveOffer = function(_id){
-      return $http.put(url_base+'/admins/management/offers/'+_id+'/approve').then(function(result){
-        return result;
-      });
-    };
-
-    this.reproveOffer = function(_id, review){
-      return $http.put(url_base+'/admins/management/offers/'+_id+'/reprove',{
-        'review': 'review'
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    /*this.deleteOffer = function(id){
-      return $http.delete(url_base+'/admins/management/offers/'+id).then(function(result){
-        return result;
-      });
-    };*/
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').service('Partnes', ['$http','Config', function($http,Config) {
-
-    var url_base = Config.url_base;
-
-    this.getPartnes = function(){
-      return $http.get(url_base+'/admins/management/partners').then(function(result){
-        return result;
-      });
-    };
-
-    this.active = function(_id){
-      return $http.put(url_base+'/admins/management/partners/'+_id+'/account/activation').then(function(result){
-        return result;
-      });
-    };
-
-    this.inactivate = function(_id){
-      return $http.put(url_base+'/admins/management/partners/'+_id+'/account/inactivation').then(function(result){
-        return result;
-      });
-    };
-
-    this.updateProfile = function(_id, profile){
-      return $http.put(url_base+'/admins/management/partners/'+_id+'/profile',{
-        'companyName': profile.companyName,
-        'tradingName': profile.tradingName,
-        'taxDocument': profile.taxDocument,
-        'address': profile.address,
-        'contact': profile.contact,
-        'representative': profile.representative,
-        'desc1': profile.desc1,
-        'desc2': profile.desc2,
-        'plan': profile.plan,
-        'profilePicture': profile.profilePicture
-      }).then(function(result){
-        return result;
-      });
-    };
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').service('Plans', ['$http','Config', function($http,Config) {
-
-    var url_base = Config.url_base;
-
-    this.getPlans = function(){
-      return $http.get(url_base+'/plans').then(function(result){
-        return result;
-      });
-    };
-
-    this.getPlan = function(id){
-      return $http.get(url_base+'/plans/'+id).then(function(result){
-        return result;
-      });
-    };
-
-    this.createPlan = function(title, desc){
-      return $http.post(url_base+'/admins/management/plans',{
-        'title': title,
-        'description': desc
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.updatePlan = function(id,title,desc){
-      return $http.put(url_base+'/admins/management/plans/'+id,{
-        'title': title,
-        'description': desc
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.activatePlan = function(_id){
-      return $http.put(url_base+'/admins/management/plans/'+_id+'/activation').then(function(result){
-        return result;
-      });
-    };
-
-    this.inactivatePlan = function(_id){
-      return $http.put(url_base+'/admins/management/plans/'+_id+'/inactivation').then(function(result){
-        return result;
-      });
-    };
-
-    /*this.deletePlan = function(id){
-      return $http.delete(url_base+'/admins/management/plans'+id).then(function(result){
-        return result;
-      });
-    };*/
-
-  }]);
-}());
-
-(function() {
-  angular.module('dashboard').service('Subcategories', ['$http','Config', function($http,Config) {
-
-    var url_base = Config.url_base;
-
-    this.createSubcategory = function(categoryId, title){
-      return $http.post(url_base+'/admins/management/categories/'+categoryId+'/subcategories',{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.updateSubcategory = function(categoryId, subcategoryId, title){
-      return $http.put(url_base+'/admins/management/categories/'+categoryId+'/subcategories/'+subcategoryId+'/update',{
-        'title': title
-      }).then(function(result){
-        return result;
-      });
-    };
-
-    this.inactivateSubcategory = function(categoryId, subcategoryId){
-      return $http.put(url_base+'/admins/management/categories/'+categoryId+'/subcategories/'+subcategoryId+'/inactivation').then(function(result){
-        return result;
-      });
-    };
-
-    this.activateSubcategory = function(categoryId, subcategoryId){
-      return $http.put(url_base+'/admins/management/categories/'+categoryId+'/subcategories/'+subcategoryId+'/activation').then(function(result){
-        return result;
-      });
-    };
-
-    this.getSubcategories = function(){
-      return $http.get(url_base+'/subcategories').then(function(result){
-        return result;
-      });
-    };
-
-    this.getSubcategory = function(_id){
-      return $http.get(url_base+'/subcategories/'+_id).then(function(result){
+      return $http.get(url_base+'/users/management/bi/numbers').then(function(result){
         return result;
       });
     };
@@ -4035,24 +2570,24 @@ angular.module("views/admins/admins.html",[]).run(["$templateCache",function($te
     "              <form class=\"form-inline\">"+
     "                <div class=\"input-group mb-4 mr-sm-4 mb-sm-0\">"+
     "                  <div class=\"input-group-addon\"><i class=\"material-icons\">search</i></div>"+
-    "                  <input ng-model=\"adminsCtrl.key\" ng-change=\"adminsCtrl.update()\" type=\"text\" class=\"form-control\" id=\"inlineFormInputGroup\" placeholder=\"Pesquisa ...\">"+
+    "                  <input ng-model=\"UsersCtrl.key\" ng-change=\"UsersCtrl.update()\" type=\"text\" class=\"form-control\" id=\"inlineFormInputGroup\" placeholder=\"Pesquisa ...\">"+
     "                </div>"+
-    "                <select class=\"custom-select mb-sm-0 mr-sm-2 input-md\" id=\"predicate\" ng-model=\"adminsCtrl.selectedPredicate\" ng-change=\"adminsCtrl.update()\" ng-options=\"predicate.label as predicate.label for predicate in adminsCtrl.predicates\" ng-selected=\"{{predicate.label == adminsCtrl.selectedPredicate}}\"></select>"+
-    "                <button ng-click=\"adminsCtrl.clean()\" type=\"button\" class=\"btn btn-default\">Limpar filtro</button>"+
+    "                <select class=\"custom-select mb-sm-0 mr-sm-2 input-md\" id=\"predicate\" ng-model=\"UsersCtrl.selectedPredicate\" ng-change=\"UsersCtrl.update()\" ng-options=\"predicate.label as predicate.label for predicate in UsersCtrl.predicates\" ng-selected=\"{{predicate.label == UsersCtrl.selectedPredicate}}\"></select>"+
+    "                <button ng-click=\"UsersCtrl.clean()\" type=\"button\" class=\"btn btn-default\">Limpar filtro</button>"+
     "              </form>"+
     "            </div>"+
     "          </div>"+
     ""+
-    "          <table ng-if=\"adminsCtrl.showTable == true\" class=\"table table-striped table-responsive\" at-table at-paginated at-list=\"adminsCtrl.filteredList\" at-config=\"adminsCtrl.config\">"+
+    "          <table ng-if=\"UsersCtrl.showTable == true\" class=\"table table-striped table-responsive\" at-table at-paginated at-list=\"UsersCtrl.filteredList\" at-config=\"UsersCtrl.config\">"+
     "            <thead></thead>"+
     "            <tbody class=\"col-md-12\">"+
-    "            <tr ng-repeat=\"item in adminsCtrl.filteredList\">"+
+    "            <tr ng-repeat=\"item in UsersCtrl.filteredList\">"+
     "              <td class=\"align-middle\" at-title=\"Nome\" at-initial-sorting=\"asc\" at-attribute=\"name\" at-sortable>{{item.name}}</td>"+
     "              <td class=\"align-middle\" at-title=\"Email\" at-sortable at-attribute=\"email\">{{item.email}}</td>"+
     "              <td class=\"align-middle\" at-title=\"Status\" at-sortable at-attribute=\"isActive\">{{item.isActive | status}}</td>"+
     "              <td class=\"align-middle\" at-title=\"Ação\">"+
     "                <button ng-hide=\"true\" class=\"btn btn-primary btn-smn\"><i class=\"material-icons\">search</i></button>"+
-    "                <button ng-click=\"adminsCtrl.active(item._id,item.email,item.isActive)\" class=\"btn btn-primary btn-smn\">"+
+    "                <button ng-click=\"UsersCtrl.active(item._id,item.email,item.isActive)\" class=\"btn btn-primary btn-smn\">"+
     "                  <i ng-if=\"item.isActive\" class=\"material-icons\">check_circle</i>"+
     "                  <i ng-if=\"!item.isActive\" class=\"material-icons\">radio_button_unchecked</i>"+
     "                </button>"+
@@ -4061,7 +2596,7 @@ angular.module("views/admins/admins.html",[]).run(["$templateCache",function($te
     "            </tbody>"+
     "          </table>"+
     ""+
-    "          <table ng-if=\"adminsCtrl.showTable == false\" class=\"table table-striped table-responsive\">"+
+    "          <table ng-if=\"UsersCtrl.showTable == false\" class=\"table table-striped table-responsive\">"+
     "            <thead>"+
     "              <tr>"+
     "                <th>Nome <i style=\"margin-left: 10px;\" class=\"fa fa-minus\"></i></th>"+
@@ -4077,11 +2612,11 @@ angular.module("views/admins/admins.html",[]).run(["$templateCache",function($te
     "            </tbody>"+
     "          </table>"+
     ""+
-    "          <div ng-if=\"adminsCtrl.showTable == true\" class=\"row controler-table\">"+
+    "          <div ng-if=\"UsersCtrl.showTable == true\" class=\"row controler-table\">"+
     "            <div class=\"col-md-3\">"+
     "              <div class=\"form-group\">"+
     "                <label>Ver </label>"+
-    "                <select class=\"pagination-table custom-select\" ng-init=\"adminsCtrl.config.itemsPerPage = '10'\" ng-model=\"adminsCtrl.config.itemsPerPage\" class=\"form-control\">"+
+    "                <select class=\"pagination-table custom-select\" ng-init=\"UsersCtrl.config.itemsPerPage = '10'\" ng-model=\"UsersCtrl.config.itemsPerPage\" class=\"form-control\">"+
     "                  <option value=\"5\">5</option>"+
     "                  <option value=\"10\">10</option>"+
     "                  <option value=\"20\">20</option>"+
@@ -4090,8 +2625,8 @@ angular.module("views/admins/admins.html",[]).run(["$templateCache",function($te
     "                <label>itens</label>"+
     "              </div>"+
     "            </div>"+
-    "            <div ng-if=\"adminsCtrl.showTable == true\" class=\"col-md-9\">"+
-    "              <at-pagination at-list=\"adminsCtrl.filteredList\" at-config=\"adminsCtrl.config\" class=\"pag-table\" at-translate></at-pagination>"+
+    "            <div ng-if=\"UsersCtrl.showTable == true\" class=\"col-md-9\">"+
+    "              <at-pagination at-list=\"UsersCtrl.filteredList\" at-config=\"UsersCtrl.config\" class=\"pag-table\" at-translate></at-pagination>"+
     "            </div>"+
     "          </div>"+
     ""+
@@ -4301,6 +2836,15 @@ angular.module("views/auth/register.html",[]).run(["$templateCache",function($te
     "            <small ng-show=\"RegisterForm.email.$error.required\" class=\"form-text text-muted text-danger\">O endereço de email é obrigatório.</small>"+
     "            <small ng-show=\"RegisterForm.email.$error.invalidEmail\" class=\"form-text text-muted text-danger\">Digite um endereço de email válido.</small>"+
     "            <small ng-show=\"RegisterForm.email.$error.emailExists\" class=\"form-text text-muted text-danger\">Este endereço de email já foi utilizado por outra conta.</small>"+
+    "          </div>"+
+    "        </div>"+
+    "        <div class=\"form-group\">"+
+    "          <label class=\"card-label\" for=\"formGroupExampleInput\">Celular</label>"+
+    "          <input type=\"tel\" name=\"phoneNumber\" ng-model=\"registerCtrl.user.phoneNumber\" class=\"form-control\" placeholder=\"(xx) XXXXX-XXXX\" ng-class=\"{'has-error': RegisterForm.phoneNumber.$invalid && RegisterForm.phoneNumber.$dirty}\" ui-br-cellphone required>"+
+    "          <div class=\"error-container\" ng-show=\"RegisterForm.phoneNumber.$dirty && RegisterForm.phoneNumber.$invalid\">"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.required\" class=\"form-text text-muted text-danger\">O celular é obrigatório.</small>"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.invalidCellphone\" class=\"form-text text-muted text-danger\">Digite um celular válido.</small>"+
+    "            <small ng-show=\"RegisterForm.phoneNumber.$error.phoneNumberExists\" class=\"form-text text-muted text-danger\">Este celular já foi utilizado por outra conta.</small>"+
     "          </div>"+
     "        </div>"+
     "        <div class=\"form-group\">"+
@@ -4572,12 +3116,12 @@ angular.module("views/home/home.html",[]).run(["$templateCache",function($templa
     "      <div class=\"cards-dash row\">"+
     "        <div class=\"col-lg-3 col-md-6\">"+
     "          <a href=\"#/ofertas\" class=\"card\">"+
-    "            <cards-bi bi-data=\"homeCtrl.numbers\" bi-name=\"offers\" bi-icon=\"shopping_cart\"></cards-bi>"+
+    "            <cards-bi bi-data=\"homeCtrl.numbers\" bi-name=\"clients\" bi-icon=\"list\"></cards-bi>"+
     "          </a>"+
     "        </div>"+
     "        <div class=\"col-lg-3 col-md-6\">"+
     "          <a href=\"#/categorias\" class=\"card\">"+
-    "            <cards-bi bi-data=\"homeCtrl.numbers\" bi-name=\"categories\" bi-icon=\"list\"></cards-bi>"+
+    "            <cards-bi bi-data=\"homeCtrl.numbers\" bi-name=\"sales\" bi-icon=\"shopping_cart\"></cards-bi>"+
     "          </a>"+
     "        </div>"+
     "        <div class=\"col-lg-3 col-md-6\">"+
@@ -4617,11 +3161,11 @@ angular.module("views/home/home.html",[]).run(["$templateCache",function($templa
 angular.module("directives/menuDropdown/menuDropdown.html",[]).run(["$templateCache",function($templateCache){
     $templateCache.put("templates/menuDropdown.html",
     "<a class=\"nav-link\" href=\"#\" target=\"_self\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">"+
-    "  <img class=\"rounded-circle\" ngf-thumbnail=\"menuDropdownCtrl.user.picture || '//placehold.it/40'\">"+
+    "  <img class=\"rounded-circle\" ngf-thumbnail=\"menuDropdownCtrl.user.picture || 'https://placehold.it/40'\">"+
     "</a>"+
-    "<div class=\"dropdown-menu dropdown-menu-right \" aria-labelledby=\"navbarDropdownMenuLink\">"+
+    "<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdownMenuLink\">"+
     "    <div class=\"drop-title\">"+
-    "      <img class=\"rounded-circle img-drop-title\" ngf-thumbnail=\"menuDropdownCtrl.user.picture || '//placehold.it/40'\">"+
+    "      <img class=\"rounded-circle img-drop-title\" ngf-thumbnail=\"menuDropdownCtrl.user.picture || 'https://placehold.it/40'\">"+
     "      <span>{{menuDropdownCtrl.user.name}}</span>"+
     "      <div class=\"title-notify\">{{menuDropdownCtrl.user.email}}</div>"+
     "    </div>"+
@@ -4638,95 +3182,14 @@ angular.module("directives/menuNavbar/menuNavbar.html",[]).run(["$templateCache"
     "    <button id=\"toggler-button\" sidebar-toogler class=\"navbar-toggler toggle\" type=\"button\">"+
     "      &#9776;"+
     "    </button>"+
-    "    <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
+    "    <menu-dropdown></menu-dropdown>"+
+    "    <!-- <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
     "        <ul class=\"navbar-nav ml-auto\">"+
-    "            <!-- <li ng-hide=\"true\" class=\"nav-item dropdown \">"+
-    "                <a class=\"nav-link dropdown-toggle\" href=\"#\" target=\"_self\" data-toggle=\"dropdown\""+
-    "                   aria-haspopup=\"true\" aria-expanded=\"false\">"+
-    "                                <span><i class=\"material-icons navbar-icons\">notifications</i>"+
-    "                                <span class=\"badge badge-danger\">4</span></span>"+
-    "                </a>"+
-    "                <div class=\"dropdown-menu notif-list dropdown-menu-right dropdownresp   \""+
-    "                     aria-labelledby=\"navbarDropdownMenuLink\">"+
-    "                    <div class=\"drop-title\">"+
-    "                        <small>Notificações</small>"+
-    "                    </div>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span class=\"message\">"+
-    "                                  Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                </span>"+
-    "                    </a>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span class=\"message\">"+
-    "                                  Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                </span>"+
-    "                    </a>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span class=\"message\">"+
-    "                                  Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                </span>"+
-    "                    </a>"+
-    "                    <div class=\"drop-footer text-center\">"+
-    "                        <a href=\"dropdown-item\" href=\"#\">"+
-    "                            <small>Show all</small>"+
-    "                        </a></div>"+
-    "                </div>"+
-    "            </li>"+
-    "            <li ng-hide=\"true\" class=\"nav-item dropdown\">"+
-    "                <a class=\"nav-link dropdown-toggle\" href=\"#\" target=\"_self\" data-toggle=\"dropdown\""+
-    "                   aria-haspopup=\"true\" aria-expanded=\"false\">"+
-    "                    <span><i class=\"material-icons navbar-icons\">mail</i></span>"+
-    "                    <span class=\"badge badge-danger\">2</span></span>"+
-    "                </a>"+
-    "                <div class=\"dropdown-menu msg-list dropdown-menu-right\""+
-    "                     aria-labelledby=\"navbarDropdownMenuLink\">"+
-    "                    <div class=\"drop-title\">"+
-    "                        <small>Mensagens</small>"+
-    "                    </div>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span>"+
-    "                                    <span>John Smith</span>"+
-    "                                    <span class=\"time\">3 mins ago</span>"+
-    "                                  </span>"+
-    "                        <span class=\"message\">"+
-    "                                    Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                  </span>"+
-    "                    </a>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span>"+
-    "                                    <span>John Smith</span>"+
-    "                                    <span class=\"time\">3 mins ago</span>"+
-    "                                  </span>"+
-    "                        <span class=\"message\">"+
-    "                                    Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                  </span>"+
-    "                    </a>"+
-    "                    <a class=\"dropdown-item\" href=\"#\">"+
-    "                        <span class=\"image\"><img src=\"app/assets/img/icons/user_100_100.jpeg\" alt=\"Profile Image\"></span>"+
-    "                        <span>"+
-    "                                    <span>John Smith</span>"+
-    "                                    <span class=\"time\">3 mins ago</span>"+
-    "                                  </span>"+
-    "                        <span class=\"message\">"+
-    "                                    Film festivals used to be do-or-die moments for movie makers. They were where..."+
-    "                                  </span>"+
-    "                    </a>"+
-    "                    <div class=\"drop-footer text-center\">"+
-    "                        <a href=\"dropdown-item\" href=\"#\">"+
-    "                            <small>Show all</small>"+
-    "                        </a></div>"+
-    "                </div>"+
-    "            </li> -->"+
     "            <li class=\"nav-item dropdown\">"+
-    "              <menu-dropdown></menu-dropdown>"+
+    ""+
     "            </li>"+
     "        </ul>"+
-    "    </div>"+
+    "    </div> -->"+
     "</nav>"+
     "");
 }]);
@@ -4734,7 +3197,7 @@ angular.module("directives/menuSidebar/menuSidebar.html",[]).run(["$templateCach
     $templateCache.put("templates/menuSidebar.html",
     "<div id=\"sidebar\" class=\"sidebar sidebar-left sidebar-transition sidebar-size-3 sidebar-title\">"+
     "    <!-- Brand -->"+
-    "    <a ng-href=\"#/\" class=\"sidebar-brand\"><img class=\"img img-responsive img-brand\" width=\"190\" src=\"app/assets/img/logos/nabudega.png\"/></a>"+
+    "    <a ng-href=\"#/\" class=\"sidebar-brand\"><img class=\"img img-responsive img-brand\" width=\"190\" src=\"app/assets/img/logos/logo.png\"/></a>"+
     "    <div class=\"sidebar-heading\">MENU</div>"+
     "    <ul class=\"sidebar-menu sidebar-text\">"+
     "      <li ng-repeat=\"menuItem in menuSidebarCtrl.menuItens\" class=\"sidebar-menu-item\">"+
@@ -5415,7 +3878,8 @@ angular.module("views/partials/navbar.html",[]).run(["$templateCache",function($
     "    <button sidebar-toogler class=\"navbar-toggler\" type=\"button\">"+
     "      &#9776;"+
     "    </button>"+
-    "    <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
+    "    <menu-dropdown></menu-dropdown>"+
+    "    <!-- <div class=\"navbar-collapse collapse\" id=\"navbar2\">"+
     "        <ul class=\"navbar-nav ml-auto\">"+
     "            <li ng-hide=\"true\" class=\"nav-item dropdown \">"+
     "                <a class=\"nav-link dropdown-toggle\" href=\"#\" target=\"_self\" data-toggle=\"dropdown\""+
@@ -5498,12 +3962,12 @@ angular.module("views/partials/navbar.html",[]).run(["$templateCache",function($
     "                            <small>Show all</small>"+
     "                        </a></div>"+
     "                </div>"+
-    "            </li>"+
+    "            </li> "+
     "            <li class=\"nav-item dropdown\">"+
-    "              <menu-dropdown></menu-dropdown>"+
+    ""+
     "            </li>"+
     "        </ul>"+
-    "    </div>"+
+    "    </div> -->"+
     "</nav>"+
     "");
 }]);
@@ -5756,6 +4220,16 @@ angular.module("views/profile/settings.html",[]).run(["$templateCache",function(
     "                    <small ng-show=\"UpdateProfileForm.email.$error.emailExists\" class=\"form-text text-muted text-danger\">Este endereço de email já foi utilizado por outra conta.</small>"+
     "                  </div>"+
     "                </div>"+
+    "                <div class=\"form-group\">"+
+    "                  <label for=\"exampleInputEmail1\">Celular</label>"+
+    "                  <input  ng-disabled=\"true\" type=\"tel\" name=\"phoneNumber\" ng-model=\"settingsCtrl.inputs.phoneNumber\" class=\"form-control\" placeholder=\"(xx) XXXXX-XXXX\" ng-class=\"{'has-error': UpdateProfileForm.phoneNumber.$invalid && UpdateProfileForm.phoneNumber.$dirty}\" ui-email=\"logged\" required>"+
+    "                  <small id=\"phoneHelp\" class=\"form-text text-muted\">Nós nunca compartilharemos seu celular com ninguém.</small>"+
+    "                  <div class=\"error-container\" ng-show=\"RegisterForm.phoneNumber.$dirty && RegisterForm.phoneNumber.$invalid\">"+
+    "                    <small ng-show=\"RegisterForm.phoneNumber.$error.required\" class=\"form-text text-muted text-danger\">O celular é obrigatório.</small>"+
+    "                    <small ng-show=\"RegisterForm.phoneNumber.$error.invalidCellphone\" class=\"form-text text-muted text-danger\">Digite um celular válido.</small>"+
+    "                    <small ng-show=\"RegisterForm.phoneNumber.$error.phoneNumberExists\" class=\"form-text text-muted text-danger\">Este celular já foi utilizado por outra conta.</small>"+
+    "                  </div>"+
+    "                </div>"+
     "                <button type=\"submit\" ng-disabled=\"UpdateProfileForm.$invalid\" class=\"btn btn-primary\">"+
     "                  <div ng-show=\"settingsCtrl.start\" class=\"loader loader-btn\">"+
     "                    <svg class=\"circular\" viewBox=\"25 25 50 50\">"+
@@ -5919,6 +4393,70 @@ angular.module("views/subcategories/subcategories.html",[]).run(["$templateCache
     "          </div>"+
     "        </div>"+
     ""+
+    "      </div>"+
+    "    </div>"+
+    "  </div>"+
+    "</div>"+
+    "");
+}]);
+angular.module("views/users/users.html",[]).run(["$templateCache",function($templateCache){
+    $templateCache.put("templates/users.html",
+    "<div id=\"content\" class=\"container-fluid side-toogle\">"+
+    "  <div class=\"row\">"+
+    "    <div class=\"col-md-12\">"+
+    "      <div class=\"card\">"+
+    "        <div class=\"card-header\">"+
+    "          Tabela Gerencial de Consultores"+
+    "        </div>"+
+    "        <div class=\"card-block \">"+
+    "          <div class=\"row\">"+
+    "            <div class=\"col-md-12\">"+
+    "              <form class=\"form-inline\">"+
+    "                <div class=\"input-group mb-4 mr-sm-4 mb-sm-0\">"+
+    "                  <div class=\"input-group-addon\"><i class=\"material-icons\">search</i></div>"+
+    "                  <input ng-model=\"usersCtrl.key\" ng-change=\"usersCtrl.update()\" type=\"text\" class=\"form-control\" id=\"inlineFormInputGroup\" placeholder=\"Pesquisa ...\">"+
+    "                </div>"+
+    "                <select class=\"custom-select mb-sm-0 mr-sm-2 input-md\" id=\"predicate\" ng-model=\"usersCtrl.selectedPredicate\" ng-change=\"usersCtrl.update()\" ng-options=\"predicate.label as predicate.label for predicate in usersCtrl.predicates\" ng-selected=\"{{predicate.label == usersCtrl.selectedPredicate}}\"></select>"+
+    "                <button ng-click=\"usersCtrl.clean()\" type=\"button\" class=\"btn btn-default\">Limpar filtro</button>"+
+    "              </form>"+
+    "            </div>"+
+    "          </div>"+
+    "          <table class=\"table table-striped table-responsive\" at-table at-paginated at-list=\"usersCtrl.filteredList\" at-config=\"usersCtrl.config\">"+
+    "            <thead></thead>"+
+    "            <tbody class=\"col-md-12\">"+
+    "            <tr ng-repeat=\"item in usersCtrl.filteredList\">"+
+    "              <td class=\"align-middle\" at-title=\"Nome\" at-initial-sorting=\"asc\" at-attribute=\"name\" at-sortable>{{item.account.name}}</td>"+
+    "              <td class=\"align-middle\" at-title=\"Email\" at-sortable at-attribute=\"email\">{{item.account.email}}</td>"+
+    "              <td class=\"align-middle\" at-title=\"Status\" at-sortable at-attribute=\"isActive\">{{item.account.isActive | status}}</td>"+
+    "              <td class=\"align-middle\" at-title=\"Ação\">"+
+    "                <button ng-hide=\"true\" class=\"btn btn-primary btn-smn\"><i class=\"material-icons\">search</i></button>"+
+    "                <button ng-click=\"usersCtrl.active(item._id,item.account.email,item.account.isActive)\" class=\"btn btn-primary btn-smn\">"+
+    "                  <i ng-if=\"item.account.isActive\" class=\"material-icons\">check_circle</i>"+
+    "                  <i ng-if=\"!item.account.isActive\" class=\"material-icons\">radio_button_unchecked</i>"+
+    "                </button>"+
+    "                <button ng-hide=\"true\" class=\"btn btn-danger btn-smn\"><i class=\"material-icons\">delete_forever</i></button>"+
+    "              </td>"+
+    "            </tr>"+
+    "            </tbody>"+
+    "          </table>"+
+    "          <div class=\"row controler-table\">"+
+    "            <div class=\"col-md-6\">"+
+    "              <div class=\"form-group\">"+
+    "                <label>Ver </label>"+
+    "                <select class=\"pagination-table custom-select\" ng-init=\"usersCtrl.config.itemsPerPage = '10'\" ng-model=\"usersCtrl.config.itemsPerPage\" class=\"form-control\">"+
+    "                  <option value=\"5\">5</option>"+
+    "                  <option value=\"10\">10</option>"+
+    "                  <option value=\"20\">20</option>"+
+    "                  <option value=\"50\">50</option>"+
+    "                </select>"+
+    "                <label>itens</label>"+
+    "              </div>"+
+    "            </div>"+
+    "            <div class=\"col-md-6\">"+
+    "              <at-pagination at-list=\"usersCtrl.filteredList\" at-config=\"usersCtrl.config\" class=\"pag-table\" at-translate></at-pagination>"+
+    "            </div>"+
+    "          </div>"+
+    "        </div>"+
     "      </div>"+
     "    </div>"+
     "  </div>"+

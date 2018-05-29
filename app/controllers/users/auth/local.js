@@ -7,7 +7,7 @@ module.exports = (app) => {
   }
 
   controller.isAuth = (req, res) => {
-    res.end()
+    res.send(responses.getAccount(req.user))
   }
 
   controller.logout = (req, res) => {

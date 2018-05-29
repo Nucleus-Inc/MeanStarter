@@ -4,8 +4,10 @@
       restrict: 'AEC',
       link: function(scope, iElement, iAttrs, ngModelCtrl) {
         iElement.bind('click',function(){
-          angular.element('#sidebar').toggleClass('sidebar-visible');
-          angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up');
+          setTimeout(function(){
+            angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up');
+            angular.element('#sidebar').toggleClass('sidebar-visible');
+          },1);
         });
       }
     };

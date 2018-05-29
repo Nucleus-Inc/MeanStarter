@@ -19,16 +19,18 @@
       Auth.isAuthenticated().then(function(res){
         vm.user = {
           '_id': res.data._id,
-          'name': res.data.name,
-          'email': res.data.email
+          'name': res.data.account.name,
+          'email': res.data.account.email,
+          'phoneNumber': res.data.account.phoneNumber,
+          'isActive': res.data.account.isActive
         };
         var cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile');
         if(cachedFile == null || cachedFile === ''){
           Profile.getProfile(res.data._id).then(function(res){
-            if(res.data.profilePicture){
-              var formatedImage = formatImage(res.data.profilePicture);
-              $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
-              vm.user.picture = formatedImage;
+            if(res.data.profile!=null && res.data.profile.profilePicture){
+               var formatedImage = formatImage(res.data.profile.profilePicture);
+               $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
+               vm.user.picture = formatedImage;
             }
           }).catch(function(err){
             console.log(err);

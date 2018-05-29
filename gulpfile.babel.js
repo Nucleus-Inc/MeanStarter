@@ -179,13 +179,13 @@ gulp.task('nodemon', () => {
 })
 
 gulp.task('watch', () => {
+  gulp.watch('gulpfile.babel.js', () => {
+    runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
+  })
+  gulp.watch(['public/app/**/**/*.html','public/app/app.js','public/app/**/**/*.js'], () => {
+    runSequence('htmlToJs','concat','minify')
+  })
   gulp.watch('public/app/assets/sass/*.scss',['sass'])
-  gulp.watch('public/app/views/**/*.html', () => {
-    runSequence('htmlToJs','concat','minify','clean')
-  })
-  gulp.watch(['public/app/**/**/*.js'], () => {
-    runSequence('concat','minify','clean')
-  })
 })
 
 gulp.task('dev', () => {
