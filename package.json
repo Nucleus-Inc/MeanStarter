@@ -1,6 +1,6 @@
 {
   "name": "mean-starter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mean Stack starter template with useful modules and features required for most applications",
   "main": "app.js",
   "scripts": {
@@ -38,7 +38,7 @@
     "angular-route": "^1.7.0",
     "angular-sanitize": "^1.7.0",
     "angular-slick-carousel": "^3.1.7",
-    "angular-table": "^1.0.4",
+    "angular-table": "https://github.com/Igor-Lopes/angular-table.git#v1.0.8",
     "angular-validation-match": "^1.9.0",
     "angular-zxcvbn": "^3.2.2",
     "app-module-path": "^2.2.0",
@@ -66,6 +66,7 @@
     "helmet": "^3.6.1",
     "jquery": "^3.3.1",
     "jsonwebtoken": "^7.4.1",
+    "loaders.css": "^0.1.2",
     "lodash": "^4.17.4",
     "method-override": "^2.3.9",
     "moment": "^2.22.1",
@@ -83,6 +84,7 @@
     "popper.js": "^1.14.3",
     "randomstring": "^1.1.5",
     "slick-carousel": "^1.8.1",
+    "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "string-mask": "^0.3.0",
     "tether": "^1.4.4",
