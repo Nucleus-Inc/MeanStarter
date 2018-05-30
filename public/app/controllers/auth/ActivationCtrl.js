@@ -1,55 +1,55 @@
-(function() {
+(() => {
   angular.module('dashboard').controller('ActivationCtrl', ['$scope', function($scope) {
 
-    var vm = this;
+    let vm = this
 
-    vm.success = false;
-    vm.activationSuccess = false;
+    vm.success = false
+    vm.activationSuccess = false
 
-    vm.danger = true;
-    vm.activationDanger = true;
+    vm.danger = true
+    vm.activationDanger = true
 
-    vm.errLogin = false;
-    vm.resend = false;
+    vm.errLogin = false
+    vm.resend = false
 
-    vm.hidepassword = true;
-    vm.show = true;
-    vm.hide = false;
+    vm.hidepassword = true
+    vm.show = true
+    vm.hide = false
 
-    vm.toggle = function(param){
+    vm.toggle = (param) => {
       if(param==='show'){
-        vm.hidepassword = false;
-        vm.show = false;
-        vm.hide = true;
+        vm.hidepassword = false
+        vm.show = false
+        vm.hide = true
       }else{
-        vm.hidepassword = true;
-        vm.show = true;
-        vm.hide = false;
+        vm.hidepassword = true
+        vm.show = true
+        vm.hide = false
       }
-    };
+    }
 
-    vm.close = function(code) {
+    vm.close = (code) => {
       if(code==0)
-        vm.activationSuccess = false;
+        vm.activationSuccess = false
       else
         if(code==1)
-          vm.activationDanger = false;
+          vm.activationDanger = false
         else
           if(code==2)
-            vm.errLogin = false;
+            vm.errLogin = false
           else
-            vm.resend = false;
-    };
+            vm.resend = false
+    }
 
-    vm.submit = function() {
-      vm.activationSuccess = false;
-      vm.errLogin = true;
-    };
+    vm.submit = () => {
+      vm.activationSuccess = false
+      vm.errLogin = true
+    }
 
-    vm.send = function() {
-      vm.activationDanger = false;
-      vm.resend = true;
-    };
+    vm.send = () => {
+      vm.activationDanger = false
+      vm.resend = true
+    }
 
-  }]);
-}());
+  }])
+})()

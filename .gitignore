@@ -1,4 +1,4 @@
 node_modules/
 config/env/development.js
-public/config
+public/config/env_dev.js
 public/vendors

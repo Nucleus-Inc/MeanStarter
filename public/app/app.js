@@ -55,7 +55,7 @@ angular
           }
         }
       })
-      .when('/consultores',{
+      .when('/usuarios',{
         templateUrl: 'app/views/users/users.html',
         controller: 'UsersCtrl as usersCtrl',
         resolve: {

@@ -12,31 +12,31 @@
         "submenu": []
       },
       {
-        "icon": "supervisor_account",
-        "label": "Consultores",
-        "href": "/consultores",
+        "icon": "list",
+        "label": "Usuários",
+        "href": "/usuarios",
         "hasSubmenu": false,
         "submenu": []
       },
       {
-        "icon": "face",
-        "label": "Clientes",
+        "icon": "shopping_cart",
+        "label": "Exemplo #1",
         "href": "",
         "hasSubmenu": true,
         "submenu": [
           {
             "label": "Pendentes",
-            "href": "/clientes/pendentes"
+            "href": "/exemplo/pendentes"
           },
           {
             "label": "Geral",
-            "href": "/clientes"
+            "href": "/exemplo"
           }
         ]
       },
       {
-        "icon": "store_mall_directory",
-        "label": "Parceiros",
+        "icon": "contacts",
+        "label": "Exemplo #2",
         "href": "",
         "hasSubmenu": true,
         "submenu": [
@@ -51,8 +51,8 @@
         ]
       },
       {
-        "icon": "content_cut",
-        "label": "Serviços",
+        "icon": "assignment",
+        "label": "Exemplo #3",
         "href": "",
         "hasSubmenu": true,
         "submenu": [
@@ -63,22 +63,6 @@
           {
             "label": "Geral",
             "href": "/servicos"
-          }
-        ]
-      },
-      {
-        "icon": "code",
-        "label": "Desenvolvimento",
-        "href": "",
-        "hasSubmenu": true,
-        "submenu": [
-          {
-            "label": "Suporte",
-            "href": "/suporte"
-          },
-          {
-            "label": "Log de Erros",
-            "href": "/logs"
           }
         ]
       }

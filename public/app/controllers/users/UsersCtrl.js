@@ -1,8 +1,8 @@
-(function() {
+(() => {
   angular.module('dashboard').controller('UsersCtrl', ['$scope','$filter','Users','Account','ModalService','Socket','Tables','Notify',
     function($scope, $filter, Users, Account, ModalService, Socket, Tables, Notify) {
 
-      var vm = this;
+      let vm = this
 
       vm.predicates = [
         {
@@ -20,107 +20,107 @@
           value: false,
           label: 'Consultores Pendentes'
         }
-      ];
-      vm.selectedPredicate = vm.predicates[0].label;
+      ]
+      vm.selectedPredicate = vm.predicates[0].label
 
       vm.config = {
         itemsPerPage: 10
-      };
+      }
 
-      var buffer = [];
-      vm.filteredList = [];
-      Users.getUsers().then(function(res){
-        for(var i=0;i<res.data.length;i++)
-          vm.filteredList.push(res.data[i]);
-        buffer = vm.filteredList;
-      });
+      let buffer = []
+      vm.filteredList = []
+      Users.getUsers().then((res) => {
+        for(let i=0;i<res.data.length;i++)
+          vm.filteredList.push(res.data[i])
+        buffer = vm.filteredList
+      })
 
-      Socket.on('admin add',function(msg){
-        var flag = true;
-        vm.filteredList.filter(function(item){
+      Socket.on('admin add',(msg) => {
+        let flag = true
+        vm.filteredList.filter((item) => {
           if(item._id === msg.id)
-            flag = false;
-        });
+            flag = false
+        })
         if(flag)
-          vm.filteredList.push(msg);
-      });
+          vm.filteredList.push(msg)
+      })
 
-      Socket.on('admin active',function(msg){
-        vm.filteredList.filter(function(item){
+      Socket.on('admin active',(msg) => {
+        vm.filteredList.filter((item) => {
           if(item._id === msg)
-            item.account.isActive = true;
-        });
-      });
+            item.account.isActive = true
+        })
+      })
 
-      Socket.on('admin inactivate',function(msg){
-        vm.filteredList.filter(function(item){
+      Socket.on('admin inactivate',(msg) => {
+        vm.filteredList.filter((item) => {
           if(item._id === msg)
-            item.account.isActive = false;
-        });
-      });
+            item.account.isActive = false
+        })
+      })
 
-      var search = function(value){
-        Tables.search([value.name,value.email],vm.key,function(res){
+      let search = (value) => {
+        Tables.search([value.name,value.email],vm.key,(res) => {
           if(res){
-            buffer.filter(function(item){
+            buffer.filter((item) => {
               if(item.account.email == value.email){
-                vm.filteredList.push(item);
+                vm.filteredList.push(item)
               }
-            });
+            })
           }
-        });
-      };
+        })
+      }
 
-      vm.update = function() {
-        Tables.condition(vm.predicates,vm.selectedPredicate,function(condition){
-          var account = [];
-          buffer.filter(function(item){
-            account.push(item.account);
-          });
-          vm.filteredList = [];
-          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,function(res){
+      vm.update = () => {
+        Tables.condition(vm.predicates,vm.selectedPredicate,(condition) => {
+          let account = []
+          buffer.filter((item) => {
+            account.push(item.account)
+          })
+          vm.filteredList = []
+          Tables.update(account,vm.predicates,vm.selectedPredicate,condition,(res) => {
             if(res!=null)
-              search(res);
-          });
-        });
-      };
+              search(res)
+          })
+        })
+      }
 
-      vm.clean = function() {
-        Tables.clean(vm,buffer,function(res){});
-      };
+      vm.clean = () => {
+        Tables.clean(vm,buffer,(res) => { })
+      }
 
-      vm.active = function(id, email, isActive) {
+      vm.active = (id, email, isActive) => {
         ModalService.showModal({
           templateUrl: 'app/views/modals/alert.html',
           controller: 'AlertModalCtrl as alertModalCtrl',
           inputs: {
             title: isActive ? 'Desativar usuário' : 'Ativar usuário',
-            question: isActive ? 'Você desja realmente desativar este usuário?' : 'Você deseja realmente ativar este usuário?',
+            question: isActive ? 'Você desja realmente Desativar este usuário?' : 'Você deseja realmente ativar este usuário?',
             user: email
           }
-        }).then(function(modal) {
-          modal.element.modal();
-          modal.close.then(function(result) {
-            if(result){
+        }).then((modal) => {
+          modal.element.modal()
+          modal.close.then((result) => {
+            if(result && result.status){
               if(isActive){
-                Account.inactivate(id).then(function(res){
-                  Notify.run('Usuário desativado com sucesso','alert-success',null,null,null,function(res){
+                Account.inactivate(id).then((res) => {
+                  Notify.run('Usuário desativado com sucesso','alert-success',null,null,null,(res) => {
                     if(res)
-                      Socket.emit('admin inactivate',id);
-                  });
-                });
+                      Socket.emit('admin inactivate',id)
+                  })
+                })
               }else{
-                Account.active(id).then(function(res){
-                  Notify.run('Usuário ativado com sucesso','alert-success',null,null,null,function(res){
+                Account.active(id).then((res) => {
+                  Notify.run('Usuário ativado com sucesso','alert-success',null,null,null,(res) => {
                     if(res)
-                      Socket.emit('admin active',id);
-                  });
-                });
+                      Socket.emit('admin active',id)
+                  })
+                })
               }
             }
-          });
-        });
-      };
+          })
+        })
+      }
 
-  }]);
-}());
+  }])
+})()

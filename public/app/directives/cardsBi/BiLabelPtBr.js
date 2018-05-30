@@ -19,6 +19,14 @@
         return 'Clientes'
       if(string === 'sales')
         return 'Vendas'
+      if(string === 'users')
+        return 'Usuários'
+      if(string === 'example1')
+        return 'Exemplo #1'
+      if(string === 'example2')
+        return 'Exemplo #2'
+      if(string === 'example3')
+        return 'Exemplo #3'
       return string
     }
   })
