@@ -1,13 +1,13 @@
-(function() {
-  angular.module('dashboard').service('Bi', ['$http','Config', function($http,Config) {
+(() => {
+  angular.module('dashboard').service('Bi', ['$http','Config', ($http,Config) => {
 
-    var url_base = Config.url_base;
+    const url_base = Config.url_base
 
-    this.getNumbers = function(){
-      return $http.get(url_base+'/users/management/bi/numbers').then(function(result){
-        return result;
-      });
-    };
+    return {
+      getNumbers: () => {
+        return $http.get(url_base+'/users/management/bi/numbers').then((result) => { return result })
+      }
+    }
 
-  }]);
-}());
+  }])
+})()

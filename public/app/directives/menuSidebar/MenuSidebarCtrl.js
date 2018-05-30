@@ -1,7 +1,7 @@
-(function() {
-  angular.module('dashboard').controller('MenuSidebarCtrl', [function() {
+(() => {
+  angular.module('dashboard').controller('MenuSidebarCtrl', [ function() {
 
-    var vm = this;
+    let vm = this
 
     vm.menuItens = [
       {
@@ -82,7 +82,7 @@
           }
         ]
       }
-    ];
+    ]
 
-  }]);
-}());
+  }])
+})()

@@ -1,13 +1,10 @@
-(function() {
-  angular.module('dashboard').controller('UiBrCellphoneCtrl', ['$scope','Verification', function($scope, Verification) {
+(() => {
+  angular.module('dashboard').controller('UiBrCellphoneCtrl', ['$scope','Verification', ($scope, Verification) => {
 
-    $scope.verifyPhoneNumber = function(value){
-      return Verification.userVerifyPhoneNumber(value).then(function(res){
-        return res;
-      }).catch(function(err){
-        return err;
-      })
-    };
+    $scope.verifyPhoneNumber = (value) => {
+      let phoneNumber = '55' + value.toString().replace(/[^0-9]/g, '')
+      return Verification.userVerifyPhoneNumber(phoneNumber).then((result) => { return result })
+    }
 
-  }]);
-}());
+  }])
+})()

@@ -10,7 +10,7 @@ import ngConstant from 'gulp-ng-constant'
 import sass from 'gulp-sass'
 import htmlToJs from 'gulp-angular-html2js'
 import concat from 'gulp-concat'
-import uglify from 'gulp-uglify'
+import minify from 'gulp-babel-minify'
 import clean from 'gulp-clean'
 import nodemon from 'gulp-nodemon'
 
@@ -90,7 +90,8 @@ gulp.task('copyCss', () => {
     'node_modules/slick-carousel/slick/slick-theme.css',
     'node_modules/slick-carousel/slick/slick.css',
     'node_modules/daemonite-material/css/material.min.css',
-    'node_modules/slick-carousel/slick/ajax-loader.gif'
+    'node_modules/slick-carousel/slick/ajax-loader.gif',
+    'node_modules/bootstrap/dist/css/bootstrap.min.css'
   ])
     .pipe(gulp.dest('public/vendors/css'))
 })
@@ -146,6 +147,9 @@ gulp.task('htmlToJs', () => {
 
 gulp.task('concat', () => {
   return gulp.src([ 'public/app/app.js', 'public/app/**/**/*.js', 'public/tmp/**/*.html.js', 'public/dist/config.js'])
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(concat({
       newLine: ';',
       path: 'app.js'
@@ -155,10 +159,7 @@ gulp.task('concat', () => {
 
 gulp.task('minify', () => {
   return gulp.src('public/dist/app.js')
-    .pipe(babel({
-      presets: ['es2015']
-    }))
-    .pipe(uglify({
+    .pipe(minify({
       mangle: false
     }))
     .pipe(rename({suffix: '.min'}))

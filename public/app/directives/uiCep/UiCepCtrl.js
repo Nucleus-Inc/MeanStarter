@@ -1,15 +1,13 @@
-(function() {
-  angular.module('dashboard').controller('UiCepCtrl', ['$scope','PostmonService','Socket', function($scope,PostmonService,Socket) {
+(() => {
+  angular.module('dashboard').controller('UiCepCtrl', ['$scope','PostmonService','Socket', ($scope,PostmonService,Socket) => {
 
-    $scope.getCEP = function(value){
-      return PostmonService.getCep(value).then(function(res){
+    $scope.getCEP = (value) => {
+      return PostmonService.getCep(value).then((res) => {
         if(res.status==200)
-          Socket.emit('cep complete',res.data);
-        return res;
-      }).catch(function(res){
-        return res;
-      });
-    };
+          Socket.emit('cep complete',res.data)
+        return res
+      }).catch((res) => { return res })
+    }
 
-  }]);
-}());
+  }])
+})()

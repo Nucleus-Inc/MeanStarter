@@ -1,9 +1,9 @@
-(function() {
-  angular.module('dashboard').filter('commonNames', function() {
-    return function(string) {
+(() => {
+  angular.module('dashboard').filter('commonNames', () => {
+    return (string) => {
       if(!angular.isString(string))
-          return string;
-      return string.replace(/(?:^|\s)\S/g,function(a){return a.toUpperCase();});
-    };
-  });
-}());
+        return string
+      return string.replace(/(?:^|\s)\S/g,(a) => { return a.toUpperCase() })
+    }
+  })
+})()

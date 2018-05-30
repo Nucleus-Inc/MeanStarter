@@ -1,12 +1,9 @@
-(function() {
-  angular.module('dashboard').directive('menuNavbar', function() {
+(() => {
+  angular.module('dashboard').directive('menuNavbar', () => {
     return {
       restrict: 'AEC',
       templateUrl: 'app/directives/menuNavbar/menuNavbar.html',
-      controller: 'MenuNavbarCtrl as menuNavbarCtrl',
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-
-      }
-    };
-  });
-}());
+      controller: 'MenuNavbarCtrl as menuNavbarCtrl'
+    }
+  })
+})()

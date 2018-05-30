@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * @ngdoc overview
@@ -30,28 +30,28 @@ angular
     'slickCarousel',
     'cloudinary'
   ])
-  .config(function($routeProvider, $locationProvider, $httpProvider, cloudinaryProvider, CloudinaryConstant) {
+  .config(($routeProvider, $locationProvider, $httpProvider, cloudinaryProvider, CloudinaryConstant) => {
 
     // Remove '!' from path
-    $locationProvider.hashPrefix('');
+    $locationProvider.hashPrefix('')
 
     // Allow cross domain requests
-    $httpProvider.defaults.withCredentials = true;
-    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $httpProvider.defaults.withCredentials = true
+    $httpProvider.defaults.useXDomain = true
+    delete $httpProvider.defaults.headers.common['X-Requested-With']
 
     cloudinaryProvider
      .set("cloud_name",CloudinaryConstant.cloud_name)
      .set("secure",CloudinaryConstant.secure)
-     .set("upload_preset",CloudinaryConstant.upload_preset);
+     .set("upload_preset",CloudinaryConstant.upload_preset)
 
     $routeProvider
       .when('/',{
         templateUrl: 'app/views/home/home.html',
         controller: 'HomeCtrl as homeCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
@@ -59,8 +59,8 @@ angular
         templateUrl: 'app/views/users/users.html',
         controller: 'UsersCtrl as usersCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
@@ -68,8 +68,8 @@ angular
         templateUrl: 'app/views/profile/profile.html',
         controller: 'ProfileCtrl as profileCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
@@ -77,8 +77,8 @@ angular
         templateUrl: 'app/views/profile/settings.html',
         controller: 'SettingsCtrl as settingsCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
@@ -86,8 +86,8 @@ angular
         templateUrl: 'app/views/report/report.html',
         controller: 'ReportCtrl as reportCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
@@ -118,29 +118,27 @@ angular
       })
       .otherwise({
         redirectTo: '/'
-      });
+      })
 
   })
+  .run(($rootScope, $location, amMoment) => {
 
-  .run(function($rootScope, $location, amMoment) {
-
-    amMoment.changeLocale('pt-br');
+    amMoment.changeLocale('pt-br')
 
     /* Route events */
-    $rootScope.$on("$routeChangeStart", function(event, next, current) {
-      console.log("Route Start");
-    });
+    $rootScope.$on("$routeChangeStart", (event, next, current) => {
+      console.log("Route Start")
+    })
 
-    $rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
-      console.log("Route Change Error: " + JSON.stringify(rejection));
-      $location.path("/login");
-    });
+    $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
+      console.log("Route Change Error: " + JSON.stringify(rejection))
+      $location.path("/login")
+    })
 
-    $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-      if (typeof previous != 'undefined') {
-        console.log("Previous Url: " + previous.originalPath);
-      }
-      console.log("Current Url: " + current.originalPath);
-    });
+    $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
+      if (typeof previous != 'undefined')
+        console.log("Previous Url: " + previous.originalPath)
+      console.log("Current Url: " + current.originalPath)
+    })
 
-  });
+  })

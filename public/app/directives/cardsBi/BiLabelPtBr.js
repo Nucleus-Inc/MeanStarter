@@ -1,25 +1,25 @@
-(function() {
-  angular.module('dashboard').filter('biLabel', function() {
-    return function(string) {
+(() => {
+  angular.module('dashboard').filter('biLabel', () => {
+    return (string) => {
       if(string === 'admins')
-        return 'Operadores';
+        return 'Operadores'
       if(string === 'customers')
-        return 'Clientes';
+        return 'Clientes'
       if(string === 'partners')
-        return 'Parceiros';
+        return 'Parceiros'
       if(string === 'services')
-        return 'Serviços';
+        return 'Serviços'
       if(string === 'categories')
-        return 'Categorias';
+        return 'Categorias'
       if(string === 'plans')
-        return 'Planos';
+        return 'Planos'
       if(string === 'offers')
-        return 'Ofertas';
+        return 'Ofertas'
       if(string === 'clients')
-        return 'Clientes';
+        return 'Clientes'
       if(string === 'sales')
-        return 'Vendas';
-      return string;
-    };
-  });
-}());
+        return 'Vendas'
+      return string
+    }
+  })
+})()

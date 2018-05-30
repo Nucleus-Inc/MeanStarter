@@ -1,13 +1,13 @@
-(function() {
-  angular.module('dashboard').service('Users', ['$http','Config', function($http,Config) {
+(() => {
+  angular.module('dashboard').service('Users', ['$http','Config', ($http,Config) => {
 
-    var url_base = Config.url_base;
+    const url_base = Config.url_base
 
-    this.getUsers = function(){
-      return $http.get(url_base+'/users').then(function(result){
-        return result;
-      });
-    };
+    return {
+      getUsers: () => {
+        return $http.get(url_base+'/users').then((result) => { return result })
+      }
+    }
 
-  }]);
-}());
+  }])
+})()

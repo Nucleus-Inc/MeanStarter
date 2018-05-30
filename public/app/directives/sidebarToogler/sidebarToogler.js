@@ -1,15 +1,15 @@
-(function() {
-  angular.module('dashboard').directive('sidebarToogler', function() {
+(() => {
+  angular.module('dashboard').directive('sidebarToogler', () => {
     return {
       restrict: 'AEC',
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-        iElement.bind('click',function(){
-          setTimeout(function(){
-            angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up');
-            angular.element('#sidebar').toggleClass('sidebar-visible');
-          },1);
-        });
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
+        iElement.bind('click', () => {
+          setTimeout(() => {
+            angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up')
+            angular.element('#sidebar').toggleClass('sidebar-visible')
+          },1)
+        })
       }
-    };
-  });
-}());
+    }
+  })
+})()

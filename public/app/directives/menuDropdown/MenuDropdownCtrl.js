@@ -1,74 +1,67 @@
-(function() {
+(() => {
   angular.module('dashboard').controller('MenuDropdownCtrl', ['$scope','$window','$location','Auth','Profile','Socket', function($scope, $window, $location, Auth, Profile, Socket) {
 
-    var vm = this;
+    let vm = this
 
-    Socket.on('change profile',function(msg){
-      var formatedImage = formatImage(msg);
-      var cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile');
+    Socket.on('change profile', (msg) => {
+      let formatedImage = formatImage(msg)
+      let cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile')
       if(msg != cachedFile)
-        $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
-      vm.user.picture = formatedImage;
-    });
+        $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage)
+      vm.user.picture = formatedImage
+    })
 
-    Socket.on('login success',function(msg){
-      $scope.display();
-    });
+    Socket.on('login success', (msg) => {
+      $scope.display()
+    })
 
-    $scope.display = function(){
-      Auth.isAuthenticated().then(function(res){
+    $scope.display = () => {
+      Auth.isAuthenticated().then((res) => {
         vm.user = {
           '_id': res.data._id,
           'name': res.data.account.name,
           'email': res.data.account.email,
           'phoneNumber': res.data.account.phoneNumber,
           'isActive': res.data.account.isActive
-        };
-        var cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile');
+        }
+        let cachedFile = $window.localStorage.getItem('persistentCache:imageNavProfile')
         if(cachedFile == null || cachedFile === ''){
-          Profile.getProfile(res.data._id).then(function(res){
+          Profile.getProfile(res.data._id).then((res) => {
             if(res.data.profile!=null && res.data.profile.profilePicture){
-               var formatedImage = formatImage(res.data.profile.profilePicture);
-               $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage);
-               vm.user.picture = formatedImage;
+               let formatedImage = formatImage(res.data.profile.profilePicture)
+               $window.localStorage.setItem('persistentCache:imageNavProfile',formatedImage)
+               vm.user.picture = formatedImage
             }
-          }).catch(function(err){
-            console.log(err);
-          });
+          })
         }else
-          vm.user.picture = cachedFile;
-      }).catch(function(err){
-        console.log(err);
-      });
-    };
+          vm.user.picture = cachedFile
+      })
+    }
 
-    vm.logout = function(){
-      Auth.logout().then(function(res){
-        Socket.emit('logout success', res.data);
-        $window.localStorage.setItem('persistentCache:imageNavProfile','');
-        $window.localStorage.setItem('persistentCache:imageProfile','');
-        vm.user.picture = undefined;
-        $location.path('/login');
-      }).catch(function(err){
-        console.log('err');
-        // Socket.emit('logout success', res.data);
-      });
-    };
+    vm.logout = () => {
+      Auth.logout().then((res) => {
+        Socket.emit('logout success', res.data)
+        $window.localStorage.setItem('persistentCache:imageNavProfile','')
+        $window.localStorage.setItem('persistentCache:imageProfile','')
+        vm.user.picture = undefined
+        $location.path('/login')
+      })
+    }
 
-    var formatImage = function(url){
+    let formatImage = (url) => {
       if(url){
-        var search = url.search('/w_40,h_40,c_pad,b_rgb:31000f');
+        let search = url.search('/w_40,h_40,c_pad,b_rgb:31000f')
         if(search > -1){
-          return url;
+          return url
         }else{
-          var pos = url.lastIndexOf("/upload/");
-          var res = url.slice(0, pos+8);
-          var posRes = url.slice(pos+7,url.length);
-          res = res+'w_40,h_40,c_pad,b_rgb:31000f';
-          return (res+posRes);
+          let pos = url.lastIndexOf("/upload/")
+          let res = url.slice(0, pos+8)
+          let posRes = url.slice(pos+7,url.length)
+          res = res+'w_40,h_40,c_pad,b_rgb:31000f'
+          return (res+posRes)
         }
       }
-    };
+    }
 
-  }]);
-}());
+  }])
+})()

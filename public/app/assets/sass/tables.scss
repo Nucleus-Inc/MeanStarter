@@ -2,6 +2,21 @@
   display: table;
 }
 
+.at-pagination {
+  margin: 0px;
+  width: fit-content;
+  float: right;
+}
+
+.at-select-page {
+  width: fit-content;
+  display: inline-flex;
+}
+
+.at-label {
+  margin-top: 20px;
+}
+
 .pagination-table {
   margin-left: 10px;
   margin-right: 10px;

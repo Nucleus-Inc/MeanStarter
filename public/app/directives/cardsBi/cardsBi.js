@@ -1,27 +1,26 @@
-(function() {
-  angular.module('dashboard').directive('cardsBi', function() {
+(() => {
+  angular.module('dashboard').directive('cardsBi', () => {
     return {
       restrict: 'AEC',
       scope: {
         biData: '=?',
         biName: '@',
-        biIcon: '@'
+        biIcon: '@',
+        biColor: '@'
       },
       templateUrl: 'app/directives/cardsBi/cardsBi.html',
       controller: 'CardsBiCtrl as cardsBiCtrl',
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-        
-        scope.setColor(angular.element('.card-box'));
-        scope.setIcon(scope.biIcon);
-        scope.setLabel(scope.biName);
-        scope.$watch('biData', watchData, true);
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
 
-        function watchData (newVal, oldVal) {
+        scope.setColor(iElement.children().children()[0], scope.biColor)
+        scope.setIcon(scope.biIcon)
+        scope.setLabel(scope.biName)
+        scope.$watch('biData', (newVal, oldVal) => {
           if(newVal!=undefined)
-            scope.setValue(newVal[scope.biName]);
-        };
+            scope.setValue(newVal[scope.biName])
+        }, true)
 
       }
-    };
-  });
-}());
+    }
+  })
+})()

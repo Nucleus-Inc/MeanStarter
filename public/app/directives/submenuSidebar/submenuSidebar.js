@@ -1,20 +1,20 @@
-(function() {
-  angular.module('dashboard').directive('submenuSidebar', function() {
+(() => {
+  angular.module('dashboard').directive('submenuSidebar', () => {
     return {
       restrict: 'AEC',
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-        var clear = function(){
-          var items = angular.element('.sidebar-menuItem-button');
-          angular.forEach(items,function(item){
-            angular.element(item).parent().removeClass('open');
-          });
-        };
-        iElement.bind('click',function(){
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
+        var clear = () => {
+          var items = angular.element('.sidebar-menuItem-button')
+          angular.forEach(items, (item) => {
+            angular.element(item).parent().removeClass('open')
+          })
+        }
+        iElement.bind('click', () => {
           if(!angular.element(iElement).parent().hasClass('open'))
-            clear();
-          angular.element(iElement).parent().toggleClass('open');
-        });
+            clear()
+          angular.element(iElement).parent().toggleClass('open')
+        })
       }
-    };
-  });
-}());
+    }
+  })
+})()

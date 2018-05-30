@@ -1,77 +1,48 @@
-(function() {
-  angular.module('dashboard').directive('uiEmail', function() {
+(() => {
+  angular.module('dashboard').directive('uiEmail', () => {
     return {
       restrict: 'AEC',
       require: 'ngModel',
       scope: {
         ngModel: '=ngModel'
       },
-      controller: ['$scope','Verification','Auth','Account', function($scope, Verification, Auth, Account) {
+      controller: 'UiEmailCtrl as uiEmailCtrl',
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
 
-        $scope.userVerifyEmail = function(email,view){
-          Verification.userVerifyEmail(email).then(function(res){
-            view.$setValidity("emailExists",true);
-          }).catch(function(err){
-            if(err.status==422){
-              view.$setValidity("emailExists",false);
-            }
-            if(err.status==404){
-              view.$setValidity("emailExists",true);
-            }
-          });
-        };
-
-        $scope.verifyEmail = function(email,view){
-          Auth.isAuthenticated().then(function(res){
-            if(res.data){
-              Account.getAccount(res.data._id).then(function(res){
-                if(res.data.email === email)
-                  view.$setValidity("emailExists",true);
-                else
-                  view.$setValidity("emailExists",false);
-              });
-            }else
-              $scope.userVerifyEmail(email,view);
-          });
-        };
-
-      }],
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-
-        scope.$watch('ngModel', function (value) {
+        scope.$watch('ngModel', (value) => {
           if(value){ //exists an input value
-            var str = ""+value;
-            var res = str.match(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([;,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/);
+            let str = value.toString()
+            let res = str.match(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/)
             if(res){ //email is match
-              ngModelCtrl.$setValidity("invalidEmail",true);
-              if(iAttrs.uiEmail){ //uiEmail defined
+              ngModelCtrl.$setValidity("emailExists", true)
+              ngModelCtrl.$setValidity("invalidEmail", true)
+              if(iAttrs.uiEmail){ //uiEmail defined .catch((err) => { ngModelCtrl.$setValidity("emailExists", res)  })
                 if(iAttrs.uiEmail == 'registered'){ //uiEmail equals registered
-                  scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
+                  scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })
                 }else{
                   if(iAttrs.uiEmail == 'no-registered'){ //uiEmail equals no-registered
-
+                    verifyEmail = true
                   }else{
                     if(iAttrs.uiEmail == 'logged'){
-                      scope.verifyEmail(scope.ngModel,ngModelCtrl);
+                      scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })
                     }else{ //uiEmail exists and is empty
-                      scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
+                      scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })
                     }
                   }
                 }
               }else //uiEmail no defined
-                scope.userVerifyEmail(scope.ngModel,ngModelCtrl);
-              /*scope.userVerifyEmail(scope.ngModel,ngModelCtrl);*/
+                scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })
             }else{ //email no match
-              ngModelCtrl.$setValidity("invalidEmail",false);
-              ngModelCtrl.$setValidity("emailExists",true);
+              ngModelCtrl.$setValidity("invalidEmail",false)
+              ngModelCtrl.$setValidity("emailExists",true)
             }
           }else{ //no input value
-            ngModelCtrl.$setValidity("invalidEmail",true);
-            ngModelCtrl.$setValidity("emailExists",true);
+            ngModelCtrl.$setValidity("invalidEmail",true)
+            ngModelCtrl.$setValidity("emailExists",true)
           }
-        });
+        })
 
       }
-    };
-  });
-}());
+    }
+  })
+})()

@@ -1,28 +1,22 @@
-(function() {
-  angular.module('dashboard').directive('uiPassword', function() {
+(() => {
+  angular.module('dashboard').directive('uiPassword', () => {
     return {
       restrict: 'AEC',
       require: 'ngModel',
       scope: {
         ngModel: '=ngModel'
       },
-      controller: ['$scope','Verification', function($scope,Verification) {
-        $scope.checkPassword = function(password, view){
-          Verification.verifyPassword(password).then(function(res){
-            if(res.data.score > 1)
-              view.$setValidity("weakPassword", true);
-            else
-              view.$setValidity("weakPassword", false);
-          });
-        };
-      }],
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
-        scope.$watch('ngModel', function (value) {
-          ngModelCtrl.$setValidity("weakPassword", true);
-          if(value)
-            scope.checkPassword(value,ngModelCtrl);
-        });
+      controller: 'UiPasswordCtrl as uiPasswordCtrl',
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
+        scope.$watch('ngModel', (value) => {
+          ngModelCtrl.$setValidity("weakPassword", true)
+          if(value){
+            scope.checkPassword(value).then((res) => {
+              ngModelCtrl.$setValidity('weakPassword', res )
+            })
+          }
+        })
       }
-    };
-  });
-}());
+    }
+  })
+})()

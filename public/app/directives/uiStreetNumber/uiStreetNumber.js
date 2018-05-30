@@ -1,25 +1,25 @@
-(function() {
-  angular.module('dashboard').directive('uiStreetNumber', function() {
+(() => {
+  angular.module('dashboard').directive('uiStreetNumber', () => {
     return {
       restrict: 'AEC',
       require: 'ngModel',
       scope: {
         ngModel: '=ngModel'
       },
-      link: function(scope, iElement, iAttrs, ngModelCtrl) {
+      link: (scope, iElement, iAttrs, ngModelCtrl) => {
 
         //Input accept numbers-only
-        function parserName(number) {
-          var input = number.replace(/[^0-9]/g,'');
+        let parserName = (number) => {
+          var input = number.replace(/[^0-9]/g,'')
           if(input !== number) {
-              ngModelCtrl.$setViewValue(input);
-              ngModelCtrl.$render();
+              ngModelCtrl.$setViewValue(input)
+              ngModelCtrl.$render()
           }
-          return Number(input);
+          return Number(input)
         }
-        ngModelCtrl.$parsers.push(parserName);
-        
+        ngModelCtrl.$parsers.push(parserName)
+
       }
-    };
-  });
-}());
+    }
+  })
+})()

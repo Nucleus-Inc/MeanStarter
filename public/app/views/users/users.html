@@ -38,19 +38,19 @@
           </table>
           <div class="row controler-table">
             <div class="col-md-6">
-              <div class="form-group">
-                <label>Ver </label>
+              <div class="at-select-page form-group">
+                <label class="at-label">Ver </label>
                 <select class="pagination-table custom-select" ng-init="usersCtrl.config.itemsPerPage = '10'" ng-model="usersCtrl.config.itemsPerPage" class="form-control">
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
                 </select>
-                <label>itens</label>
+                <label class="at-label">itens</label>
               </div>
             </div>
             <div class="col-md-6">
-              <at-pagination at-list="usersCtrl.filteredList" at-config="usersCtrl.config" class="pag-table" at-translate></at-pagination>
+              <at-pagination at-list="usersCtrl.filteredList" at-config="usersCtrl.config" class="pag-table at-pagination"></at-pagination>
             </div>
           </div>
         </div>

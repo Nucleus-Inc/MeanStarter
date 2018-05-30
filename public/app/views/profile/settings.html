@@ -67,7 +67,7 @@
                 </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Celular</label>
-                  <input  ng-disabled="true" type="tel" name="phoneNumber" ng-model="settingsCtrl.inputs.phoneNumber" class="form-control" placeholder="(xx) XXXXX-XXXX" ng-class="{'has-error': UpdateProfileForm.phoneNumber.$invalid && UpdateProfileForm.phoneNumber.$dirty}" ui-email="logged" required>
+                  <input  ng-disabled="true" type="tel" name="phoneNumber" ng-model="settingsCtrl.inputs.phoneNumber" class="form-control" placeholder="(xx) XXXXX-XXXX" ng-class="{'has-error': UpdateProfileForm.phoneNumber.$invalid && UpdateProfileForm.phoneNumber.$dirty}" ui-br-cellphone required>
                   <small id="phoneHelp" class="form-text text-muted">Nós nunca compartilharemos seu celular com ninguém.</small>
                   <div class="error-container" ng-show="RegisterForm.phoneNumber.$dirty && RegisterForm.phoneNumber.$invalid">
                     <small ng-show="RegisterForm.phoneNumber.$error.required" class="form-text text-muted text-danger">O celular é obrigatório.</small>
@@ -106,7 +106,7 @@
                 </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Senha atual</label>
-                  <input ng-model="settingsCtrl.account.currentPassword" type="password" name="currentPassword" class="form-control" ng-class="{'has-error': UpdatePassForm.currentPassword.$invalid && UpdatePassForm.currentPassword.$dirty}" aria-describedby="passwordHelp">
+                  <input ng-model="settingsCtrl.account.currentPassword" type="password" name="currentPassword" class="form-control" ng-class="{'has-error': UpdatePassForm.currentPassword.$invalid && UpdatePassForm.currentPassword.$dirty}" current-password current-email="{{settingsCtrl.inputs.email}}" aria-describedby="passwordHelp" required>
                   <small id="passwordHelp" class="form-text text-muted">Você deve fornecer sua senha atual para alterá-la.</small>
                   <div class="error-container" ng-show="UpdatePassForm.currentPassword.$dirty && UpdatePassForm.currentPassword.$invalid">
                     <small ng-show="UpdatePassForm.currentPassword.$error.required" class="form-text text-muted text-danger">É obrigatório digitar a senha atual para modificar a senha.</small>
