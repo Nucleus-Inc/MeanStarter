@@ -1,6 +1,6 @@
 {
   "name": "mean-starter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Mean Stack starter template with useful modules and features required for most applications",
   "main": "app.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "angular-route": "^1.7.0",
     "angular-sanitize": "^1.7.0",
     "angular-slick-carousel": "^3.1.7",
-    "angular-table": "https://github.com/Igor-Lopes/angular-table.git#v1.0.8",
+    "angular-table": "https://github.com/Nucleus-Inc/angular-table.git",
     "angular-validation-match": "^1.9.0",
     "angular-zxcvbn": "^3.2.2",
     "app-module-path": "^2.2.0",
@@ -112,6 +112,7 @@
     "gulp": "^3.9.1",
     "gulp-angular-html2js": "0.0.3",
     "gulp-babel": "^7.0.1",
+    "gulp-babel-minify": "^0.4.3",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-ng-constant": "^1.2.0",
@@ -121,7 +122,6 @@
     "gulp-run-sequence": "^0.3.2",
     "gulp-sass": "^4.0.1",
     "gulp-series": "^1.0.2",
-    "gulp-uglify": "^3.0.0",
     "gulp-yarn": "^2.0.0",
     "mocha": "^3.4.2",
     "nyc": "^11.8.0",
