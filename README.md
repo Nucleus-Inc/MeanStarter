@@ -51,3 +51,10 @@ Mean Stack starter template with useful modules and features required for most a
 - [ ] Ensure Dependencies are Secure
 - [ ] Sanitize Mongo input to avoid Mongo script injection
 - [ ] Avoid DOS exploit where users can manually trigger bad request errors that shut down your app
+
+## Build
+
+```sh
+$ yarn install
+$ gulp dev
+```
