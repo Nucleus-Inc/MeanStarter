@@ -1,0 +1,41 @@
+angular.module("views/modals/form-modal.html",[]).run(["$templateCache",function($templateCache){
+    $templateCache.put("templates/form-modal.html",
+    "<div class=\"modal fade \">"+
+    "    <div class=\"modal-dialog\">"+
+    "        <div class=\"modal-content\">"+
+    "            <div class=\"modal-header\">"+
+    "                <h4 class=\"modal-title\">Modal with Form</h4>"+
+    "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>"+
+    "            </div>"+
+    "            <div class=\"modal-body\">"+
+    "                <form ng-submit=\"formModalCtrl.close(true)\" name=\"form-modal\" novalidate>"+
+    "                    <div class=\"form-group\">"+
+    "                        <label for=\"email-input\">Email address</label>"+
+    "                        <input ng-model=\"formModalCtrl.inputs.email\" type=\"email\" class=\"form-control\" id=\"email-input\" aria-describedby=\"email-help\" placeholder=\"Enter email\">"+
+    "                        <small id=\"email-help\" class=\"form-text text-muted\">We'll never share your email with anyone else.</small>"+
+    "                    </div>"+
+    "                    <div class=\"form-group\">"+
+    "                        <label for=\"subject\">Subject</label>"+
+    "                        <input ng-model=\"formModalCtrl.inputs.subject\" type=\"text\" class=\"form-control\" id=\"subject\" placeholder=\"Subject of your message\">"+
+    "                    </div>"+
+    "                    <div class=\"form-group\">"+
+    "                        <label for=\"text-area\">Your message</label>"+
+    "                        <textarea ng-model=\"formModalCtrl.inputs.message\" class=\"form-control\" id=\"text-area\" rows=\"3\"></textarea>"+
+    "                    </div>"+
+    "                    <div class=\"form-check\">"+
+    "                        <label class=\"form-check-label\">"+
+    "                          <input ng-model=\"formModalCtrl.inputs.checkbox\" type=\"checkbox\" class=\"form-check-input\">"+
+    "                          Check me out"+
+    "                        </label>"+
+    "                    </div>"+
+    "                    <div class=\"modal-footer\">"+
+    "                        <button type=\"submit\" class=\"btn btn-primary\">Send</button>"+
+    "                        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"> Cancel</button>"+
+    "                    </div>"+
+    "                </form>"+
+    "            </div>"+
+    "        </div>"+
+    "    </div>"+
+    "</div>"+
+    "");
+}]);

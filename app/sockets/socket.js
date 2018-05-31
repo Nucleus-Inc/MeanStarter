@@ -1,7 +1,5 @@
 module.exports = (io) => {
-
   io.on('connection', (socket) => {
-
     console.log('user connected: ' + socket.id)
 
     socket.on('login success', (msg) => {
@@ -33,7 +31,5 @@ module.exports = (io) => {
     socket.on('disconnect', () => {
       console.log('user disconnected: ' + socket.id)
     })
-
   })
-
 }

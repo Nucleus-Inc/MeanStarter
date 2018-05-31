@@ -1,0 +1,33 @@
+angular.module("directives/cloudinary/cloudinary.html",[]).run(["$templateCache",function($templateCache){
+    $templateCache.put("templates/cloudinary.html",
+    "<slick settings=\"cloudinaryCtrl.slickConfig\" class=\"slick-cloudinary\">"+
+    "  <div ng-repeat=\"url in cloudinaryCtrl.urls\">"+
+    "    <div class=\"custom-zoom\">"+
+    "      <img class=\"img slick-img\" ng-src=\"{{url.path}}\"/>"+
+    "      <span class=\"custom-zoom-in\">"+
+    "        <i ng-click=\"cloudinaryCtrl.zoom(url)\" class=\"material-icons\">zoom_in</i>"+
+    "      </span>"+
+    "    </div>"+
+    "  </div>"+
+    "</slick>"+
+    ""+
+    "<!-- modal -->"+
+    "<div id=\"slick-cloudinary-modal\" class=\"slick-cloudinary-modal\">"+
+    "  <div class=\"slick-modal-content\">"+
+    "      <span ng-click=\"cloudinaryCtrl.close()\" class=\"slick-modal-close\" id=\"slick-modal-close\">Fechar</span>"+
+    "      <figure class=\"slick-figure\">"+
+    "          <img id=\"slick-figure-img\" src=\"{{cloudinaryCtrl.zoomImg}}\" class=\"slick-figure-img\">"+
+    "          <div id=\"slick-infobox\" class=\"slick-infobox\">"+
+    "            <span class=\"slick-infobox-icon\">"+
+    "              <i class=\"fa fa-info-circle\"></i>"+
+    "              <div class=\"slick-infobox-content\">"+
+    "                <h4 id=\"slick-figure-title\">{{cloudinaryCtrl.title}}</h4>"+
+    "                <p id=\"slick-figure-desc\">{{cloudinaryCtrl.description}}</p>"+
+    "              </div>"+
+    "            </span>"+
+    "          </div>"+
+    "      </figure>"+
+    "  </div>"+
+    "</div>"+
+    "");
+}]);

@@ -1,7 +1,6 @@
 const consign = require('consign')
 
 module.exports = (app) => {
-
   const io = require('socket.io').listen(app)
 
   /* Express load */
@@ -12,5 +11,4 @@ module.exports = (app) => {
     .into(io)
 
   return io
-
 }
