@@ -127,18 +127,18 @@ angular
 
     /* Route events */
     $rootScope.$on("$routeChangeStart", (event, next, current) => {
-      console.log("Route Start")
+      // console.log("Route Start")
     })
 
     $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
-      console.log("Route Change Error: " + JSON.stringify(rejection))
+      // console.log("Route Change Error: " + JSON.stringify(rejection))
       $location.path("/login")
     })
 
     $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-      if (typeof previous != 'undefined')
-        console.log("Previous Url: " + previous.originalPath)
-      console.log("Current Url: " + current.originalPath)
+      // if (typeof previous != 'undefined')
+        // console.log("Previous Url: " + previous.originalPath)
+      // console.log("Current Url: " + current.originalPath)
     })
 
   })

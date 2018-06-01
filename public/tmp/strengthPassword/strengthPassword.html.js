@@ -1,0 +1,13 @@
+angular.module("directives/strengthPassword/strengthPassword.html",[]).run(["$templateCache",function($templateCache){
+    $templateCache.put("templates/strengthPassword.html",
+    "<div class=\"container-fluid clean-margin\">"+
+    "  <div class=\"row justify-content-center clean-margin\">"+
+    "    <div id=\"worst\" class=\"strength-meter strength-meter-default\"></div>"+
+    "    <div id=\"bad\" class=\"strength-meter strength-meter-default\"></div>"+
+    "    <div id=\"weak\" class=\"strength-meter strength-meter-default\"></div>"+
+    "    <div id=\"good\" class=\"strength-meter strength-meter-default\"></div>"+
+    "    <div id=\"strong\" class=\"strength-meter strength-meter-default\"></div>"+
+    "  </div>"+
+    "</div>"+
+    "");
+}]);

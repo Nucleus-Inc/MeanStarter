@@ -13,9 +13,11 @@ import concat from 'gulp-concat'
 import minify from 'gulp-babel-minify'
 import clean from 'gulp-clean'
 import nodemon from 'gulp-nodemon'
+import karma from 'karma'
 
 import config from './public/config/env.js'
 
+const karmaServer = karma.Server
 let env = 'development'
 
 gulp.task('yarn', () => {
@@ -64,7 +66,6 @@ gulp.task('copyJs', () => {
     'node_modules/bootstrap/dist/js/bootstrap.min.js',
     'node_modules/daemonite-material/js/material.min.js',
     'node_modules/chart.js/dist/Chart.min.js',
-    'node_modules/angular-notify/dist/angular-notify.min.js',
     'node_modules/string-mask/src/string-mask.js',
     'node_modules/ngstorage/ngStorage.min.js',
     'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
@@ -187,6 +188,13 @@ gulp.task('watch', () => {
     runSequence('htmlToJs','concat','minify')
   })
   gulp.watch('public/app/assets/sass/*.scss',['sass'])
+})
+
+gulp.task('test', (done) => {
+  karmaServer.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, () => { done() })
 })
 
 gulp.task('dev', () => {
