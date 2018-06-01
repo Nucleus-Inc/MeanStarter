@@ -1,0 +1,89 @@
+.mybutton {
+  background-color: transparent;
+  background-image: none;
+  border: 0;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
+  min-width: 5.5rem;
+  padding: .6875rem 1rem;
+  text-align: center;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  z-index: 20;
+  border-radius: 2px;
+  -webkit-transition-duration: .3s;
+  -o-transition-duration: .3s;
+  transition-duration: .3s;
+  -webkit-transition-property: background-color, color, -webkit-box-shadow;
+  -o-transition-property: background-color, box-shadow, color;
+  transition-property: background-color, box-shadow, color;
+  transition-property: background-color, box-shadow, color, -webkit-box-shadow;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  cursor: pointer;
+}
+
+.mybutton:focus::before, .mybutton:hover::before {
+  opacity: 1;
+}
+
+.mybutton:disabled {
+  cursor: not-allowed;
+}
+
+.mybutton:disabled:hover {
+  background-color: rgba(0,0,0,.17);
+}
+
+.btn {
+  font-weight: 400;
+}
+
+.btn-margin {
+  margin-left: 4px;
+}
+
+// Buttons
+
+.btn-primary {
+  @include button-variant($primary-color, $primary-color);
+}
+.btn-secondary {
+  @include button-variant($secondary-color, $secondary-color);
+}
+.btn-info {
+  @include button-variant($info, $info);
+}
+.btn-success {
+  @include button-variant($success, $success);
+}
+.btn-warning {
+  @include button-variant($warning, $warning);
+}
+.btn-danger {
+  @include button-variant($danger, $danger);
+}
+
+// Remove all backgrounds
+.btn-outline-primary {
+  @include button-outline-variant($primary-color);
+}
+.btn-outline-secondary {
+  @include button-outline-variant($secondary-color);
+}
+.btn-outline-info {
+  @include button-outline-variant($info);
+}
+.btn-outline-success {
+  @include button-outline-variant($success);
+}
+.btn-outline-warning {
+  @include button-outline-variant($warning);
+}
+.btn-outline-danger {
+  @include button-outline-variant($danger);
+}

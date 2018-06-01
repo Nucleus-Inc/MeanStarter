@@ -18,7 +18,7 @@ module.exports = (app) => {
   broadcast.sendCode = (data, options) => {
     if (options.transport === 'email') {
       smtpTransporter.use('compile', hbs({
-        viewPath: 'app/views/broadcast',
+        viewPath: 'app/views/hbs',
         extName: '.hbs'
       }))
 

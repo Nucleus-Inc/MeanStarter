@@ -1,0 +1,129 @@
+html,body {
+  height: 100%;
+  overflow: unset;
+  background-color: #fafafa;
+}
+
+body {
+  font-family: $body-font;
+}
+h1, h2, h3, h4, h5, h6, .title {
+  font-family: $title-font;
+}
+a {
+  color: $blue;
+}
+
+.overflow-h {
+  overflow: hidden !important;
+}
+
+.form-inline {
+  .custom-select, .btn {
+    @include mobile {
+      display: block;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+}
+.table-responsive {
+  @include mobile {
+    .btn {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+.page-item.active .page-link {
+    color: #fff;
+    background-color: $blue;
+    border-color: $blue;
+}
+.page-link {
+    color: $blue;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+.btn, .input-group-addon {
+  .material-icons {
+    font-size: 1.3rem;
+    vertical-align: middle;
+  }
+}
+.card-title, .title {
+  font-family: $title-font;
+}
+
+form {
+  padding: 15px;
+}
+
+#content {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.views {
+  height: 100%;
+  width: 100%;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.vertically-align {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  margin-top: 50px;
+}
+
+.horizontal-align {
+  margin: 0px auto;
+  margin-top: 70px;
+  padding-bottom: 30px;
+}
+
+.fa-position {
+  float: right;
+  color: $secondary-color;
+  margin-right: 7px;
+  margin-top: -25px;
+  cursor: pointer;
+}
+
+.clean-margin {
+  margin: 0;
+}

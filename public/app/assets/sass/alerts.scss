@@ -1,0 +1,39 @@
+.alert-success {
+  background-color: $success;
+  border-color: darken($green, 5%);
+  color: #fff;
+  .alert-link {color: #fff;}
+}
+.alert-info {
+  background-color: $info;
+  border-color: darken($info, 5%);
+  color: #fff;
+  .alert-link {color: #fff;}
+}
+.alert-warning {
+  background-color: $warning;
+  border-color: darken($warning, 5%);
+  color: #fff;
+  .alert-link {color: #fff;}
+}
+.alert-danger {
+  background-color: $danger;
+  border-color: darken($danger, 5%);
+  color: #fff;
+  .alert-link {color: #fff;}
+}
+.cg-notify-message {
+  background-color: $teal;
+  color: #fff;
+  a {color: #fff;}
+}
+.alert-close-btn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 18px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}

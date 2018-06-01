@@ -1,0 +1,71 @@
+<div class="container-fluid pages">
+  <div class="nav-login">
+    <img class="img-login" src="app/assets/img/logos/icon.png">
+  </div>
+  <div ng-show="activationCtrl.success" class="col col-sm-6 col-md-4 horizontal-align">
+    <div ng-show="activationCtrl.activationSuccess" class="alert alert-success text-center" role="alert">
+      <span class="alert-close-btn" ng-click="activationCtrl.close(0)">&times;</span>
+      <span>Your account has been successfully activated</span>
+    </div>
+    <div ng-show="activationCtrl.errLogin" class="alert alert-danger text-center" role="alert">
+      <span class="alert-close-btn" ng-click="activationCtrl.close(2)">&times;</span>
+      <span>There was a problem with your login.</span>
+    </div>
+    <div class="cards">
+      <h3 class="text-center card-title">Log in</h3>
+      <form  role="form" name="ActLoginForm" ng-submit="activationCtrl.submit()" novalidate>
+        <div class="form-group">
+          <label class="card-label" for="formGroupExampleInput">Email Address</label>
+          <input type="email" class="form-control" id="formGroupExampleInput" placeholder="you@example.com" ng-model="activationCtrl.user.email" ui-email required>
+        </div>
+        <div class="form-group">
+          <label class="card-label" for="formGroupExampleInput">Password</label>
+          <input type="{{activationCtrl.hidepassword ? 'password' : 'text'}}" name="password" ng-model="activationCtrl.user.password" class="form-control" placeholder="Type your password" required>
+          <i ng-click="activationCtrl.toggle('hide')" ng-show="activationCtrl.hide" class="fa fa-eye-slash fa-position" aria-hidden="true"></i>
+          <i ng-click="activationCtrl.toggle('show')" ng-show="activationCtrl.show" class="fa fa-eye fa-position" aria-hidden="true"></i>
+        </div>
+        <button class="mybutton btn-primary btn-lg btn-block">LOGIN</button>
+        <br />
+        <div class="row align-items-center">
+           <div class="col">
+             <a href="#/cadastrar">Register</a>
+           </div>
+           <div class="col text-right">
+             <a href="#/recuperar">Forgot your password?</a>
+           </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div ng-show="activationCtrl.danger" class="col col-sm-6 col-md-4 horizontal-align">
+    <div ng-show="activationCtrl.activationDanger" class="alert alert-danger text-center" role="alert">
+      <span class="alert-close-btn" ng-click="activationCtrl.close(1)">&times;</span>
+      <span>Error there was trying to activate your account</span>
+    </div>
+    <div ng-show="activationCtrl.resend" class="alert alert-warning text-center" role="alert">
+      <span class="alert-close-btn" ng-click="activationCtrl.close(3)">&times;</span>
+      <span>Check your inbox for the next steps.</span>
+    </div>
+    <div class="cards">
+      <h3 class="text-center card-title">Resend new token</h3>
+      <form role="form" name="ActResendForm" ng-submit="activationCtrl.send()" novalidate>
+        <div class="form-group">
+          <label class="card-label" for="formGroupExampleInput">Email Address</label>
+          <input type="email" name="email" class="form-control" id="formGroupExampleInput" placeholder="you@example.com" ng-model="activationCtrl.user.email" ng-class="{'has-error': ActResendForm.email.$invalid && ActResendForm.email.$dirty}" ui-email required>
+          <div class="error-container" ng-show="ActResendForm.email.$dirty && ActResendForm.email.$invalid">
+            <small ng-show="ActResendForm.email.$error.required" class="form-text text-muted text-danger">Your email is required.</small>
+          </div>
+        </div>
+        <button class="mybutton btn-primary btn-block" ng-disabled="ActResendForm.$invalid" type="submit" name="Resend">RESEND</button>
+        <br>
+        <div class="row align-items-center">
+           <div class="col">
+             <a href="#/login">Login</a>
+           </div>
+           <div class="col text-right">
+             <a href="#/cadastrar">Register</a>
+           </div>
+        </div>
+    </div>
+  </div>
+</div>

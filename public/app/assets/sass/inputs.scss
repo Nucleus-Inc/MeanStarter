@@ -1,0 +1,13 @@
+.custom-select:focus, .form-control:focus {
+  border-bottom: 1px solid $secondary-color;
+  box-shadow: none;
+  outline: 0;
+}
+
+.custom-select:hover, .form-control-file:hover, .form-control:hover {
+  box-shadow: none;
+}
+
+.custom-select, .form-control {
+  height: auto;
+}

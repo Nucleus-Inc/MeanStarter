@@ -1,0 +1,18 @@
+.dialog, .modal {
+  z-index: 1002;
+}
+
+.modal-backdrop {
+  z-index: 1001;
+}
+
+.modal-dialog {
+  z-index: 10;
+  max-width: 50% !important;
+}
+
+@media all and (max-width: 768px) {
+  .modal-dialog  {
+    max-width: 80% !important;
+  }
+}

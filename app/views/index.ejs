@@ -2,76 +2,122 @@
 <html>
 
 <head>
+
   <meta charset="utf-8">
-  <title></title>
   <meta name="description" content="">
-  <meta name="viewport" content="width=device-width">
-  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <!-- build:css(.) styles/vendor.css -->
-  <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
-  <!-- endbower -->
-  <!-- endbuild -->
-  <!-- build:css(.tmp) styles/main.css -->
-  <link rel="stylesheet" href="app/assets/styles/main.css">
-  <!-- endbuild -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+  <meta name="theme-color" content="#4051b5">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#4051b5">
+  <meta name="msapplication-navbutton-color" content="#4051b5">
+
+  <meta name="author" content="Nucleus.eti">
+  <meta name="fragment" content="!">
+
+  <title ng-cloak>Dashboard</title>
+  <meta name="description" content="Mean Stack starter template with useful modules and features required for most applications">
+
+  <link rel="icon" href="app/assets/img/logos/icon.png">
+
+  <link rel="stylesheet" href="vendors/css/bootstrap-layout.css">
+
+  <!-- Material icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="vendors/css/loaders.min.css">
+  <link rel="stylesheet" href="vendors/css/font-awesome.min.css">
+  <link rel="stylesheet" href="vendors/css/angular-notify.min.css">
+  <link rel="stylesheet" href="vendors/css/slick-theme.css" />
+  <link rel="stylesheet" href="vendors/css/slick.css" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700|Montserrat:200,400,700" rel="stylesheet">
+
+  <!-- Daemonite materials -->
+  <link rel="stylesheet" href="vendors/css/material.min.css">
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="dist/app.min.css">
+
 </head>
 
-<body ng-app="meanStarterApp">
-  <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-  <!-- Add your site or application content here -->
-
-  <div ng-view=""></div>
-
-  <!--<div class="footer">
-    <div class="container">
-      <p><span class="glyphicon glyphicon-heart"></span> from Nucleus</p>
+<body ng-app="dashboard">
+  <div class="no-login container-fluid full-height">
+    <div id="navbarContainer" class="no-login full-height">
+      <menu-sidebar></menu-sidebar>
+      <div class="layout-content" data-scrollable>
+        <menu-navbar></menu-navbar>
+        <div class="views" ng-view="" autoscroll="true"></div>
+      </div>
     </div>
-  </div>-->
+  </div>
+  <!-- JQuery -->
+  <script src="vendors/js/jquery.min.js"></script>
+  <!-- AngularJS -->
+  <script src="vendors/js/angular.min.js"></script>
+  <!-- Angular Sanitize -->
+  <script src="vendors/js/angular-sanitize.min.js"></script>
+  <!-- Angular Route -->
+  <script src="vendors/js/angular-route.min.js"></script>
+  <!-- Angular Animate -->
+  <script src="vendors/js/angular-animate.min.js"></script>
+  <!-- Angular Messages -->
+  <script src="vendors/js/angular-messages.min.js"></script>
+  <!-- Angular Local Storage -->
+  <script src="vendors/js/angular-local-storage.min.js"></script>
+  <!-- Angular Inout Masks -->
+  <script src="vendors/js/angular-input-masks-standalone.min.js"></script>
+  <!-- zxcvbn -->
+  <script src='vendors/js/zxcvbn.js'></script>
+  <script src='vendors/js/angular-zxcvbn.min.js'></script>
+  <!-- Tether -->
+  <script src="vendors/js/tether.min.js"></script>
+  <!--Bootstrap js -->
+  <script src="vendors/js/bootstrap.min.js"></script>
+  <!-- Material -->
+  <script src="vendors/js/material.min.js"></script>
+  <!-- Chart.js -->
+  <script src="vendors/js/Chart.min.js"></script>
+  <!-- Angular Chart.js -->
+  <script src="vendors/js/angular-chart.min.js"></script>
+  <!--Angular Modal Service -->
+  <script src="vendors/js/angular-modal-service.min.js"></script>
+  <!-- Angular Table -->
+  <script src="vendors/js/angular-table.min.js"></script>
+  <!-- Angular Loaders -->
+  <script src="vendors/js/angular-notify.min.js"></script>
+  <!-- Angular Notify -->
+  <script src="vendors/js/angular-loaders.min.js"></script>
+  <!-- String Mask -->
+  <script src="vendors/js/string-mask.js"></script>
+  <!-- Angular Validation Match -->
+  <script src="vendors/js/angular-validation-match.min.js"></script>
+  <!-- Bootstrap-layout js -->
+  <script src="vendors/js/bootstrap-layout.js"></script>
+  <!-- ngStorage -->
+  <script src="vendors/js/ngStorage.min.js"></script>
+  <!-- Socket.io -->
+  <script src="vendors/js/socket.io.js"></script>
+  <!-- Moment -->
+  <script src="vendors/js/moment.min.js"></script>
+  <!-- Angular Moment -->
+  <script src="vendors/js/angular-moment.min.js"></script>
+  <script src="vendors/js/angular-locale_pt-br.js"></script>
+  <script src="vendors/js/pt-br.js"></script>
+  <!-- Angular BR Filters -->
+  <script src="vendors/js/angular-br-filters.min.js"></script>
+  <!-- Cloudinary -->
+  <script src="vendors/js/cloudinary-core-shrinkwrap.min.js"></script>
+  <script src="vendors/js/angular.cloudinary.js"></script>
+  <!-- Slick -->
+  <script src="vendors/js/slick.min.js"></script>
+  <!-- Angular Slick -->
+  <script src="vendors/js/angular-slick.min.js"></script>
+  <!-- Angular File Upload -->
+  <script src="vendors/js/ng-file-upload.min.js"></script>
+  <!-- Angular App -->
+  <script src="dist/app.min.js"></script>
 
-
-  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-  <script>
-    ! function(A, n, g, u, l, a, r) {
-      A.GoogleAnalyticsObject = l, A[l] = A[l] || function() {
-          (A[l].q = A[l].q || []).push(arguments)
-        }, A[l].l = +new Date, a = n.createElement(g),
-        r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
-    }(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', 'UA-XXXXX-X');
-    ga('send', 'pageview');
-  </script>
-
-  <!-- build:js(.) scripts/vendor.js -->
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
-
-  <!-- endbower -->
-  <!-- endbuild -->
-
-  <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="app/app.js"></script>
-  <script src="app/controllers/auth/AuthCtrl.js"></script>
-  <script src="app/controllers/profile/ProfileCtrl.js"></script>
-  <script src="app/controllers/activation/ActivationCtrl.js"></script>
-  <script src="app/controllers/nav/NavCtrl.js"></script>
-  <!-- Services -->
-  <script src="app/services/Auth.js"></script>
-  <script src="app/services/Activation.js"></script>
-  <script src="app/services/Storage.js"></script>
-  <!-- Directives -->
-  <!--<script src="app/directives/auth/authAlert.js"></script>
-  <script src="app/directives/activation/authActivation.js"></script>-->
-  <!-- endbuild -->
 </body>
 
 </html>
