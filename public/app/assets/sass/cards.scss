@@ -150,3 +150,9 @@
     margin-right: auto;
     margin-left: auto;
 }
+
+@include mobile() {
+  .card {
+    margin-bottom: 40px;
+  }
+}

@@ -12,6 +12,8 @@
     })
 
     Socket.on('login success', (msg) => {
+      angular.element('#sidebar').removeClass('no-transition')
+      angular.element('.layout-content').removeClass('no-transition')
       $scope.display()
     })
 
@@ -40,6 +42,8 @@
 
     vm.logout = () => {
       Auth.logout().then((res) => {
+        angular.element('#sidebar').addClass('no-transition')
+        angular.element('.layout-content').addClass('no-transition')
         Socket.emit('logout success', res.data)
         $window.localStorage.setItem('persistentCache:imageNavProfile','')
         $window.localStorage.setItem('persistentCache:imageProfile','')
