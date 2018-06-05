@@ -108,10 +108,20 @@
                     if(res)
                       Socket.emit('admin inactivate',id)
                   })
+                }).catch((err) => {
+                  Notify.run('Erro ao tentar desativar usuário','alert-danger',null,null,null,(res) => {
+                    if(res)
+                      Socket.emit('admin inactivate',id)
+                  })
                 })
               }else{
                 Account.active(id).then((res) => {
                   Notify.run('Usuário ativado com sucesso','alert-success',null,null,null,(res) => {
+                    if(res)
+                      Socket.emit('admin active',id)
+                  })
+                }).catch((err) => {
+                  Notify.run('Erro ao tentar ativar usuário','alert-danger',null,null,null,(res) => {
                     if(res)
                       Socket.emit('admin active',id)
                   })

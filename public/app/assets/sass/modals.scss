@@ -24,6 +24,13 @@
     color: #ffffff;
 }
 
+// cg notify
+.cg-notify-message {
+  .cg-notify-close {
+    top: calc(50% - 15%);
+  }
+}
+
 @media all and (max-width: 768px) {
   .modal-dialog  {
     max-width: 80% !important;

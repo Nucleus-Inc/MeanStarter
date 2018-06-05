@@ -16,7 +16,7 @@
         return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result }).catch((err) => { return err })
       },
       inactivate: (_id) => {
-        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result })
+        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result }).catch((err) => { return err })
       },
       setActivationCode: (_id) => {
         return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result })

@@ -151,6 +151,12 @@
     margin-left: auto;
 }
 
+@include tablet() {
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
 @include mobile() {
   .card {
     margin-bottom: 40px;
