@@ -61,16 +61,16 @@ $width-btn: 14px;
 @keyframes color {
   100%,
   0% {
-    stroke: $red;
+    stroke: $white;
   }
   40% {
-    stroke: $blue;
+    stroke: $white;
   }
   66% {
-    stroke: $green;
+    stroke: $white;
   }
   80%,
   90% {
-    stroke: $yellow;
+    stroke: $white;
   }
 }
