@@ -23,11 +23,11 @@
       		simple      : new StringMask('0000-000-0000')         //N/A, so it's "simple"
       	}
 
-        let clearValue = (rawValue) => {
+        const clearValue = (rawValue) => {
       		return rawValue.toString().replace(/[^0-9]/g, '').slice(0, 13)
       	}
 
-        let format = (cleanValue) => {
+        const format = (cleanValue) => {
           let formattedValue
       		if (cleanValue.indexOf('0800') === 0) {
       			formattedValue = phoneMask0800.simple.apply(cleanValue)
@@ -47,12 +47,12 @@
       		return formattedValue.trim().replace(/[^0-9]$/, '')
       	}
 
-        let getModelValue = (formattedValue, originalModelType) => {
+        const getModelValue = (formattedValue, originalModelType) => {
       		let cleanValue = this.clearValue(formattedValue)
       		return originalModelType === 'number' ? parseInt(cleanValue) : cleanValue
       	}
 
-        let validations = (value) => {
+        const validations = (value) => {
           let valueLength = value && value.toString().length
           //8- 8D without AC
           //9- 9D without AC

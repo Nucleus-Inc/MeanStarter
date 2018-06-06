@@ -59,7 +59,7 @@
         })
       })
 
-      let search = (value) => {
+      const search = (value) => {
         Tables.search([value.name,value.email],vm.key,(res) => {
           if(res){
             buffer.filter((item) => {

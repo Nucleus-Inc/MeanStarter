@@ -9,7 +9,7 @@
       link: (scope, iElement, iAttrs, ngModelCtrl) => {
 
         //Input accept numbers-only
-        let parserName = (number) => {
+        const parserName = (number) => {
           var input = number.replace(/[^0-9]/g,'')
           if(input !== number) {
               ngModelCtrl.$setViewValue(input)

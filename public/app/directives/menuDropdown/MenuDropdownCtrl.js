@@ -52,7 +52,7 @@
       })
     }
 
-    let formatImage = (url) => {
+    const formatImage = (url) => {
       if(url){
         let search = url.search('/w_40,h_40,c_pad,b_rgb:31000f')
         if(search > -1){

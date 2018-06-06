@@ -8,18 +8,18 @@
 
         let width = angular.element(window).width()
 
-        let addSidebar = () => {
+        const addSidebar = () => {
           angular.element('#sidebar').addClass('sidebar-visible')
           angular.element('#navbarContainer').addClass('layout-sidebar-l3-md-up')
           angular.element('#toggler-button').addClass('toggle')
         }
 
-        let removeSidebar = () => {
+        const removeSidebar = () => {
           angular.element('#sidebar').removeClass('sidebar-visible')
           angular.element('#navbarContainer').removeClass('layout-sidebar-l3-md-up')
         }
 
-        let toggleSidebar = () => {
+        const toggleSidebar = () => {
           angular.element('#sidebar').toggleClass('sidebar-visible')
           angular.element('#navbarContainer').toggleClass('layout-sidebar-l3-md-up')
         }

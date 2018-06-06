@@ -8,7 +8,7 @@
       },
       link: (scope, iElement, iAttrs, ngModelCtrl) => {
         //Disable keyup press of the numbers in input
-        let parserName = (textName) => {
+        const parserName = (textName) => {
           let input = textName.replace(/[^a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-+$]/g,'')
           if(input !== textName) {
               ngModelCtrl.$setViewValue(input)
