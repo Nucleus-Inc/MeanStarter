@@ -12,7 +12,7 @@ module.exports = (app) => {
       return !!(password && zxcvbn(password).score >= 2)
     },
     isPhoneNumber: (number) => {
-      var numberExp = new RegExp(/(55)[0-9]{11}/)
+      let numberExp = new RegExp(/(55)[0-9]{11}/)
       return numberExp.test(number)
     },
     isUrl: (url) => {
