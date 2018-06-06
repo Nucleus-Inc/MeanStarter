@@ -56,7 +56,7 @@
           vm.start = false
           vm.err = false
         }).catch((err) => {
-          vm.errDescription = err.data.error.description
+          vm.errDescription = err.data.response.description
           vm.err = true
           vm.start = false
         })

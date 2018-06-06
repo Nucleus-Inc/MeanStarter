@@ -36,7 +36,7 @@
       }).catch((err) => {
         vm.alertMessage.show = true
         vm.alertMessage.type = 'danger'
-        vm.alertMessage.message = err.data.error.description
+        vm.alertMessage.message = err.data.response.description
       })
 
       vm.updatePassword = () => {
@@ -70,13 +70,13 @@
             vm.start = false
             vm.alertMessage.show = true
             vm.alertMessage.type = 'danger'
-            vm.alertMessage.message = err.data.error.description
+            vm.alertMessage.message = err.data.response.description
           })
         }else{
           vm.start = false
           vm.alertMessage.show = true
           vm.alertMessage.type = 'danger'
-          vm.alertMessage.message = err.data.error.description
+          vm.alertMessage.message = err.data.response.description
         }
       }
 

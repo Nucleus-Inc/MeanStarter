@@ -47,7 +47,7 @@
           $location.path('/login')
           vm.start = false
         }).catch((err) => {
-          vm.errDescription = err.data.error.description
+          vm.errDescription = err.data.response.description
           vm.resetSuccess = false
           vm.resetDanger = true
           vm.start = false
