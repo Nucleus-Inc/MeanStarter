@@ -30,8 +30,8 @@ module.exports = (app) => {
         _id: user._id,
         isActive: user.account.isActive
       }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+        expiresIn: '1h'
+      })
 
       res.set('JWT', token)
 
@@ -44,8 +44,8 @@ module.exports = (app) => {
         username: user.account.name,
         code: code
       }, {
-          transport: 'email'
-        })
+        transport: 'email'
+      })
 
       res.status(201).send(responses.getAccount(user))
     } catch (ex) {
