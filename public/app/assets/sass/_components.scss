@@ -122,8 +122,18 @@ form {
   margin-right: 7px;
   margin-top: -25px;
   cursor: pointer;
+  position: relative;
+  z-index: 10;
 }
 
 .clean-margin {
   margin: 0;
+}
+
+.display-n {
+  display: none !important;
+}
+
+.display-b {
+  display: block !important;
 }
