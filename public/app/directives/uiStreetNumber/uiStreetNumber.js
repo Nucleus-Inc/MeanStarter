@@ -10,7 +10,7 @@
 
         //Input accept numbers-only
         const parserName = (number) => {
-          var input = number.replace(/[^0-9]/g,'')
+          let input = number.replace(/[^0-9]/g,'')
           if(input !== number) {
               ngModelCtrl.$setViewValue(input)
               ngModelCtrl.$render()
