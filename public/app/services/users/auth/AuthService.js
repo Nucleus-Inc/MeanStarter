@@ -8,7 +8,7 @@
         return $http.post(url_base+'/users/auth/local/login',{
           'email': email,
           'password': password
-        }).then((result) => { return result })
+        }).then((result) => { return result }).catch((err) => {  })
       },
       isAuthenticated: () => {
         return $http.get(url_base+'/users/auth/local/login').then((result) => {

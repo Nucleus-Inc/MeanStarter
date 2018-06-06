@@ -12,7 +12,7 @@
         scope.$watch('ngModel', (value) => {
           if(value){ //exists an input value
             let str = value.toString()
-            let res = str.match(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/)
+            let res = str.match(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)
             if(res){ //email is match
               ngModelCtrl.$setValidity("emailExists", true)
               ngModelCtrl.$setValidity("invalidEmail", true)
@@ -21,7 +21,7 @@
                   scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })
                 }else{
                   if(iAttrs.uiEmail == 'no-registered'){ //uiEmail equals no-registered
-                    verifyEmail = true
+
                   }else{
                     if(iAttrs.uiEmail == 'logged'){
                       scope.userVerifyEmail(scope.ngModel).then((res) => { ngModelCtrl.$setValidity("emailExists", res) })

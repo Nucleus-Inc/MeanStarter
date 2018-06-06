@@ -12,13 +12,13 @@
           'password': password
         }).then((result) => { return result })
       },
-      active: (id) => {
-        return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result })
+      active: (_id) => {
+        return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result }).catch((err) => { return err })
       },
-      inactivate: (id) => {
-        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result })
+      inactivate: (_id) => {
+        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result }).catch((err) => { return err })
       },
-      setActivationCode: (id) => {
+      setActivationCode: (_id) => {
         return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result })
       },
       setRecoveryToken: (recoveryKey, token, newPassword) => {

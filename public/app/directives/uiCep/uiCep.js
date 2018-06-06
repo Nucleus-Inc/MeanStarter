@@ -11,15 +11,15 @@
 
         let cepMask = new StringMask('00000-000')
 
-        let clearValue = (rawValue) => {
+        const clearValue = (rawValue) => {
       		return rawValue.toString().replace(/[^0-9]/g, '').slice(0, 8)
       	}
 
-        let format = (cleanValue) => {
+        const format = (cleanValue) => {
       		return (cepMask.apply(cleanValue) || '').replace(/[^0-9]$/, '')
       	}
 
-        let validations = (value) => {
+        const validations = (value) => {
           return value.toString().trim().length === 8
         }
 

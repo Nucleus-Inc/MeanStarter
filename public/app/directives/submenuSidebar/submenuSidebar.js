@@ -3,8 +3,8 @@
     return {
       restrict: 'AEC',
       link: (scope, iElement, iAttrs, ngModelCtrl) => {
-        var clear = () => {
-          var items = angular.element('.sidebar-menuItem-button')
+        const clear = () => {
+          let items = angular.element('.sidebar-menuItem-button')
           angular.forEach(items, (item) => {
             angular.element(item).parent().removeClass('open')
           })

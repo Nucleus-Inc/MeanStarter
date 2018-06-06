@@ -167,7 +167,7 @@
         return vm.tab === tabNum
       }
 
-      let display = (cachedFile, remove) => {
+      const display = (cachedFile, remove) => {
         if(remove){
           vm.btn.name = 'Remover'
           vm.btn.select = true
@@ -189,7 +189,7 @@
         vm.pictures.push({'url': cachedFile})
       }
 
-      let cacheUpdate = (url) => {
+      const cacheUpdate = (url) => {
         $window.localStorage.setItem('persistentCache:imageProfile',url)
       }
 

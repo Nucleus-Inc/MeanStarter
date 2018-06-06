@@ -125,20 +125,16 @@ angular
 
     amMoment.changeLocale('pt-br')
 
-    /* Route events */
     $rootScope.$on("$routeChangeStart", (event, next, current) => {
-      console.log("Route Start")
+      angular.element('#views').addClass('display-n')
     })
 
     $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
-      console.log("Route Change Error: " + JSON.stringify(rejection))
       $location.path("/login")
     })
 
     $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-      if (typeof previous != 'undefined')
-        console.log("Previous Url: " + previous.originalPath)
-      console.log("Current Url: " + current.originalPath)
+      angular.element('#views').removeClass('display-n')
     })
 
   })

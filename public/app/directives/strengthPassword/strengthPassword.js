@@ -8,7 +8,7 @@
       templateUrl: 'app/directives/strengthPassword/strengthPassword.html',
       link: (scope, iElement, iAttrs, ctrl) => {
 
-        let removeColor = (meter) => {
+        const removeColor = (meter) => {
           angular.element('#worst').removeClass('strength-meter-'+meter)
           angular.element('#bad').removeClass('strength-meter-'+meter)
           angular.element('#weak').removeClass('strength-meter-'+meter)
@@ -16,7 +16,7 @@
           angular.element('#strong').removeClass('strength-meter-'+meter)
         }
 
-        let clear = () => {
+        const clear = () => {
           removeColor('worst')
           removeColor('bad')
           removeColor('weak')
@@ -56,7 +56,7 @@
             }
           }else
             clear()
-            
+
         })
       }
     }

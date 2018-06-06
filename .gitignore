@@ -2,3 +2,5 @@ node_modules/
 config/env/development.js
 public/config/env_dev.js
 public/vendors
+public/tmp
+public/dist
