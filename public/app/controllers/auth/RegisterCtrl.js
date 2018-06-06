@@ -46,15 +46,27 @@
         vm.start = true
         let phoneNumber = '55' + vm.user.phoneNumber.toString().replace(/[^0-9]/g, '')
         Account.signup(vm.user.name, vm.user.email, phoneNumber, vm.user.password).then((res) => {
-          if (res.data) {
-            _id = res.data._id
-            vm.user._id = _id
-            vm.user.isActive = false
-            Socket.emit('admin add', vm.user)
+          if(res.status == 201 || res.status == 200){
+            if (res.data) {
+              _id = res.data._id
+              vm.user._id = _id
+              vm.user.isActive = false
+              Socket.emit('admin add', vm.user)
+            }
+            vm.create = false
+            vm.start = false
+            vm.err = false
+          }else{
+            let keyErrors = Object.keys(res.data.errors)
+            let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+            if (keyErrors.length > 1) {
+              for (let i = 1; i < keyErrors.length; i++)
+                description += keyErrors[i] + ', '
+            }
+            vm.errDescription = description
+            vm.err = true
+            vm.start = false
           }
-          vm.create = false
-          vm.start = false
-          vm.err = false
         }).catch((err) => {
           if (err.status == 400) {
             let keyErrors = Object.keys(err.data.errors)
@@ -68,6 +80,10 @@
           vm.err = true
           vm.start = false
         })
+      } else {
+        vm.errDescription = 'Por favor, verifique os campos do formulário'
+        vm.err = true
+        vm.start = false
       }
     }
 

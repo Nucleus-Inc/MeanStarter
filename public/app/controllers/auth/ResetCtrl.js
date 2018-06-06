@@ -42,15 +42,33 @@
       if(!$scope.ResetForm.$invalid){
         vm.start = true
         Account.recoverPassword($routeParams.recoveryKey,$routeParams.token,vm.user.password).then((res) => {
-          vm.resetSuccess = true
-          vm.resetDanger = false
-          $location.path('/login')
           vm.start = false
+          if(res.status == 201 || res.status == 200){
+            vm.resetSuccess = true
+            vm.resetDanger = false
+            $location.path('/login')
+          }else{
+            let keyErrors = Object.keys(res.data.errors)
+            let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+            if (keyErrors.length > 1) {
+              for (let i = 1; i < keyErrors.length; i++)
+                description += keyErrors[i] + ', '
+            }
+            vm.errDescription = description
+            vm.resetSuccess = false
+            vm.resetDanger = true
+          }
         }).catch((err) => {
-          vm.errDescription = err.data.response.description
+          vm.start = false
+          let keyErrors = Object.keys(err.data.errors)
+          let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+          if (keyErrors.length > 1) {
+            for (let i = 1; i < keyErrors.length; i++)
+              description += keyErrors[i] + ', '
+          }
+          vm.errDescription = description
           vm.resetSuccess = false
           vm.resetDanger = true
-          vm.start = false
         })
       }else{
         vm.errDescription = "Erro ao tentar redefinir sua senha. Tente novamente mais tarde."

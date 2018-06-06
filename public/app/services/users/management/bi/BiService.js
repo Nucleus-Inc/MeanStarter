@@ -5,7 +5,7 @@
 
     return {
       getNumbers: () => {
-        return $http.get(url_base+'/users/management/bi/numbers').then((result) => { return result })
+        return $http.get(url_base+'/users/management/bi/numbers').then((result) => { return result }).catch((err) => { return err })
       }
     }
 

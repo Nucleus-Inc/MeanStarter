@@ -5,7 +5,7 @@
 
     return {
       getUsers: () => {
-        return $http.get(url_base+'/users').then((result) => { return result })
+        return $http.get(url_base+'/users').then((result) => { return result }).catch((err) => { return err })
       }
     }
 

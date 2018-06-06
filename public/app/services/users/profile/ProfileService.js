@@ -5,13 +5,13 @@
 
     return {
       updatePicture: (_id, pictureUrl) => {
-        return $http.put(url_base+'/users/'+_id+'/profile/picture', pictureUrl).then((result) => { return result })
+        return $http.put(url_base+'/users/'+_id+'/profile/picture', pictureUrl).then((result) => { return result }).catch((err) => { return err })
       },
       deletePicture: (_id) => {
-        return $http.delete(url_base+'/users/'+_id+'/profile/picture').then((result) => { return result })
+        return $http.delete(url_base+'/users/'+_id+'/profile/picture').then((result) => { return result }).catch((err) => { return err })
       },
       getProfile: (_id) => {
-        return $http.get(url_base+'/users/'+_id+'/profile').then((result) => { return result })
+        return $http.get(url_base+'/users/'+_id+'/profile').then((result) => { return result }).catch((err) => { return err })
       }
     }
 
