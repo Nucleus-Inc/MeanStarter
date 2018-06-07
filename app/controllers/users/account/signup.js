@@ -40,8 +40,8 @@ module.exports = (app) => {
       }
 
       broadcast.sendCode({
-        recipient: user.email,
-        username: user.name,
+        recipient: user.account.email,
+        username: user.account.name,
         code: code
       }, {
         transport: 'email'

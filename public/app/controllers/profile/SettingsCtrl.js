@@ -36,7 +36,13 @@
       }).catch((err) => {
         vm.alertMessage.show = true
         vm.alertMessage.type = 'danger'
-        vm.alertMessage.message = err.data.error.description
+        let keyErrors = Object.keys(err.data.errors)
+        let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+        if (keyErrors.length > 1) {
+          for (let i = 1; i < keyErrors.length; i++)
+            description += keyErrors[i] + ', '
+        }
+        vm.alertMessage.message = description
       })
 
       vm.updatePassword = () => {
@@ -70,13 +76,19 @@
             vm.start = false
             vm.alertMessage.show = true
             vm.alertMessage.type = 'danger'
-            vm.alertMessage.message = err.data.error.description
+            let keyErrors = Object.keys(err.data.errors)
+            let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+            if (keyErrors.length > 1) {
+              for (let i = 1; i < keyErrors.length; i++)
+                description += keyErrors[i] + ', '
+            }
+            vm.alertMessage.message = description
           })
         }else{
           vm.start = false
           vm.alertMessage.show = true
           vm.alertMessage.type = 'danger'
-          vm.alertMessage.message = err.data.error.description
+          vm.alertMessage.message = 'Por favor, verifique os campos do formulário.'
         }
       }
 

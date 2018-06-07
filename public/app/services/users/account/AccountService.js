@@ -13,10 +13,10 @@
         }).then((result) => { return result })
       },
       active: (_id) => {
-        return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result }).catch((err) => { return err })
+        return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result })
       },
       inactivate: (_id) => {
-        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result }).catch((err) => { return err })
+        return $http.put(url_base+'/users/'+_id+'/account/inactivation').then((result) => { return result })
       },
       setActivationCode: (_id) => {
         return $http.put(url_base+'/users/'+_id+'/account/activation').then((result) => { return result })

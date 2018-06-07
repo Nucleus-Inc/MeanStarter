@@ -30,10 +30,20 @@
           }
           vm.start = false
         }).catch((err) => {
-          vm.errDescription = err.data.error.description
+          let keyErrors = Object.keys(err.data.errors)
+          let description = 'Por favor, verifique os seguintes campos: ' + keyErrors[0]
+          if (keyErrors.length > 1) {
+            for (let i = 1; i < keyErrors.length; i++)
+              description += keyErrors[i] + ', '
+          }
+          vm.errDescription = description
           vm.start = false
           vm.err = true
         })
+      } else {
+        vm.err = true
+        vm.start = false
+        vm.errDescription = 'Por favor, verifique os campos do formulário'
       }
     }
 
