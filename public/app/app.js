@@ -121,12 +121,13 @@ angular
       })
 
   })
-  .run(($rootScope, $location, amMoment) => {
+  .run(($rootScope, $location, amMoment, offPaths) => {
 
     amMoment.changeLocale('pt-br')
 
     $rootScope.$on("$routeChangeStart", (event, next, current) => {
-      angular.element('#views').addClass('display-n')
+      if(next!=undefined && !offPaths.includes(next.$$route.originalPath))
+        angular.element('#views').addClass('display-n')
     })
 
     $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
@@ -134,7 +135,8 @@ angular
     })
 
     $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
-      angular.element('#views').removeClass('display-n')
+      if(current!=undefined && !offPaths.includes(current.$$route.originalPath))
+        angular.element('#views').removeClass('display-n')
     })
 
   })
