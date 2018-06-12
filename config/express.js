@@ -79,18 +79,6 @@ module.exports = () => {
   /* Flash Messages */
   app.use(flash())
 
-  /* Consign - Autoload */
-  consign({
-    cwd: 'app'
-  })
-    .include('models')
-    .then('errors')
-    .then('libs')
-    .then('controllers')
-    .then('routes')
-    .then('middlewares/errors.js')
-    .into(app)
-
   /* Winston Logger */
   app.use(expressWinston.logger({
     transports: [
@@ -106,6 +94,18 @@ module.exports = () => {
       return res.statusCode !== 500
     }
   }))
+
+  /* Consign - Autoload */
+  consign({
+    cwd: 'app'
+  })
+    .include('models')
+    .then('errors')
+    .then('libs')
+    .then('controllers')
+    .then('routes')
+    .then('middlewares/errors.js')
+    .into(app)
 
   return app
 }
