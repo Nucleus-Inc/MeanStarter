@@ -1,5 +1,7 @@
-(function() {
-  angular.module('meanStarterApp').controller('ProfileCtrl', ['$scope', function($scope) {
+(() => {
+  angular.module('dashboard').controller('ProfileCtrl', ['$scope', function($scope) {
 
-  }]);
-}());
+    let vm = this
+
+  }])
+})()

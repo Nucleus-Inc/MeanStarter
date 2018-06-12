@@ -5,5 +5,13 @@ module.exports = {
     jwtSession: {
       session: false
     }
+  },
+  libs: {
+    nodeMailer: {
+      service: 'Gmail',
+      user: '',
+      password: '',
+      from: ''
+    }
   }
 }

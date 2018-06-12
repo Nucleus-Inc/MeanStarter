@@ -1,7 +1,7 @@
-var passportLocal = require('app/middlewares/passport-local.js')()
+const passportLocal = require('app/middlewares/passport-local.js')()
 
 module.exports = (app) => {
-  var controller = app.controllers.users.auth.local
+  const controller = app.controllers.users.auth.local
 
   app.route('/users/auth/local/login')
     .post(passportLocal.login(), controller.login)

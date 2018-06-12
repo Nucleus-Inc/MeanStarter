@@ -1,0 +1,49 @@
+/*$primary-color: #9c27b0;
+$secondary-color: #501f58;*/
+
+$red:    #f44336;
+$orange: #FFC107;
+$yellow: #FFEB3B;
+$yellowgreen: #9ACD32;
+$green:  #4CAF50;
+$blue:   #4051b5;
+$teal:   #2196f3;
+$pink:   #E91E63;
+$purple: #9C27B0;
+$gray:   #D9DEE4;
+$amber:  #ff9800;
+$white: #fff;
+$black: #000;
+
+$body-color: #292b2c;
+$sidebar-color: #2c3e50;
+$meter-color: #DDD;
+
+$primary-color: #6a7dea !default;
+$secondary-color: #4051b5 !default;
+$hover: #354497 !default;
+$disabled-hover: #e9e9e9;
+$disabled: rgba(255,255,255,0.5);
+$success: $green !default;
+$info:    $teal !default;
+$warning: $orange !default;
+$danger:  $red !default;
+
+$disabled-hover: #e9e9e9;
+$disabled: rgba(255,255,255,0.5);
+
+// Gradientes
+// $blue-gradient: @include gradient(#62c1e9, #7ed8e9);
+// $green-gradient: @include gradient(#a4d56e, #b3e76e);
+// $red-gradient: @include gradient(#f36c4e, #ff804e);
+// $yellow-gradient: @include gradient(#face57, #faea57);
+
+// Widths
+$desktop-width: 1200px;
+$mobile-width: 767px;
+$mobile-xs-width: 357px;
+$nav-height: 70px;
+
+// Fonts
+$title-font: 'Montserrat', sans-serif;
+$body-font: 'Roboto', sans-serif;

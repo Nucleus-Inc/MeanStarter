@@ -1,0 +1,36 @@
+.pages {
+  min-height: 100%;
+  background-color: $secondary-color;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.page-item.active .page-link {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.page-link {
+  color: $primary-color;
+}
+
+/* Congrulations Register */
+.text-congrulations {
+  font-size: 20px;
+  text-align: center;
+  color: $secondary-color;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.img-congrulations {
+  width: 115px;
+  height: 115px;
+  margin-bottom: 30px;
+  margin-right: auto;
+  margin-left: auto;
+}

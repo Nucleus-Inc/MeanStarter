@@ -4,6 +4,9 @@ const { validationResult } = require('express-validator/check')
 module.exports = (app) => {
   const User = app.models.user
   const random = app.libs.random
+  const broadcast = app.libs.broadcast.auth
+  const responses = app.libs.responses.users
+  const errors = app.errors.custom
   const controller = {}
 
   controller.setEmailChangeCode = async (req, res, next) => {
@@ -12,21 +15,34 @@ module.exports = (app) => {
 
       let code = random.generate(4, 'numeric')
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
       } else {
-        let changeRequests = user.changeRequests
-        changeRequests.email.newEmail = req.body.email
-        changeRequests.email.token = new User().generateHash(code.toString())
-        changeRequests.email.tokenExp = Date.now() + 300000
-        await User.findByIdAndUpdate(user._id, {
-          changeRequests: changeRequests
+        user = await User.findByIdAndUpdate(user._id, {
+          $set: {
+            'account.changeRequests.email.newEmail': req.body.email,
+            'account.changeRequests.email.token': new User().generateHash(code.toString()),
+            'account.changeRequests.email.tokenExp': Date.now() + 300000
+          }
+        }, {
+          new: true
         })
+          .lean()
+
         if (process.env.NODE_ENV !== 'production') {
           res.set('code', code)
         }
+
+        broadcast.sendCode({
+          recipient: user.account.changeRequests.email.newEmail,
+          username: user.account.name,
+          code: code
+        }, {
+          transport: 'email'
+        })
+
         res.end()
       }
     } catch (ex) {
@@ -38,27 +54,30 @@ module.exports = (app) => {
     try {
       validationResult(req).throw()
 
-      let user = await User.findById(req.params.id)
+      let user = await User.findById(req.params.id).lean()
 
       if (!user) {
         res.status(404).end()
-      } else if (new User().compareHash(req.body.token.toString(), user.changeRequests.email.token) &&
-        Date.now() < user.changeRequests.email.tokenExp) {
-        var changeRequests = user.changeRequests
-        var newEmail = changeRequests.email.newEmail
-        changeRequests.email = {}
-        await User.findByIdAndUpdate(user._id, {
-          isActive: true,
-          email: newEmail,
-          changeRequests: changeRequests
+      } else if (new User().compareHash(req.body.token.toString(), user.account.changeRequests.email.token) &&
+        Date.now() < user.account.changeRequests.email.tokenExp) {
+        let newEmail = user.account.changeRequests.email.newEmail
+
+        user = await User.findByIdAndUpdate(user._id, {
+          $set: {
+            email: newEmail,
+            isActive: true,
+            'account.changeRequests.email.newEmail': null,
+            'account.changeRequests.email.token': null,
+            'account.changeRequests.email.tokenExp': null
+          }
+        }, {
+          new: true
         })
-        res.end()
+          .lean()
+
+        res.send(responses.getAccount(user))
       } else {
-        res.status(403)
-        res.json({
-          status: 403,
-          code: 4301
-        })
+        res.status(errors.AUT004.httpCode).send(errors.AUT004.response)
       }
     } catch (ex) {
       next(ex)

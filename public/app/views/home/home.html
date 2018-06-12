@@ -1,0 +1,46 @@
+<div id="content" class="container-fluid side-toogle">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="cards-dash row">
+        <div class="col-lg-3 col-md-6">
+          <a href="#/usuarios" class="card">
+            <cards-bi bi-data="homeCtrl.numbers" bi-name="users" bi-icon="list" bi-color="bg-berlim"></cards-bi>
+          </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <a href="#/exemplo1" class="card">
+            <cards-bi bi-data="homeCtrl.numbers" bi-name="example1" bi-icon="shopping_cart" bi-color="bg-tokyo"></cards-bi>
+          </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <a href="#/exemplo2" class="card">
+            <cards-bi bi-data="homeCtrl.numbers" bi-name="example2" bi-icon="contacts" bi-color="bg-nairobi"></cards-bi>
+          </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <a href="#/exemplo3" class="card">
+            <cards-bi bi-data="homeCtrl.numbers" bi-name="example3" bi-icon="assignment" bi-color="bg-rio"></cards-bi>
+          </a>
+        </div>
+      </div>
+      <div class="row card-row-style">
+        <div class="card card-style">
+          <div class="card-header">
+            Dados de Usuários
+          </div>
+          <div class="card-block">
+            <canvas class="chart chart-line" height="110" chart-data="homeCtrl.data" chart-labels="homeCtrl.labels" chart-series="series"></canvas>
+          </div>
+        </div>
+        <div class="card card-style-graph">
+          <div class="card-header contet-gaph">
+            Estatísticas Gerais (%)
+          </div>
+          <div class="card-block">
+            <canvas class="chart chart-doughnut" height="192" chart-data="homeCtrl.donutData" chart-labels="homeCtrl.donutLabels" chart-colors="homeCtrl.colors"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

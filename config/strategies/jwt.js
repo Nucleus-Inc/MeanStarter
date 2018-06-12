@@ -9,15 +9,15 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
 jwtOptions.secretOrKey = config.jwt.jwtSecret
 
 module.exports = (User) => {
-  passport.use(new JwtStrategy(jwtOptions, (jwtPayload, next) => {
-    User.findById(jwtPayload._id).then((data) => {
-      if (data) {
-        next(null, {
-          user: jwtPayload._id
-        })
-      } else {
-        next(null, false)
-      }
-    })
+  passport.use(new JwtStrategy(jwtOptions, async (jwtPayload, next) => {
+    let user = await User.findById(jwtPayload._id)
+
+    if (user) {
+      next(null, {
+        user: jwtPayload._id
+      })
+    } else {
+      next(null, false)
+    }
   }))
 }

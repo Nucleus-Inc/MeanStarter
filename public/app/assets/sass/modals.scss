@@ -1,0 +1,43 @@
+.dialog, .modal {
+  z-index: 1002;
+}
+
+.modal-backdrop {
+  z-index: 1001;
+}
+
+.modal-dialog {
+  z-index: 10;
+  max-width: 50% !important;
+}
+
+// hover modals
+.modal-footer .btn-success:active,
+.modal-footer .btn-success:focus,
+.modal-footer .btn-success:hover {
+  color: #ffffff;
+}
+
+.modal-footer .btn-danger:active,
+.modal-footer .btn-danger:focus,
+.modal-footer .btn-danger:hover {
+    color: #ffffff;
+}
+
+// cg notify
+.cg-notify-message {
+  .cg-notify-close {
+    top: calc(50% - 15%);
+  }
+}
+
+@media all and (max-width: 768px) {
+  .modal-dialog  {
+    max-width: 80% !important;
+  }
+}
+
+
+.no-transition {
+  transition: none !important;
+}

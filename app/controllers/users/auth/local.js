@@ -1,19 +1,13 @@
 module.exports = (app) => {
+  const responses = app.libs.responses.users
   const controller = {}
 
   controller.login = (req, res) => {
-    res.json({
-      id: req.user.id,
-      name: req.user.name,
-      email: req.user.email,
-      phoneNumber: req.user.phoneNumber,
-      memberSince: req.user.memberSince,
-      isActive: req.user.isActive
-    })
+    res.send(responses.getAccount(req.user))
   }
 
   controller.isAuth = (req, res) => {
-    res.end()
+    res.send(responses.getAccount(req.user))
   }
 
   controller.logout = (req, res) => {

@@ -1,68 +1,142 @@
-'use strict';
+'use strict'
 
 /**
  * @ngdoc overview
- * @name meanStarterApp
+ * @name dashboard
  * @description
- * # meanStarterApp
+ * # dashboardApp
  *
  * Main module of the application.
  */
 
 angular
-  .module('meanStarterApp', [
+  .module('dashboard',[
     'ngRoute',
-    'LocalStorageModule',
-    'Auth',
-    'Activation',
-    'Storage'
+    'ngStorage',
+    'chart.js',
+    'angularModalService',
+    'angular-table',
+    'cgNotify',
+    'alexjoffroy.angular-loaders',
+    'ngMessages',
+    'ngAnimate',
+    'ngSanitize',
+    'ui.utils.masks',
+    'idf.br-filters',
+    'zxcvbn',
+    'validation.match',
+    'ngFileUpload',
+    'angularMoment',
+    'slickCarousel',
+    'cloudinary'
   ])
-  .config(function($routeProvider, $locationProvider, $qProvider) {
+  .config(($routeProvider, $locationProvider, $httpProvider, cloudinaryProvider, CloudinaryConstant) => {
 
     // Remove '!' from path
-    $locationProvider.hashPrefix('');
+    $locationProvider.hashPrefix('')
+
+    // Allow cross domain requests
+    $httpProvider.defaults.withCredentials = true
+    $httpProvider.defaults.useXDomain = true
+    delete $httpProvider.defaults.headers.common['X-Requested-With']
+
+    cloudinaryProvider
+     .set("cloud_name",CloudinaryConstant.cloud_name)
+     .set("secure",CloudinaryConstant.secure)
+     .set("upload_preset",CloudinaryConstant.upload_preset)
 
     $routeProvider
-      .when('/', {
-        templateUrl: 'app/views/main.html',
-        controller: 'AuthCtrl',
-        controllerAs: 'authCtrl'
-      })
-      .when('/profile', {
-        templateUrl: 'app/views/profile.html',
-        controller: 'ProfileCtrl',
-        controllerAs: 'profileCtrl',
+      .when('/',{
+        templateUrl: 'app/views/home/home.html',
+        controller: 'HomeCtrl as homeCtrl',
         resolve: {
-          access: function(Auth) {
-            return Auth.isAuthenticated();
+          access: (Auth) => {
+            return Auth.isAuthenticated()
           }
         }
       })
-      .when('/account/:id/activate', {
-        templateUrl: 'app/views/account/activation.html',
+      .when('/usuarios',{
+        templateUrl: 'app/views/users/users.html',
+        controller: 'UsersCtrl as usersCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isAuthenticated()
+          }
+        }
+      })
+      .when('/perfil',{
+        templateUrl: 'app/views/profile/profile.html',
+        controller: 'ProfileCtrl as profileCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isAuthenticated()
+          }
+        }
+      })
+      .when('/settings',{
+        templateUrl: 'app/views/profile/settings.html',
+        controller: 'SettingsCtrl as settingsCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isAuthenticated()
+          }
+        }
+      })
+      .when('/problemas',{
+        templateUrl: 'app/views/report/report.html',
+        controller: 'ReportCtrl as reportCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isAuthenticated()
+          }
+        }
+      })
+      .when('/login',{
+        templateUrl: 'app/views/auth/login.html',
+        controller: 'LoginCtrl',
+        controllerAs: 'loginCtrl'
+      })
+      .when('/cadastrar',{
+        templateUrl: 'app/views/auth/register.html',
+        controller: 'RegisterCtrl',
+        controllerAs: 'registerCtrl'
+      })
+      .when('/recuperar',{
+        templateUrl: 'app/views/auth/forgot.html',
+        controller: 'ForgotCtrl',
+        controllerAs: 'forgotCtrl'
+      })
+      .when('/consultores/:recoveryKey/redefinir-senha/:token',{
+        templateUrl: 'app/views/auth/reset.html',
+        controller: 'ResetCtrl',
+        controllerAs: 'resetCtrl'
+      })
+      .when('/activation/:token',{
+        templateUrl: 'app/views/auth/activation.html',
         controller: 'ActivationCtrl',
-        controllerAs: 'activationCtrl',
+        controllerAs: 'activationCtrl'
       })
       .otherwise({
         redirectTo: '/'
-      });
+      })
+
   })
+  .run(($rootScope, $location, amMoment, offPaths) => {
 
-  .run(function($rootScope, $location, Auth) {
+    amMoment.changeLocale('pt-br')
 
-    /* Route events */
+    $rootScope.$on("$routeChangeStart", (event, next, current) => {
+      if(next!=undefined && !offPaths.includes(next.$$route.originalPath))
+        angular.element('#views').addClass('display-n')
+    })
 
-    $rootScope.$on("$routeChangeStart", function(event, next, current) {
+    $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
+      $location.path("/login")
+    })
 
-    });
+    $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
+      if(current!=undefined && !offPaths.includes(current.$$route.originalPath))
+        angular.element('#views').removeClass('display-n')
+    })
 
-    $rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
-      if (rejection) {
-        $location.path("/");
-      }
-    });
-
-    $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-
-    });
-  });
+  })

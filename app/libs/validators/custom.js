@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const zxcvbn = require('zxcvbn')
+const validator = require('validator')
 
 module.exports = (app) => {
   const custom = {
@@ -11,10 +12,12 @@ module.exports = (app) => {
       return !!(password && zxcvbn(password).score >= 2)
     },
     isPhoneNumber: (number) => {
-      var numberExp = new RegExp(/(55)[0-9]{11}/)
+      let numberExp = new RegExp(/(55)[0-9]{11}/)
       return numberExp.test(number)
+    },
+    isUrl: (url) => {
+      return !!(validator.isURL(url))
     }
-
   }
 
   return custom
