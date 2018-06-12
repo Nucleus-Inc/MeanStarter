@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken')
-const config = require('config/config.js')
 const { validationResult } = require('express-validator/check')
 
 module.exports = (app) => {
   const User = app.models.user
   const responses = app.libs.responses.users
+  const config = app.locals.config
   const errors = app.errors.custom
   const controller = {}
 

@@ -1,0 +1,11 @@
+image: node:8
+
+services:
+  - mongo:3.4
+
+variables:
+  MONGO_URI: 'mongodb://mongo/meanstarter-ci'
+latest:
+  script:
+   - npm install
+   - npm run lint && npm test
