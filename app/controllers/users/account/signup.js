@@ -1,4 +1,3 @@
-const config = require('config/config.js')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
 
@@ -7,6 +6,7 @@ module.exports = (app) => {
   const random = app.libs.random
   const broadcast = app.libs.broadcast.auth
   const responses = app.libs.responses.users
+  const config = app.locals.config
   const controller = {}
 
   controller.registerUser = async (req, res, next) => {

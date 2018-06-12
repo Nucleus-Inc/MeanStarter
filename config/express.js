@@ -1,26 +1,45 @@
-const config = require('./config.js')
+/* Express */
 const express = require('express')
-const mongoose = require('mongoose')
-const passport = require('passport')
-const flash = require('connect-flash')
-const consign = require('consign')
+
+/* Env Config */
+const config = require('./config.js')
+
+/* Express Session and related */
 const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
-const bodyParserError = require('bodyparser-json-error')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
+const mongoose = require('mongoose')
+
+/* Helmet */
 const helmet = require('helmet')
+
+/* Body Parser */
+const bodyParser = require('body-parser')
+const bodyParserError = require('bodyparser-json-error')
+
+/* Passport */
+const passport = require('passport')
+
+/* Flash */
+const flash = require('connect-flash')
+
+/* Consign */
+const consign = require('consign')
+
 /* Winston logger */
 const winston = require('winston')
 const expressWinston = require('express-winston')
 const WinstonMongo = require('winston-mongodb').MongoDB
 
 module.exports = () => {
-  /* Express app */
+  /* Init Express app and set port */
   const app = express()
   app.set('port', (process.env.PORT || 5000))
 
-  /* Express session */
+  /* Set locals config */
+  app.locals.config = config
+
+  /* Set Express Session Middleware */
   app.use(session({
     name: 'default.sid',
     secret: 'default',
@@ -29,13 +48,13 @@ module.exports = () => {
     store: new MongoStore({ mongooseConnection: mongoose.connection, collection: 'localsessions' })
   }))
 
-  /* Ejs views */
+  /* Set public dir and use ejs views */
   app.use(require('method-override')())
   app.use(express.static('./public'))
   app.set('view engine', 'ejs')
   app.set('views', './app/views')
 
-  /* Helmet */
+  /* Set Helmet */
   app.use(helmet.frameguard())
   app.use(helmet.xssFilter())
   app.use(helmet.noSniff())
@@ -43,43 +62,24 @@ module.exports = () => {
     setTo: 'PHP 5.6.27'
   }))
 
-  /* Cookie parser */
+  /* Use Cookie Parser */
   app.use(cookieParser())
 
-  /* Body parser */
+  /* Use Body Parser */
   app.use(bodyParser.urlencoded({
     extended: true
   }))
   app.use(bodyParser.json())
   app.use(bodyParserError.beautify())
 
-  /* Express session */
-  app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false
-  }))
-
-  /* Passport */
+  /* Use Passport */
   app.use(passport.initialize())
   app.use(passport.session())
 
-  /* Flash messages */
+  /* Use Flash Messages */
   app.use(flash())
 
-  /* Express load */
-  consign({
-    cwd: 'app'
-  })
-    .include('models')
-    .then('errors')
-    .then('libs')
-    .then('controllers')
-    .then('routes')
-    .then('middlewares/errors.js')
-    .into(app)
-
-  /* Winston logger */
+  /* Set Winston Logger */
   app.use(expressWinston.logger({
     transports: [
       new winston.transports.Console({
@@ -94,6 +94,18 @@ module.exports = () => {
       return res.statusCode !== 500
     }
   }))
+
+  /* Autoload modules with Consign */
+  consign({
+    cwd: 'app'
+  })
+    .include('models')
+    .then('errors')
+    .then('libs')
+    .then('controllers')
+    .then('routes')
+    .then('middlewares/errors.js')
+    .into(app)
 
   return app
 }
