@@ -93,28 +93,48 @@ angular
       })
       .when('/login',{
         templateUrl: 'app/views/auth/login.html',
-        controller: 'LoginCtrl',
-        controllerAs: 'loginCtrl'
+        controller: 'LoginCtrl as loginCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isNotAuthenticated()
+          }
+        }
       })
       .when('/cadastrar',{
         templateUrl: 'app/views/auth/register.html',
-        controller: 'RegisterCtrl',
-        controllerAs: 'registerCtrl'
+        controller: 'RegisterCtrl as registerCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isNotAuthenticated()
+          }
+        }
       })
       .when('/recuperar',{
         templateUrl: 'app/views/auth/forgot.html',
-        controller: 'ForgotCtrl',
-        controllerAs: 'forgotCtrl'
+        controller: 'ForgotCtrl as forgotCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isNotAuthenticated()
+          }
+        }
       })
       .when('/consultores/:recoveryKey/redefinir-senha/:token',{
         templateUrl: 'app/views/auth/reset.html',
-        controller: 'ResetCtrl',
-        controllerAs: 'resetCtrl'
+        controller: 'ResetCtrl as resetCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isNotAuthenticated()
+          }
+        }
       })
       .when('/activation/:token',{
         templateUrl: 'app/views/auth/activation.html',
-        controller: 'ActivationCtrl',
-        controllerAs: 'activationCtrl'
+        controller: 'ActivationCtrl as activationCtrl',
+        resolve: {
+          access: (Auth) => {
+            return Auth.isNotAuthenticated()
+          }
+        }
       })
       .otherwise({
         redirectTo: '/'
@@ -131,7 +151,10 @@ angular
     })
 
     $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
-      $location.path("/login")
+      if(rejection == 'isNotAuth')
+        $location.path("/")
+      else
+        $location.path("/login")
     })
 
     $rootScope.$on('$routeChangeSuccess', (event, current, previous) => {
