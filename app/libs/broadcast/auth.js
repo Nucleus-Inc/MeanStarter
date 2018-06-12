@@ -1,9 +1,9 @@
-const config = require('config/config.js')
 const nodemailer = require('nodemailer')
 const hbs = require('nodemailer-express-handlebars')
 
 module.exports = (app) => {
   const broadcast = {}
+  const config = app.locals.config
 
   const smtpTransporter = nodemailer.createTransport({
     service: config.libs.nodeMailer.service,
