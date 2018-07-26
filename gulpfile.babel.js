@@ -18,15 +18,44 @@ import karma from 'karma'
 import config from './public/config/env.js'
 
 const karmaServer = karma.Server
-let env = 'development'
 
 gulp.task('yarn', () => {
   return gulp.src(['./package.json'])
     .pipe(yarn())
 })
 
+gulp.task('constants:dev', () => {
+  const envConf = config['development']
+  return ngConstant({
+    name: 'dashboard',
+    constants: envConf,
+    stream: true,
+    deps: false,
+    wrap: true
+  })
+  .pipe(rename({
+    basename: 'config'
+  }))
+  .pipe(gulp.dest('public/dist'))
+})
+
+gulp.task('constants:sand', () => {
+  const envConf = config['sandbox']
+  return ngConstant({
+    name: 'dashboard',
+    constants: envConf,
+    stream: true,
+    deps: false,
+    wrap: true
+  })
+  .pipe(rename({
+    basename: 'config'
+  }))
+  .pipe(gulp.dest('public/dist'))
+})
+
 gulp.task('constants', () => {
-  const envConf = config[env]
+  const envConf = config['production']
   return ngConstant({
     name: 'dashboard',
     constants: envConf,
@@ -147,7 +176,7 @@ gulp.task('htmlToJs', () => {
 })
 
 gulp.task('concat', () => {
-  return gulp.src([ 'public/app/app.js', 'public/app/**/**/*.js', 'public/tmp/**/*.html.js', 'public/dist/config.js'])
+  return gulp.src(['public/app/**/*.js', 'public/tmp/**/*.html.js', 'public/dist/config.js'])
     .pipe(babel({
       presets: ['es2015']
     }))
@@ -172,19 +201,55 @@ gulp.task('clean', () => {
     .pipe(clean({force: true}))
 })
 
+gulp.task('nodemon:dev', () => {
+  nodemon({
+    script: 'app.js',
+    ext: 'js',
+    env: { 'NODE_ENV': 'development' }
+  })
+})
+
+gulp.task('nodemon:sand', () => {
+  nodemon({
+    script: 'app.js',
+    ext: 'js',
+    env: { 'NODE_ENV': 'sandbox' }
+  })
+})
+
 gulp.task('nodemon', () => {
   nodemon({
     script: 'app.js',
     ext: 'js',
-    env: { 'NODE_ENV': env }
+    env: { 'NODE_ENV': 'production' }
   })
+})
+
+gulp.task('watch:dev', () => {
+  gulp.watch('gulpfile.babel.js', () => {
+    runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants:dev','sass','htmlToJs'],'concat','minify')
+  })
+  gulp.watch(['public/app/**/*.html','public/app/**/*.js'], () => {
+    runSequence('htmlToJs','concat','minify')
+  })
+  gulp.watch('public/app/assets/sass/*.scss',['sass'])
+})
+
+gulp.task('watch:sand', () => {
+  gulp.watch('gulpfile.babel.js', () => {
+    runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants:sand','sass','htmlToJs'],'concat','minify')
+  })
+  gulp.watch(['public/app/**/*.html','public/app/**/*.js'], () => {
+    runSequence('htmlToJs','concat','minify')
+  })
+  gulp.watch('public/app/assets/sass/*.scss',['sass'])
 })
 
 gulp.task('watch', () => {
   gulp.watch('gulpfile.babel.js', () => {
-    runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
+    runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify')
   })
-  gulp.watch(['public/app/**/**/*.html','public/app/app.js','public/app/**/**/*.js'], () => {
+  gulp.watch(['public/app/**/*.html','public/app/**/*.js'], () => {
     runSequence('htmlToJs','concat','minify')
   })
   gulp.watch('public/app/assets/sass/*.scss',['sass'])
@@ -198,7 +263,11 @@ gulp.task('test', (done) => {
 })
 
 gulp.task('dev', () => {
-  runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants','sass','htmlToJs'],'concat','minify',['nodemon','watch'])
+  runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants:dev','sass','htmlToJs'],'concat','minify',['nodemon:dev','watch:dev'])
+})
+
+gulp.task('sand', () => {
+  runSequence('yarn',['copyJs','copyCss','copySlickFonts','copyFonts'],['constants:sand','sass','htmlToJs'],'concat','minify','clean',['nodemon:sand','watch:sand'])
 })
 
 gulp.task('default', () => {

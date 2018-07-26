@@ -1,5 +1,5 @@
 (() => {
-  angular.module('dashboard').controller('LoginCtrl', ['$scope','Auth','$location','Socket','Config','$localStorage', function($scope,Auth,$location,Socket,Config,$localStorage) {
+  angular.module('dashboard').controller('LoginCtrl', ['$scope','Auth','$location','Socket','$localStorage', function($scope,Auth,$location,Socket,$localStorage) {
 
     let vm = this
 

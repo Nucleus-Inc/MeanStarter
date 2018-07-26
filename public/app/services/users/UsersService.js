@@ -1,11 +1,9 @@
 (() => {
-  angular.module('dashboard').service('Users', ['$http','Config', ($http,Config) => {
-
-    const url_base = Config.url_base
+  angular.module('dashboard').service('Users', ['$http', ($http) => {
 
     return {
       getUsers: () => {
-        return $http.get(url_base+'/users').then((result) => { return result })
+        return $http.get('/users').then((result) => { return result })
       }
     }
 
