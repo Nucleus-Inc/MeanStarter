@@ -205,6 +205,10 @@ gulp.task('nodemon:dev', () => {
   nodemon({
     script: 'app.js',
     ext: 'js',
+    ignore: [
+      'node_modules/',
+      'public/'
+    ],
     env: { 'NODE_ENV': 'development' }
   })
 })
@@ -213,6 +217,10 @@ gulp.task('nodemon:sand', () => {
   nodemon({
     script: 'app.js',
     ext: 'js',
+    ignore: [
+      'node_modules/',
+      'public/'
+    ],
     env: { 'NODE_ENV': 'sandbox' }
   })
 })
@@ -221,6 +229,10 @@ gulp.task('nodemon', () => {
   nodemon({
     script: 'app.js',
     ext: 'js',
+    ignore: [
+      'node_modules/',
+      'public/'
+    ],
     env: { 'NODE_ENV': 'production' }
   })
 })
