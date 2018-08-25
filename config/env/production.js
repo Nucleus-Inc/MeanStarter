@@ -2,8 +2,8 @@ module.exports = {
   db: 'mongodb://localhost/meanstarter',
   mean: {
     errors: {
-      logExceptionsOnConsole: true,
-      logUncaughtExeceptionsOnly: true
+      dumpExceptions: false,
+      dumpUnkownExeceptionsOnly: true
     }
   },
   jwt: {
@@ -18,6 +18,15 @@ module.exports = {
       user: '',
       password: '',
       from: ''
+    },
+    winston: {
+      transports: {
+        console: {
+          colorize: true,
+          json: true,
+          statusLevels: false
+        }
+      }
     }
   }
 }
