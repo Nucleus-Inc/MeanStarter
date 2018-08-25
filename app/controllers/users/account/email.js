@@ -64,8 +64,8 @@ module.exports = (app) => {
 
         user = await User.findByIdAndUpdate(user._id, {
           $set: {
-            email: newEmail,
             isActive: true,
+            'account.email': newEmail,
             'account.changeRequests.email.newEmail': null,
             'account.changeRequests.email.token': null,
             'account.changeRequests.email.tokenExp': null

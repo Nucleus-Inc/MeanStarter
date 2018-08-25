@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = app => {
   const User = app.models.user
   const controller = {}
 
