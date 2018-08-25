@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
 
-module.exports = (app) => {
+module.exports = app => {
   const User = app.models.user
   const responses = app.libs.responses.users
   const config = app.locals.config
@@ -14,18 +14,24 @@ module.exports = (app) => {
 
       let user = await User.findOne({
         'account.email': req.body.email
-      })
-        .lean()
+      }).lean()
 
-      if (user && new User().compareHash(req.body.password, user.account.password)) {
-        const token = jwt.sign({
-          _id: user._id,
-          isActive: user.account.isActive
-        }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+      if (
+        user &&
+        new User().compareHash(req.body.password, user.account.password)
+      ) {
+        const token = jwt.sign(
+          {
+            _id: user._id,
+            isActive: user.account.isActive
+          },
+          config.jwt.jwtSecret,
+          {
+            expiresIn: '1h'
+          }
+        )
         res.set('JWT', token)
-        res.send(responses.getAccount(user))
+        res.send(responses.getAccount(users))
       } else {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       }

@@ -1,9 +1,9 @@
 const _ = require('lodash')
 
-module.exports = (app) => {
+module.exports = app => {
   const errorFormatter = {}
 
-  errorFormatter.format = (err) => {
+  errorFormatter.format = err => {
     let response = {}
 
     if (_.has(err, 'mapped')) {
@@ -14,7 +14,12 @@ module.exports = (app) => {
           errors: err.mapped()
         }
       }
-    } else if (_.isObject(err) && _.has(err, 'errors') && _.has(err, ['code']) && err.code === 11000) {
+    } else if (
+      _.isObject(err) &&
+      _.has(err, 'errors') &&
+      _.has(err, ['code']) &&
+      err.code === 11000
+    ) {
       response = {
         statusCode: 422,
         errorData: {
@@ -22,7 +27,11 @@ module.exports = (app) => {
           errors: err.fields
         }
       }
-    } else if (_.isObject(err) && _.has(err, 'apiError') && _.has(err, 'data')) {
+    } else if (
+      _.isObject(err) &&
+      _.has(err, 'apiError') &&
+      _.has(err, 'data')
+    ) {
       response = {
         statusCode: 400,
         errorData: {

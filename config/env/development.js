@@ -1,5 +1,11 @@
 module.exports = {
   db: 'mongodb://localhost/meanstarter',
+  mean: {
+    errors: {
+      logExceptionsOnConsole: true,
+      logUncaughtExeceptionsOnly: true
+    }
+  },
   jwt: {
     jwtSecret: 'meanstarter',
     jwtSession: {

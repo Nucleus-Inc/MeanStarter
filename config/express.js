@@ -34,19 +34,24 @@ const WinstonMongo = require('winston-mongodb').MongoDB
 module.exports = () => {
   /* Init Express app and set port */
   const app = express()
-  app.set('port', (process.env.PORT || 5000))
+  app.set('port', process.env.PORT || 5000)
 
   /* Set locals config */
   app.locals.config = config
 
   /* Set Express Session Middleware */
-  app.use(session({
-    name: 'default.sid',
-    secret: 'default',
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection, collection: 'localsessions' })
-  }))
+  app.use(
+    session({
+      name: 'default.sid',
+      secret: 'default',
+      resave: false,
+      saveUninitialized: false,
+      store: new MongoStore({
+        mongooseConnection: mongoose.connection,
+        collection: 'localsessions'
+      })
+    })
+  )
 
   /* Set public dir and use ejs views */
   app.use(require('method-override')())
@@ -58,17 +63,21 @@ module.exports = () => {
   app.use(helmet.frameguard())
   app.use(helmet.xssFilter())
   app.use(helmet.noSniff())
-  app.use(helmet.hidePoweredBy({
-    setTo: 'PHP 5.6.27'
-  }))
+  app.use(
+    helmet.hidePoweredBy({
+      setTo: 'PHP 5.6.27'
+    })
+  )
 
   /* Use Cookie Parser */
   app.use(cookieParser())
 
   /* Use Body Parser */
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }))
+  app.use(
+    bodyParser.urlencoded({
+      extended: true
+    })
+  )
   app.use(bodyParser.json())
   app.use(bodyParserError.beautify())
 
@@ -80,20 +89,22 @@ module.exports = () => {
   app.use(flash())
 
   /* Set Winston Logger */
-  app.use(expressWinston.logger({
-    transports: [
-      new winston.transports.Console({
-        json: true,
-        colorize: true
-      }),
-      new WinstonMongo({
-        db: config.db
-      })
-    ],
-    skip: function (req, res) {
-      return res.statusCode !== 500
-    }
-  }))
+  app.use(
+    expressWinston.logger({
+      transports: [
+        new winston.transports.Console({
+          json: true,
+          colorize: true
+        }),
+        new WinstonMongo({
+          db: config.db
+        })
+      ],
+      skip: function (req, res) {
+        return res.statusCode !== 500
+      }
+    })
+  )
 
   /* Autoload modules with Consign */
   consign({
