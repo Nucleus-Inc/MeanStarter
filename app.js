@@ -3,7 +3,7 @@ require('app-module-path').addPath(__dirname)
 const http = require('http')
 const config = require('./config/config')
 const app = require('./config/express')()
-require('./config/passport')()
+require('./config/passport')(app)
 require('./config/database.js')(config.db)
 app.base = __dirname
 const server = http.createServer(app)

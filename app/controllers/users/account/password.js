@@ -1,7 +1,8 @@
 const { validationResult } = require('express-validator/check')
 
-module.exports = (app) => {
+module.exports = app => {
   const User = app.models.user
+  const bcrypt = app.libs.bcrypt.hash
   const errors = app.errors.custom
   const controller = {}
 
@@ -13,19 +14,31 @@ module.exports = (app) => {
 
       if (!user) {
         res.status(404).end()
-      } else if (!new User().compareHash(req.body.currentPassword, user.account.password)) {
+      } else if (
+        !(await bcrypt.compareHash(
+          req.body.currentPassword,
+          user.account.password
+        ))
+      ) {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
-      } else if (new User().compareHash(req.body.newPassword, user.account.password)) {
+      } else if (
+        await bcrypt.compareHash(req.body.newPassword, user.account.password)
+      ) {
         res.status(errors.REQ003.httpCode).send(errors.REQ003.response)
       } else {
-        await User.findByIdAndUpdate(user._id, {
-          $set: {
-            'account.password': new User().generateHash(req.body.newPassword)
+        await User.findByIdAndUpdate(
+          user._id,
+          {
+            $set: {
+              'account.password': await bcrypt.generateHash(
+                req.body.newPassword
+              )
+            }
+          },
+          {
+            new: true
           }
-        }, {
-          new: true
-        })
-          .lean()
+        ).lean()
 
         res.end()
       }

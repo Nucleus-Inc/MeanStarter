@@ -8,16 +8,18 @@ const jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
 jwtOptions.secretOrKey = config.jwt.jwtSecret
 
-module.exports = (User) => {
-  passport.use(new JwtStrategy(jwtOptions, async (jwtPayload, next) => {
-    let user = await User.findById(jwtPayload._id)
+module.exports = (app, User) => {
+  passport.use(
+    new JwtStrategy(jwtOptions, async (jwtPayload, next) => {
+      let user = await User.findById(jwtPayload._id)
 
-    if (user) {
-      next(null, {
-        user: jwtPayload._id
-      })
-    } else {
-      next(null, false)
-    }
-  }))
+      if (user) {
+        next(null, {
+          user: jwtPayload._id
+        })
+      } else {
+        next(null, false)
+      }
+    })
+  )
 }

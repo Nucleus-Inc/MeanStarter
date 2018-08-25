@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator/check')
 module.exports = app => {
   const User = app.models.user
   const responses = app.libs.responses.users
+  const bcrypt = app.libs.bcrypt.hash
   const config = app.locals.config
   const errors = app.errors.custom
   const controller = {}
@@ -18,7 +19,7 @@ module.exports = app => {
 
       if (
         user &&
-        new User().compareHash(req.body.password, user.account.password)
+        (await bcrypt.compareHash(req.body.password, user.account.password))
       ) {
         const token = jwt.sign(
           {

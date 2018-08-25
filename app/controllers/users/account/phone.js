@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator/check')
 module.exports = app => {
   const User = app.models.user
   const random = app.libs.random
+  const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
   const responses = app.libs.responses.users
   const errors = app.errors.custom
@@ -25,7 +26,7 @@ module.exports = app => {
             $set: {
               'account.changeRequests.phoneNumber.newNumber':
                 req.body.phoneNumber,
-              'account.changeRequests.phoneNumber.token': new User().generateHash(
+              'account.changeRequests.phoneNumber.token': await bcrypt.generateHash(
                 code.toString()
               ),
               'account.changeRequests.phoneNumber.tokenExp': Date.now() + 300000
@@ -67,10 +68,10 @@ module.exports = app => {
       if (!user) {
         res.status(404).end()
       } else if (
-        new User().compareHash(
+        (await bcrypt.compareHash(
           req.body.token.toString(),
           user.account.changeRequests.phoneNumber.token
-        ) &&
+        )) &&
         Date.now() < user.account.changeRequests.phoneNumber.tokenExp
       ) {
         let newNumber = user.account.changeRequests.phoneNumber.newNumber
