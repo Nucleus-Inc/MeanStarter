@@ -31,7 +31,7 @@ module.exports = app => {
           }
         )
         res.set('JWT', token)
-        res.send(responses.getAccount(users))
+        res.send(responses.getAccount(user))
       } else {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       }
