@@ -55,7 +55,6 @@
     "chart.js": "^2.7.2",
     "cloudinary-core": "^2.5.0",
     "cloudinary_ng": "^1.1.1",
-    "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.1",
     "consign": "^0.1.6",
     "cookie-parser": "^1.4.3",

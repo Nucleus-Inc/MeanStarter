@@ -20,9 +20,6 @@ const bodyParserError = require('bodyparser-json-error')
 /* Passport */
 const passport = require('passport')
 
-/* Flash */
-const flash = require('connect-flash')
-
 /* Consign */
 const consign = require('consign')
 
@@ -84,9 +81,6 @@ module.exports = () => {
   /* Use Passport */
   app.use(passport.initialize())
   app.use(passport.session())
-
-  /* Use Flash Messages */
-  app.use(flash())
 
   /* Set Winston Logger */
   app.use(
