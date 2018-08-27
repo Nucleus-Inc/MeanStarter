@@ -25,6 +25,7 @@ const consign = require('consign')
 
 /* Winston logger */
 const winston = require('winston')
+const winstonConfig = require('./winston.js')
 const expressWinston = require('express-winston')
 const WinstonMongo = require('winston-mongodb').MongoDB
 
@@ -37,15 +38,16 @@ module.exports = () => {
   app.locals.config = config
 
   /* Set Express Session Middleware */
+
   app.use(
     session({
-      name: 'default.sid',
-      secret: 'default',
-      resave: false,
-      saveUninitialized: false,
+      name: config.libs.expressSession.name,
+      secret: config.libs.expressSession.secret,
+      resave: config.libs.expressSession.resave,
+      saveUninitialized: config.libs.expressSession.saveUninitialized,
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
-        collection: 'localsessions'
+        collection: config.libs.expressSession.mongoStore.collection
       })
     })
   )
@@ -62,7 +64,7 @@ module.exports = () => {
   app.use(helmet.noSniff())
   app.use(
     helmet.hidePoweredBy({
-      setTo: 'PHP 5.6.27'
+      setTo: config.libs.helmet.poweredBy
     })
   )
 
@@ -91,23 +93,8 @@ module.exports = () => {
           db: config.db
         })
       ],
-      skip: function (req, res) {
-        return res.statusCode !== 500
-      },
-      level: function (req, res) {
-        let level = ''
-
-        if (res.statusCode >= 100) {
-          level = 'info'
-        }
-        if (res.statusCode >= 400) {
-          level = 'warn'
-        }
-        if (res.statusCode >= 500) {
-          level = 'error'
-        }
-        return level
-      }
+      skip: winstonConfig.skip,
+      level: winstonConfig.level
     })
   )
 

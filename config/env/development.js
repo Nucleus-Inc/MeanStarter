@@ -13,6 +13,18 @@ module.exports = {
     }
   },
   libs: {
+    expressSession: {
+      name: 'default.sid',
+      secret: 'default',
+      resave: false,
+      saveUninitialized: false,
+      mongoStore: {
+        collection: 'localsessions'
+      }
+    },
+    helmet: {
+      poweredBy: 'PHP 5.6.27'
+    },
     nodeMailer: {
       service: 'Gmail',
       user: '',
