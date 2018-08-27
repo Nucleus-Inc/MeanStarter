@@ -34,11 +34,7 @@ module.exports = () => {
   const app = express()
   app.set('port', process.env.PORT || 5000)
 
-  /* Set locals config */
-  app.locals.config = config
-
   /* Set Express Session Middleware */
-
   app.use(
     session({
       name: config.libs.expressSession.name,
@@ -58,7 +54,7 @@ module.exports = () => {
   app.set('view engine', 'ejs')
   app.set('views', './app/views')
 
-  /* Set Helmet */
+  /* Use Helmet */
   app.use(helmet.frameguard())
   app.use(helmet.xssFilter())
   app.use(helmet.noSniff())
@@ -84,7 +80,7 @@ module.exports = () => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  /* Set Winston Logger */
+  /* Use Winston Logger */
   app.use(
     expressWinston.logger({
       transports: [
@@ -97,6 +93,13 @@ module.exports = () => {
       level: winstonConfig.level
     })
   )
+
+  /* Ensure index is now deprecated: https://github.com/Automattic/mongoose/issues/6890 */
+  mongoose.set('useCreateIndex', true)
+
+  /* Set App Locals */
+  app.locals.mongoose = mongoose
+  app.locals.config = config
 
   /* Autoload modules with Consign */
   consign({

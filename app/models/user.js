@@ -1,8 +1,6 @@
-const mongoose = require('mongoose')
-const beautifyUnique = require('mongoose-beautiful-unique-validation')
-/* const sanitizerPlugin = require('mongoose-sanitizer') */
+module.exports = app => {
+  const mongoose = app.locals.mongoose
 
-module.exports = () => {
   const schema = mongoose.Schema(
     {
       account: {
@@ -73,9 +71,6 @@ module.exports = () => {
       timestamps: true
     }
   )
-
-  /* schema.plugin(sanitizerPlugin) */
-  schema.plugin(beautifyUnique)
 
   return mongoose.model('User', schema)
 }

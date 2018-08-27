@@ -4,7 +4,7 @@ const http = require('http')
 const config = require('./config/config')
 const app = require('./config/express')()
 require('./config/passport')(app)
-require('./config/database.js')(config.db)
+require('./config/database.js')(config.db, app.locals.mongoose)
 app.base = __dirname
 const server = http.createServer(app)
 require('./config/socket')(server)

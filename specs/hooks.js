@@ -8,14 +8,14 @@ chai.use(chaiHttp)
 const userModel = server.models.user
 
 /* Before hooks */
-before((done) => {
-  userModel.ensureIndexes((err) => {
+before(done => {
+  userModel.ensureIndexes(err => {
     done()
   })
 })
 
 /* After hooks */
-after((done) => {
+after(done => {
   userModel.remove({}, (err, docs) => {
     done()
   })
