@@ -12,7 +12,23 @@
         </span>
         <ul ng-if="menuItem.hasSubmenu" class="sidebar-submenu">
           <li ng-repeat="submenuItem in menuItem.submenu" class="sidebar-menu-item">
-              <div link-sidebar link-sidebar-close class="sidebar-menu-button" href="{{submenuItem.href}}">{{submenuItem.label}}</div>
+            <span submenu-sidebar ng-if="submenuItem.hasSubmenu" class="sidebar-menu-button sidebar-menuItem-button submenu-label" data-toggle="sidebar-collapse">
+              <i class="sidebar-menu-icon material-icons">{{submenuItem.icon}}</i> {{submenuItem.label}}
+            </span>
+            <ul ng-if="submenuItem.hasSubmenu" class="sidebar-submenu submenu-item">
+              <li ng-repeat="submenuSubItem in submenuItem.submenu" class="sidebar-menu-item">
+                <span submenu-sidebar ng-if="submenuSubItem.hasSubmenu" class="sidebar-menu-button sidebar-menuItem-button submenu-label" data-toggle="sidebar-collapse">
+                  <i class="sidebar-menu-icon material-icons">{{submenuSubItem.icon}}</i> {{submenuSubItem.label}}
+                </span>
+                <ul ng-if="submenuSubItem.hasSubmenu" class="sidebar-submenu submenu-item">
+                  <li ng-repeat="item in submenuSubItem.submenu" class="sidebar-menu-item">
+                    <div link-sidebar link-sidebar-close class="sidebar-menu-button" href="{{item.href}}">{{item.label}}</div>
+                  </li>
+                </ul>
+                <div ng-if="!submenuSubItem.hasSubmenu" link-sidebar link-sidebar-close class="sidebar-menu-button" href="{{submenuSubItem.href}}">{{submenuSubItem.label}}</div>
+              </li>
+            </ul>
+            <div ng-if="!submenuItem.hasSubmenu" link-sidebar link-sidebar-close class="sidebar-menu-button submenu-item" href="{{submenuItem.href}}">{{submenuItem.label}}</div>
           </li>
         </ul>
       </li>
