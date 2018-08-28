@@ -1,13 +1,15 @@
-const mongoose = require('mongoose')
 const bluebird = require('bluebird')
 
-module.exports = (uri) => {
+module.exports = (uri, mongoose) => {
   bluebird.promisifyAll(mongoose)
 
   // mongoose.Promise = global.Promise; For use native promise
   mongoose.Promise = bluebird
 
-  mongoose.connect(uri)
+  mongoose.connect(
+    uri,
+    { useNewUrlParser: true }
+  )
 
   mongoose.connection.on('connected', () => {
     console.log('Mongoose! Connected in: ' + uri)
@@ -17,7 +19,7 @@ module.exports = (uri) => {
     console.log('Mongoose! Disconnected: ' + uri)
   })
 
-  mongoose.connection.on('error', (err) => {
+  mongoose.connection.on('error', err => {
     console.log('Mongoose! Error in connection: ' + err)
   })
 
@@ -27,4 +29,6 @@ module.exports = (uri) => {
     })
     process.exit(0)
   })
+
+  return mongoose
 }

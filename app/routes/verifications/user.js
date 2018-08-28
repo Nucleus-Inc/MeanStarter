@@ -9,7 +9,13 @@ module.exports = (app) => {
       check('email')
         .isEmail()
         .trim()
-        .normalizeEmail(),
+        .normalizeEmail({
+          gmail_remove_dots: false,
+          gmail_remove_subaddress: false,
+          outlookdotcom_remove_subaddress: false,
+          yahoo_remove_subaddress: false,
+          icloud_remove_subaddress: false
+        }),
       check('phoneNumber')
         .custom((value, { req }) => {
           return customValidators.isPhoneNumber(req.query.phoneNumber)

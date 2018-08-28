@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator/check')
 
-module.exports = (app) => {
+module.exports = app => {
   const User = app.models.user
   const random = app.libs.random
+  const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
   const config = app.locals.config
   const responses = app.libs.responses.users
@@ -23,27 +24,33 @@ module.exports = (app) => {
       } else if (user.account.isActive) {
         res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
       } else {
-        await User.findByIdAndUpdate(user._id, {
-          $set: {
-            'account.token': new User().generateHash(code.toString()),
-            'account.tokenExp': Date.now() + 300000
+        await User.findByIdAndUpdate(
+          user._id,
+          {
+            $set: {
+              'account.token': await bcrypt.generateHash(code.toString()),
+              'account.tokenExp': Date.now() + 300000
+            }
+          },
+          {
+            new: true
           }
-        }, {
-          new: true
-        })
-          .lean()
+        ).lean()
 
         if (process.env.NODE_ENV != 'production') {
           res.set('code', code)
         }
 
-        broadcast.sendCode({
-          recipient: user.account.email,
-          username: user.account.name,
-          code: code
-        }, {
-          transport: 'email'
-        })
+        broadcast.sendCode(
+          {
+            recipient: user.account.email,
+            username: user.account.name,
+            code: code
+          },
+          {
+            transport: 'email'
+          }
+        )
 
         res.end()
       }
@@ -60,24 +67,38 @@ module.exports = (app) => {
 
       if (user.account.isActive) {
         res.status(errors.AUT006.httpCode).send(errors.AUT006.response)
-      } else if (user.account.token && new User().compareHash(req.body.token.toString(), user.account.token) && Date.now() < user.account.tokenExp) {
-        user = await User.findByIdAndUpdate(user._id, {
-          $set: {
-            'account.token': null,
-            'account.tokenExp': null,
-            'account.isActive': true
+      } else if (
+        user.account.token &&
+        (await bcrypt.compareHash(
+          req.body.token.toString(),
+          user.account.token
+        )) &&
+        Date.now() < user.account.tokenExp
+      ) {
+        user = await User.findByIdAndUpdate(
+          user._id,
+          {
+            $set: {
+              'account.token': null,
+              'account.tokenExp': null,
+              'account.isActive': true
+            }
+          },
+          {
+            new: true
           }
-        }, {
-          new: true
-        })
-          .lean()
+        ).lean()
 
-        let token = jwt.sign({
-          _id: user._id,
-          isActive: user.account.isActive
-        }, config.jwt.jwtSecret, {
-          expiresIn: '1h'
-        })
+        let token = jwt.sign(
+          {
+            _id: user._id,
+            isActive: user.account.isActive
+          },
+          config.jwt.jwtSecret,
+          {
+            expiresIn: '1h'
+          }
+        )
 
         res.set('JWT', token)
         res.send(responses.getAccount(user))

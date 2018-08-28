@@ -1,32 +1,49 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
-module.exports = (User) => {
+module.exports = (app, User) => {
+  const bcrypt = app.libs.bcrypt.hash
+
   passport.serializeUser((user, done) => {
     done(null, user._id)
   })
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      done(err, user)
-    })
+  passport.deserializeUser(async (id, done) => {
+    try {
+      let user = await User.findById(id)
+
+      done(null, user)
+    } catch (ex) {
+      done(ex, null)
+    }
   })
 
-  passport.use('local-login', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-    passReqToCallback: true
-  }, (req, email, password, done) => {
-    User.findOne({
-      'account.email': email
-    }, (err, user) => {
-      if (err) {
-        return done(err)
-      } else if (user && new User().compareHash(password, user.account.password)) {
-        return done(null, user)
-      } else {
-        return done(null, false)
+  passport.use(
+    'local-login',
+    new LocalStrategy(
+      {
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true
+      },
+      async (req, email, password, done) => {
+        try {
+          let user = await User.findOne({
+            'account.email': email
+          })
+
+          if (
+            user &&
+            (await bcrypt.compareHash(password, user.account.password))
+          ) {
+            return done(null, user)
+          } else {
+            return done(null, false)
+          }
+        } catch (ex) {
+          done(ex)
+        }
       }
-    })
-  }))
+    )
+  )
 }

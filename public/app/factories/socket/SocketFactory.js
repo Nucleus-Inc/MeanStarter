@@ -3,7 +3,7 @@
     const socket = io.connect()
     return {
       on: (eventName, callback) => {
-        socket.on(eventName, () => {
+        socket.on(eventName, function() {
           const args = arguments
           $rootScope.$apply( () => {
             callback.apply(socket, args)
@@ -11,7 +11,7 @@
         })
       },
       emit: (eventName, data, callback) => {
-        socket.emit(eventName, data, () => {
+        socket.emit(eventName, data, function() {
           const args = arguments
           $rootScope.$apply( () => {
             if (callback) {

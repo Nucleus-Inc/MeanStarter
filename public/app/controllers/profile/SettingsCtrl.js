@@ -1,6 +1,6 @@
 (() => {
-  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','Profile','notify','$localStorage','Config','Auth','$location','cloudinary','ModalService','Socket',
-    function($scope, $timeout, $window, Upload, Account, Profile, notify, $localStorage, Config, Auth, $location, cloudinary, ModalService, Socket) {
+  angular.module('dashboard').controller('SettingsCtrl', ['$scope','$timeout','$window','Upload','Account','Profile','notify','$localStorage','Auth','$location','cloudinary','ModalService','Socket',
+    function($scope, $timeout, $window, Upload, Account, Profile, notify, $localStorage, Auth, $location, cloudinary, ModalService, Socket) {
 
       let vm = this
 

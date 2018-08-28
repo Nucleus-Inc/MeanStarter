@@ -11,11 +11,11 @@ module.exports = (req, res, next) => {
     },
     logout: (req, res, next) => {
       req.logout()
-      req.session.destroy((err) => {
+      req.session.destroy(err => {
         if (err) {
           res.status(500).end()
         } else {
-          res.status(200).clearCookie('connect.sid', { path: '/' }).end()
+          res.status(200).end()
         }
       })
     },

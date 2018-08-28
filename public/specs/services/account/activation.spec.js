@@ -1,17 +1,17 @@
-(() => {
+;(() => {
   describe('AccountService: Activation', () => {
     beforeEach(() => {
       module('dashboard')
     })
 
     let Account, $httpBackend
-    let user = {
+    /* let user = {
       '_id': 'EFB34556AC34123232434F',
       'name': 'User name',
       'email': 'mean@email.com',
       'phoneNumber': '5585999999999',
       'password': 'M3an@Start3r'
-    }
+    } */
 
     beforeEach(inject((_Account_, _$httpBackend_) => {
       Account = _Account_
@@ -35,6 +35,5 @@
     //   })
     //   $httpBackend.flush()
     // })
-
   })
 })()
