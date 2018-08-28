@@ -17,6 +17,9 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const bodyParserError = require('bodyparser-json-error')
 
+/* Express Mongo Sanitizer */
+const mongoSanitize = require('express-mongo-sanitize')
+
 /* Passport */
 const passport = require('passport')
 
@@ -75,6 +78,9 @@ module.exports = () => {
   )
   app.use(bodyParser.json())
   app.use(bodyParserError.beautify())
+
+  /* Use Express Mongo Sanitize */
+  app.use(mongoSanitize())
 
   /* Use Passport */
   app.use(passport.initialize())
