@@ -35,7 +35,18 @@ const WinstonMongo = require('winston-mongodb').MongoDB
 module.exports = () => {
   /* Init Express app and set port */
   const app = express()
+
   app.set('port', process.env.PORT || 5000)
+
+  const apiVersions = {
+    v1: {
+      baseUrl: '/api/v1'
+    }
+  }
+
+  const routers = {
+    v1: express.Router()
+  }
 
   /* Set Express Session Middleware */
   app.use(
@@ -86,6 +97,12 @@ module.exports = () => {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  /* Use routers */
+  app.use(apiVersions.v1.baseUrl, routers.v1)
+
+  /* Set default to latest version */
+  app.use('/', routers.v1)
+
   /* Use Winston Logger */
   app.use(
     expressWinston.logger({
@@ -106,6 +123,7 @@ module.exports = () => {
   /* Set App Locals */
   app.locals.mongoose = mongoose
   app.locals.config = config
+  app.locals.routers = routers
 
   /* Autoload modules with Consign */
   consign({
