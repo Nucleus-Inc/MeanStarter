@@ -42,7 +42,7 @@ module.exports = app => {
             return done(null, false)
           }
         } catch (ex) {
-          done(ex)
+          return done(ex)
         }
       }
     )
