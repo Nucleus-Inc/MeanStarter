@@ -8,7 +8,9 @@ const jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
 jwtOptions.secretOrKey = config.jwt.jwtSecret
 
-module.exports = (app, User) => {
+module.exports = app => {
+  const User = app.models.user
+
   passport.use(
     new JwtStrategy(jwtOptions, async (jwtPayload, next) => {
       let user = await User.findById(jwtPayload._id)

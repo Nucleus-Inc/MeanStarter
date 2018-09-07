@@ -80,6 +80,7 @@
     "nodemailer": "^4.0.1",
     "nodemailer-express-handlebars": "^2.0.0",
     "passport": "^0.3.2",
+    "passport-google-id-token": "^0.4.5",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "popper.js": "^1.14.3",

@@ -4,66 +4,98 @@ module.exports = app => {
   const schema = mongoose.Schema(
     {
       account: {
-        name: {
-          type: String,
-          required: true
-        },
-        email: {
-          type: String,
-          required: true,
-          index: {
-            unique: true
-          }
-        },
-        phoneNumber: {
-          type: String,
-          index: {
-            unique: true
-          }
-        },
-        password: {
-          type: String,
-          required: true
-        },
-        isActive: {
-          type: Boolean,
-          default: false
-        },
-        token: {
-          type: String
-        },
-        tokenExp: {
-          type: Number
-        },
-        changeRequests: {
-          phoneNumber: {
-            newNumber: {
-              type: String
-            },
-            token: {
-              type: String
-            },
-            tokenExp: {
-              type: Number
-            }
+        local: {
+          name: {
+            type: String
           },
           email: {
-            newEmail: {
-              type: String,
-              lowercase: true
+            type: String,
+            index: {
+              unique: true,
+              partialFilterExpression: {
+                'account.local.email': {
+                  $exists: true
+                }
+              }
+            }
+          },
+          phoneNumber: {
+            type: String,
+            index: {
+              unique: true,
+              partialFilterExpression: {
+                'account.local.phoneNumber': {
+                  $exists: true
+                }
+              }
+            }
+          },
+          password: {
+            type: String
+          },
+          isActive: {
+            type: Boolean,
+            default: false
+          },
+          token: {
+            type: String
+          },
+          tokenExp: {
+            type: Number
+          },
+          changeRequests: {
+            phoneNumber: {
+              newNumber: {
+                type: String
+              },
+              token: {
+                type: String
+              },
+              tokenExp: {
+                type: Number
+              }
             },
-            token: {
+            email: {
+              newEmail: {
+                type: String,
+                lowercase: true
+              },
+              token: {
+                type: String
+              },
+              tokenExp: {
+                type: Number
+              }
+            }
+          },
+          profile: {
+            pictureUrl: {
               type: String
-            },
-            tokenExp: {
-              type: Number
             }
           }
-        }
-      },
-      profile: {
-        pictureUrl: {
-          type: String
+        },
+        google: {
+          id: {
+            type: String
+          },
+          accessToken: {
+            type: String
+          },
+          refreshToken: {
+            type: String
+          },
+          email: {
+            type: String
+          },
+          displayName: {
+            type: String
+          },
+          phoneNumber: {
+            type: String
+          },
+          photo: {
+            type: String
+          }
         }
       }
     },

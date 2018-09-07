@@ -1,5 +1,16 @@
 module.exports = {
   db: 'mongodb://localhost/meanstarter',
+  auth: {
+    google: {
+      clientID: '',
+      clientSecret: '',
+      callbacks: {
+        user: {
+          callbackURL: 'http://localhost:5000/users/auth/google/callback'
+        }
+      }
+    }
+  },
   mean: {
     errors: {
       dumpExceptions: true,
