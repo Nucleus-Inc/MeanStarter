@@ -6,7 +6,7 @@ module.exports = app => {
   const config = app.locals.config
 
   passport.use(
-    'google-id-token',
+    'google-signin',
     new GoogleTokenStrategy(
       {
         clientID: config.auth.google.clientID

@@ -5,6 +5,9 @@ module.exports = {
       clientID: '',
       clientSecret: '',
       callbacks: {
+        patient: {
+          callbackURL: 'http://localhost:5000/patients/auth/google/callback'
+        },
         user: {
           callbackURL: 'http://localhost:5000/users/auth/google/callback'
         }
