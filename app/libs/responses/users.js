@@ -1,11 +1,23 @@
-
 const _ = require('lodash')
 
-module.exports = (app) => {
+module.exports = app => {
   const users = {}
   const keys = {
-    account: ['_id', 'account.name', 'account.email', 'account.phoneNumber', 'account.isActive'],
-    profile: ['_id', 'profile.pictureUrl']
+    account: [
+      '_id',
+      'account.local.name',
+      'account.local.email',
+      'account.loca.phoneNumber',
+      'account.local.isActive',
+      'account.local.profile',
+      'account.google.email',
+      'account.google.displayName',
+      'account.google.phoneNumber',
+      'account.google.photo',
+      'createdAt',
+      'updatedAt'
+    ],
+    profile: ['_id', 'account.local.profile']
   }
 
   users.getAccount = function (data) {

@@ -1,13 +1,16 @@
 const { validationResult } = require('express-validator/check')
 
 module.exports = app => {
+  const responses = app.libs.responses.users
   const controller = {}
 
-  controller.getHello = async (req, res, next) => {
+  controller.signIn = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
-      res.send(req.user)
+      let user = req.user
+
+      res.send(responses.getAccount(user))
     } catch (ex) {
       next(ex)
     }
