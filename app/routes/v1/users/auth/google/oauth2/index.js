@@ -10,7 +10,7 @@ module.exports = app => {
   )
 
   app
-    .route('/users/auth/google/callback')
+    .route('/users/auth/google/oauth2/callback')
     .get(
       passport.authenticate('google-oauth2', { failureRedirect: '#/signIn' }),
       controller.getCallback
