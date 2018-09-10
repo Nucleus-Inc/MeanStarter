@@ -6,7 +6,20 @@ module.exports = {
       clientSecret: '',
       callbacks: {
         user: {
-          callbackURL: 'http://localhost:5000/users/auth/google/callback'
+          callbackURL: 'http://localhost:5000/users/auth/google/oauth2/callback'
+        }
+      }
+    },
+    facebook: {
+      clientID: '',
+      clientSecret: '',
+      profileURL:
+        'https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email',
+      profileFields: ['id', 'email', 'name'],
+      callbacks: {
+        user: {
+          callbackURL:
+            'http://localhost:5000/users/auth/facebook/oauth2/callback'
         }
       }
     }
