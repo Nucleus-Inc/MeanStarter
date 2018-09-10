@@ -26,7 +26,7 @@ module.exports = app => {
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,
         callbackURL: config.auth.facebook.callbacks.user.callbackURL,
-        profileFields: ['id', 'displayName', 'photos', 'email']
+        profileFields: config.auth.facebook.profileFields
       },
       async (token, refreshToken, profile, done) => {
         try {
