@@ -90,10 +90,21 @@ module.exports = app => {
           displayName: {
             type: String
           },
-          phoneNumber: {
+          photo: {
+            type: String
+          }
+        },
+        facebook: {
+          id: {
+            type: String
+          },
+          displayName: {
             type: String
           },
           photo: {
+            type: String
+          },
+          email: {
             type: String
           }
         }
