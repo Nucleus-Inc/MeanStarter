@@ -146,8 +146,12 @@ angular
     amMoment.changeLocale('pt-br')
 
     $rootScope.$on("$routeChangeStart", (event, next, current) => {
-      if(next!=undefined && !offPaths.includes(next.$$route.originalPath))
+      if(next!=undefined && !offPaths.includes(next.$$route.originalPath)){
         angular.element('#views').addClass('display-n')
+        setTimeout(() => {
+          angular.element('.modal-backdrop').remove()
+        }, 600)
+      }
     })
 
     $rootScope.$on("$routeChangeError", (event, current, previous, rejection) => {
