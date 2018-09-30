@@ -21,7 +21,7 @@ const bodyParserError = require('bodyparser-json-error')
 const mongoSanitize = require('express-mongo-sanitize')
 
 /* Passport */
-const passport = require('passport')
+const passportInstances = require('config/passport/instances')
 
 /* Consign */
 const consign = require('consign')
@@ -94,8 +94,8 @@ module.exports = () => {
   app.use(mongoSanitize())
 
   /* Use Passport */
-  app.use(passport.initialize())
-  app.use(passport.session())
+  app.use(passportInstances.user.initialize())
+  app.use(passportInstances.user.session())
 
   /* Use routers */
   app.use(apiVersions.v1.baseUrl, routers.v1)
@@ -124,7 +124,9 @@ module.exports = () => {
   app.locals.mongoose = mongoose
   app.locals.config = config
   app.locals.routers = routers
-
+  app.locals.passport = {
+    user: passportInstances.user
+  }
   /* Autoload modules with Consign */
   consign({
     cwd: 'app'
@@ -133,8 +135,8 @@ module.exports = () => {
     .then('errors')
     .then('libs')
     .then('controllers')
+    .then('middlewares')
     .then('routes')
-    .then('middlewares/errors.js')
     .into(app)
 
   return app

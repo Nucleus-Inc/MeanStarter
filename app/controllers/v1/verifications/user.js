@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator/check')
 
-module.exports = (app) => {
+module.exports = app => {
   const User = app.models.user
   const controller = {}
 
@@ -14,14 +14,15 @@ module.exports = (app) => {
       }
 
       let user = await User.findOne({
-        $or: [{
-          'account.email': query.email
-        },
-        {
-          'account.phoneNumber': query.phoneNumber
-        }]
-      })
-        .lean()
+        $or: [
+          {
+            'account.local.email': query.email
+          },
+          {
+            'account.local.phoneNumber': query.phoneNumber
+          }
+        ]
+      }).lean()
 
       if (user) {
         res.status(422).end()

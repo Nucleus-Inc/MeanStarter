@@ -1,6 +1,5 @@
-const passport = require('passport')
-
 module.exports = app => {
+  const passport = app.locals.passport.user
   const controller = app.controllers.v1.users.auth.facebook.oauth2.index
 
   app

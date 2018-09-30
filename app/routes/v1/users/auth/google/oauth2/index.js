@@ -1,6 +1,5 @@
-const passport = require('passport')
-
 module.exports = app => {
+  const passport = app.locals.passport.user
   const controller = app.controllers.v1.users.auth.google.oauth2.index
 
   app.route('/users/auth/google/oauth2').get(

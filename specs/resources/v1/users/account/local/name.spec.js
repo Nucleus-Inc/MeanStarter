@@ -7,12 +7,31 @@ let user = require('specs/resources/v1/schemas/user.js')
 
 chai.use(chaiHttp)
 
-describe('User Account', () => {
-  it('should successfully get account info on /api/v1/users/:id/account GET', done => {
+describe('User Account name', () => {
+  it('should fail to update account name with missing field on /api/v1/users/:id/account/name PUT', done => {
     chai
       .request(server)
-      .get('/api/v1/users/' + user._id + '/account')
+      .put('/api/v1/users/' + user._id + '/account/local/name')
       .set('Authorization', 'JWT ' + user.jwt)
+      .send({})
+      .end((err, res) => {
+        res.should.have.status(400)
+        res.body.should.be.a('object')
+        res.body.should.have.property('errors')
+        res.body.errors.should.be.a('object')
+        res.body.errors.should.have.property('name')
+        done()
+      })
+  })
+
+  it('should successfully update account name on /api/v1/users/:id/account/name PUT', done => {
+    chai
+      .request(server)
+      .put('/api/v1/users/' + user._id + '/account/local/name')
+      .set('Authorization', 'JWT ' + user.jwt)
+      .send({
+        name: 'New User Name'
+      })
       .end((err, res) => {
         res.should.have.status(200)
         res.body.should.have.property('account')

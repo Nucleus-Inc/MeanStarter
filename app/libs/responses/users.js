@@ -7,7 +7,7 @@ module.exports = app => {
       '_id',
       'account.local.name',
       'account.local.email',
-      'account.loca.phoneNumber',
+      'account.local.phoneNumber',
       'account.local.isActive',
       'account.local.profile',
       'account.google.email',

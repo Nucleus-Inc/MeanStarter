@@ -1,6 +1,16 @@
 module.exports = {
   db: 'mongodb://localhost/meanstarter',
   auth: {
+    local: {
+      tokens: {
+        recovery: {
+          expires: '1d'
+        },
+        activation: {
+          expires: '1d'
+        }
+      }
+    },
     google: {
       clientID: '',
       clientSecret: '',
@@ -34,7 +44,8 @@ module.exports = {
     jwtSecret: 'meanstarter',
     jwtSession: {
       session: false
-    }
+    },
+    expires: '7d'
   },
   libs: {
     expressSession: {
