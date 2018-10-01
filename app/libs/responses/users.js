@@ -1,7 +1,8 @@
 const _ = require('lodash')
 
 module.exports = app => {
-  const users = {}
+  const lib = {}
+
   const keys = {
     account: [
       '_id',
@@ -20,13 +21,9 @@ module.exports = app => {
     profile: ['_id', 'account.local.profile']
   }
 
-  users.getAccount = function (data) {
+  lib.getAccount = function (data) {
     return _.pick(data, keys.account)
   }
 
-  users.getProfile = function (data) {
-    return _.pick(data, keys.profile)
-  }
-
-  return users
+  return lib
 }
