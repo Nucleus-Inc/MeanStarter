@@ -1,10 +1,10 @@
-const users = require('app/middlewares/users.js')
 const { check } = require('express-validator/check')
 
 module.exports = app => {
   const controller = app.controllers.v1.users.account.local.password
   const router = app.locals.routers.v1
-  const passportMult = app.middlewares.auth.users.passportMult
+  const passportMult = app.middlewares.users.auth.passportMult
+  const permission = app.middlewares.users.auth.permission
   const customValidators = app.libs.validators.custom
 
   router.route('/users/:id/account/local/password').put(
@@ -22,7 +22,7 @@ module.exports = app => {
         })
     ],
     passportMult.isAuth,
-    users.verifyOwner,
+    permission.isOwner,
     controller.updatePassword
   )
 }
