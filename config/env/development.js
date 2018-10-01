@@ -12,8 +12,8 @@ module.exports = {
       }
     },
     google: {
-      clientID: '',
-      clientSecret: '',
+      clientID: 'abc',
+      clientSecret: 'abc',
       callbacks: {
         user: {
           callbackURL: 'http://localhost:5000/users/auth/google/oauth2/callback'
@@ -21,8 +21,8 @@ module.exports = {
       }
     },
     facebook: {
-      clientID: '',
-      clientSecret: '',
+      clientID: 'abc',
+      clientSecret: 'abc',
       profileURL:
         'https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email',
       profileFields: ['id', 'displayName', 'photos', 'email'],

@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_PATH=. NODE_ENV=travis nyc mocha specs/index.js",
+    "test": "NODE_PATH=. NODE_ENV=development nyc mocha specs/index.js",
     "lint": "eslint app.js app/** config/** specs/** public/controllers/** public/directives/** public/factories/** public/filters/** public/services/** public/app.js public/specs/** --ext .js"
   },
   "repository": "git+https://github.com/Igor-Lopes/MeanStarter.git",

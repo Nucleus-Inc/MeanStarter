@@ -1,4 +1,3 @@
-// const users = require('app/middlewares/users.js')
 const { check } = require('express-validator/check')
 
 module.exports = app => {
