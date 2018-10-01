@@ -87,6 +87,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
+    "passport-mocked": "^1.2.0",
     "popper.js": "^1.14.3",
     "randomstring": "^1.1.5",
     "slick-carousel": "^1.8.1",
@@ -140,7 +141,6 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.4.2",
     "nyc": "^11.8.0",
-    "passport-mock-strategy": "^1.1.1",
     "r": "0.0.5",
     "underscore": "~1.6.0"
   }

@@ -1,9 +1,15 @@
 const FacebookStrategy = require('passport-facebook').Strategy
+const MockStrategy = require('passport-mocked').Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
   const User = app.models.user
   const config = app.locals.config
+
+  let Strategy =
+    process.env.NODE_ENV === 'production' || 'development'
+      ? FacebookStrategy
+      : MockStrategy
 
   passport.serializeUser((user, done) => {
     done(null, user._id)
@@ -21,7 +27,7 @@ module.exports = app => {
 
   passport.use(
     'facebook-oauth2',
-    new FacebookStrategy(
+    new Strategy(
       {
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,

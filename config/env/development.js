@@ -12,9 +12,8 @@ module.exports = {
       }
     },
     google: {
-      clientID:
-        '962854434183-e7r3pbj2fs580ni04oq0c96bld5neubj.apps.googleusercontent.com',
-      clientSecret: 'fEzeOabyCvded3R96iebQkRK',
+      clientID: 'abc',
+      clientSecret: 'abc',
       callbacks: {
         user: {
           callbackURL: 'http://localhost:5000/users/auth/google/oauth2/callback'
