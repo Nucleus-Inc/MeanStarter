@@ -140,6 +140,7 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.4.2",
     "nyc": "^11.8.0",
+    "passport-mock-strategy": "^1.1.1",
     "r": "0.0.5",
     "underscore": "~1.6.0"
   }
