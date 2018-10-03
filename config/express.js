@@ -51,13 +51,13 @@ module.exports = () => {
   /* Set Express Session Middleware */
   app.use(
     session({
-      name: config.libs.expressSession.name,
-      secret: config.libs.expressSession.secret,
-      resave: config.libs.expressSession.resave,
-      saveUninitialized: config.libs.expressSession.saveUninitialized,
+      name: config.modules.expressSession.name,
+      secret: config.modules.expressSession.secret,
+      resave: config.modules.expressSession.resave,
+      saveUninitialized: config.modules.expressSession.saveUninitialized,
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
-        collection: config.libs.expressSession.mongoStore.collection
+        collection: config.modules.expressSession.mongoStore.collection
       })
     })
   )
@@ -74,7 +74,7 @@ module.exports = () => {
   app.use(helmet.noSniff())
   app.use(
     helmet.hidePoweredBy({
-      setTo: config.libs.helmet.poweredBy
+      setTo: config.modules.helmet.poweredBy
     })
   )
 
@@ -107,7 +107,9 @@ module.exports = () => {
   app.use(
     expressWinston.logger({
       transports: [
-        new winston.transports.Console(config.libs.winston.transports.console),
+        new winston.transports.Console(
+          config.modules.winston.transports.console
+        ),
         new WinstonMongo({
           db: config.db
         })

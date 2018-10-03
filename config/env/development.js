@@ -46,7 +46,7 @@ module.exports = {
     dumpExceptions: true,
     dumpUnkownExeceptionsOnly: true
   },
-  libs: {
+  modules: {
     expressSession: {
       name: 'default.sid',
       secret: 'default',
