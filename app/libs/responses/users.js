@@ -6,7 +6,7 @@ module.exports = app => {
   const keys = {
     account: [
       '_id',
-      'account.local.name',
+      'account.local.displayName',
       'account.local.email',
       'account.local.phoneNumber',
       'account.local.isActive',

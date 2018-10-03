@@ -5,7 +5,7 @@ module.exports = app => {
     {
       account: {
         local: {
-          name: {
+          displayName: {
             type: String
           },
           email: {

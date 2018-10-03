@@ -5,7 +5,7 @@ module.exports = app => {
   const responses = app.libs.responses.users
   const controller = {}
 
-  controller.updateName = async (req, res, next) => {
+  controller.updateDisplayName = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
@@ -13,7 +13,7 @@ module.exports = app => {
         req.params.id,
         {
           $set: {
-            'account.local.name': req.body.name
+            'account.local.displayName': req.body.displayName
           }
         },
         {

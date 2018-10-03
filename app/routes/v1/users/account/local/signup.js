@@ -6,7 +6,7 @@ module.exports = app => {
 
   router.route('/users/account/local/signup').post(
     [
-      check('name').exists(),
+      check('displayName').exists(),
       check('email')
         .exists()
         .isEmail()

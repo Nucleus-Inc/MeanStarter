@@ -20,7 +20,7 @@ module.exports = app => {
       let user = await User.create({
         account: {
           local: {
-            name: req.body.name,
+            displayName: req.body.displayName,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
             password: await bcrypt.generateHash(req.body.password),
@@ -51,7 +51,7 @@ module.exports = app => {
       broadcast.sendCode(
         {
           recipient: user.account.local.email,
-          username: user.account.local.name,
+          username: user.account.local.displayName,
           code: code
         },
         {

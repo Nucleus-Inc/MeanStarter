@@ -15,7 +15,7 @@ describe('User Signup', () => {
       .request(server)
       .post('/api/v1/users/account/local/signup')
       .send({
-        name: user.name,
+        displayName: user.displayName,
         email: user.email,
         password: user.password,
         phoneNumber: user.phoneNumber
@@ -25,8 +25,8 @@ describe('User Signup', () => {
         res.body.should.have.property('account')
         res.body.account.should.have.property('local')
         res.body.account.local.should.be.a('object')
-        res.body.account.local.should.have.property('name')
-        res.body.account.local.name.should.be.eql(user.name)
+        res.body.account.local.should.have.property('displayName')
+        res.body.account.local.displayName.should.be.eql(user.displayName)
         res.body.account.local.should.have.property('email')
         res.body.account.local.email.should.be.eql(user.email)
         res.body.account.local.should.have.property('phoneNumber')
@@ -63,7 +63,7 @@ describe('User Signup', () => {
         res.body.code.should.be.eql(4000)
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('object')
-        res.body.errors.should.have.property('name')
+        res.body.errors.should.have.property('displayName')
         res.body.errors.should.have.property('email')
         res.body.errors.should.have.property('phoneNumber')
         res.body.errors.should.have.property('password')
@@ -76,7 +76,7 @@ describe('User Signup', () => {
       .request(server)
       .post('/api/v1/users/account/local/signup')
       .send({
-        name: user.name,
+        displayName: user.displayName,
         email: user.email,
         password: user.password,
         phoneNumber: user.phoneNumber
@@ -97,7 +97,7 @@ describe('User Signup', () => {
       .request(server)
       .post('/api/v1/users/account/local/signup')
       .send({
-        name: user.name,
+        displayName: user.displayName,
         email: 'user2@email.com',
         password: user.password,
         phoneNumber: user.phoneNumber
