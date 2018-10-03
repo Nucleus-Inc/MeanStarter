@@ -8,6 +8,9 @@ module.exports = {
         },
         activation: {
           expires: '1d'
+        },
+        confirmation: {
+          expires: '1d'
         }
       }
     },

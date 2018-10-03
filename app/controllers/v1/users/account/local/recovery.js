@@ -1,10 +1,12 @@
 const { validationResult } = require('express-validator/check')
+const ms = require('ms')
 
 module.exports = app => {
   const User = app.models.user
   const random = app.libs.random.string
   const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
+  const config = app.locals.config
   const errors = app.errors.custom
   const controller = {}
 
@@ -33,7 +35,8 @@ module.exports = app => {
           {
             $set: {
               'account.local.token': await bcrypt.generateHash(code.toString()),
-              'account.local.tokenExp': Date.now() + 300000
+              'account.local.tokenExp':
+                Date.now() + ms(config.auth.local.tokens.recovery.expires)
             }
           },
           {

@@ -1,10 +1,12 @@
 const { validationResult } = require('express-validator/check')
+const ms = require('ms')
 
 module.exports = app => {
   const User = app.models.user
   const random = app.libs.random.string
   const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
+  const config = app.locals.config
   const responses = app.libs.responses.users
   const errors = app.errors.custom
   const controller = {}
@@ -30,7 +32,7 @@ module.exports = app => {
                 code.toString()
               ),
               'account.local.changeRequests.phoneNumber.tokenExp':
-                Date.now() + 300000
+                Date.now() + ms(config.auth.local.tokens.confirmation.expires)
             }
           },
           {
