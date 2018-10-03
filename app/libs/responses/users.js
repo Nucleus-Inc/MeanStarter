@@ -10,15 +10,14 @@ module.exports = app => {
       'account.local.email',
       'account.local.phoneNumber',
       'account.local.isActive',
-      'account.local.profile',
+      'account.local.photo',
       'account.google.email',
       'account.google.displayName',
       'account.google.phoneNumber',
       'account.google.photo',
       'createdAt',
       'updatedAt'
-    ],
-    profile: ['_id', 'account.local.profile']
+    ]
   }
 
   lib.getAccount = function (data) {

@@ -5,7 +5,7 @@ module.exports = app => {
   const responses = app.libs.responses.users
   const controller = {}
 
-  controller.updateProfile = async (req, res, next) => {
+  controller.updatePhoto = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
@@ -13,7 +13,7 @@ module.exports = app => {
         req.params.id,
         {
           $set: {
-            'account.local.profile.pictureUrl': req.body.pictureUrl
+            'account.local.photo': req.body.photo
           }
         },
         {

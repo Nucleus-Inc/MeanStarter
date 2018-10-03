@@ -8,6 +8,9 @@ module.exports = app => {
           displayName: {
             type: String
           },
+          photo: {
+            type: String
+          },
           email: {
             type: String,
             index: {
@@ -66,11 +69,6 @@ module.exports = app => {
               tokenExp: {
                 type: Number
               }
-            }
-          },
-          profile: {
-            pictureUrl: {
-              type: String
             }
           }
         },

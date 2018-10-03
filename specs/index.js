@@ -12,7 +12,7 @@ require('./resources/v1/users/account/local/password.spec.js')
 require('./resources/v1/users/account/local/recovery.spec.js')
 require('./resources/v1/users/account/local/phone.spec.js')
 require('./resources/v1/users/account/local/email.spec.js')
-require('./resources/v1/users/account/local/profile/index.spec.js')
+require('./resources/v1/users/account/local/photo.spec.js')
 require('./resources/v1/users/account/local/name.spec.js')
 
 /* Account index */
