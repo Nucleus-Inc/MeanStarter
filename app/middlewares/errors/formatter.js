@@ -7,14 +7,14 @@ module.exports = app => {
     let formattedError = errorFormatter.format(err)
 
     if (
-      config.mean.errors.dumpExceptions &&
-      config.mean.errors.dumpUnkownExeceptionsOnly &&
+      config.errors.dumpExceptions &&
+      config.errors.dumpUnkownExeceptionsOnly &&
       formattedError.statusCode === 500
     ) {
       errorsLogger.dumpError(err)
     } else if (
-      config.mean.errors.dumpExceptions &&
-      !config.mean.errors.dumpUnkownExeceptionsOnly
+      config.errors.dumpExceptions &&
+      !config.errors.dumpUnkownExeceptionsOnly
     ) {
       errorsLogger.dumpError(err)
     }

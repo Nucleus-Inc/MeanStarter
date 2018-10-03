@@ -35,11 +35,9 @@ module.exports = {
       }
     }
   },
-  mean: {
-    errors: {
-      dumpExceptions: true,
-      dumpUnkownExeceptionsOnly: true
-    }
+  errors: {
+    dumpExceptions: true,
+    dumpUnkownExeceptionsOnly: true
   },
   jwt: {
     jwtSecret: 'meanstarter',
