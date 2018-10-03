@@ -5,7 +5,7 @@ const ms = require('ms')
 module.exports = app => {
   const controller = {}
   const User = app.models.user
-  const random = app.libs.random
+  const random = app.libs.random.string
   const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
   const responses = app.libs.responses.users

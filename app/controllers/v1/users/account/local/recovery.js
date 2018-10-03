@@ -2,7 +2,7 @@ const { validationResult } = require('express-validator/check')
 
 module.exports = app => {
   const User = app.models.user
-  const random = app.libs.random
+  const random = app.libs.random.string
   const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
   const errors = app.errors.custom
