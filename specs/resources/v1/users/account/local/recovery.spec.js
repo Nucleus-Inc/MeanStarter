@@ -55,13 +55,17 @@ describe('User Account Recovery', () => {
         res.should.have.status(200)
         res.headers.should.have.property('jwt')
         res.headers.jwt.should.be.a('string')
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          done()
-        })
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 })

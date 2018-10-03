@@ -96,9 +96,9 @@ module.exports = app => {
             _id: user._id,
             isActive: user.account.local.isActive
           },
-          config.jwt.jwtSecret,
+          config.auth.local.jwt.jwtSecret,
           {
-            expiresIn: config.jwt.expires
+            expiresIn: config.auth.local.jwt.expires
           }
         )
 

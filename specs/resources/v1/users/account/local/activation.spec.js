@@ -68,14 +68,18 @@ describe('User Account Activation', () => {
       })
       .end((err, res) => {
         res.should.have.status(200)
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          user.isActive = true
-          done()
-        })
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            user.isActive = true
+            done()
+          }
+        )
       })
   })
 

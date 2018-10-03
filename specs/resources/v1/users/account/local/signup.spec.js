@@ -37,14 +37,18 @@ describe('User Signup', () => {
         res.headers.should.have.property('code')
         res.headers.code.should.be.a('string')
         res.headers.code.length.should.be.eql(4)
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          user._id = res.body._id
-          done()
-        })
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            user._id = res.body._id
+            done()
+          }
+        )
       })
   })
 

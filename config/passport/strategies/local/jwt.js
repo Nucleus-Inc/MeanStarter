@@ -1,15 +1,15 @@
-const config = require('config/config.js')
 const passportJWT = require('passport-jwt')
 const ExtractJwt = passportJWT.ExtractJwt
 const JwtStrategy = passportJWT.Strategy
 
-const jwtOptions = {}
-jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
-jwtOptions.secretOrKey = config.jwt.jwtSecret
-
 module.exports = app => {
   const passport = app.locals.passport.user
   const User = app.models.user
+  const config = app.locals.config
+
+  const jwtOptions = {}
+  jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
+  jwtOptions.secretOrKey = config.auth.local.jwt.jwtSecret
 
   passport.use(
     new JwtStrategy(jwtOptions, async (jwtPayload, next) => {

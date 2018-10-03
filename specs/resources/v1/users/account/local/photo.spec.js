@@ -35,8 +35,6 @@ describe('User Profile Picture', () => {
         photo: 'http://www.newpicture.com'
       })
       .end((err, res) => {
-        console.log('################')
-        console.log(res.body)
         res.should.have.status(200)
         res.body.should.have.property('account')
         res.body.account.should.have.property('local')

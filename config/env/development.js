@@ -12,6 +12,13 @@ module.exports = {
         confirmation: {
           expires: '1d'
         }
+      },
+      jwt: {
+        jwtSecret: 'meanstarter',
+        jwtSession: {
+          session: false
+        },
+        expires: '7d'
       }
     },
     google: {
@@ -38,13 +45,6 @@ module.exports = {
   errors: {
     dumpExceptions: true,
     dumpUnkownExeceptionsOnly: true
-  },
-  jwt: {
-    jwtSecret: 'meanstarter',
-    jwtSession: {
-      session: false
-    },
-    expires: '7d'
   },
   libs: {
     expressSession: {
