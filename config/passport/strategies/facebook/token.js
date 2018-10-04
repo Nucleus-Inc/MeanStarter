@@ -9,9 +9,10 @@ module.exports = app => {
     'facebook-token',
     new FacebookTokenStrategy(
       {
-        clientID: config.auth.facebook.clientID
+        clientID: config.auth.facebook.clientID,
+        passReqToCallback: true
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (req, accessToken, refreshToken, profile, done) => {
         try {
           let user = await User.findOneAndUpdate(
             {

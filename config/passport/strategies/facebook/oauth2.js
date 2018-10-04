@@ -11,20 +11,6 @@ module.exports = app => {
       ? FacebookStrategy
       : MockStrategy
 
-  passport.serializeUser((user, done) => {
-    done(null, user._id)
-  })
-
-  passport.deserializeUser(async (id, done) => {
-    try {
-      let user = await User.findById(id)
-
-      done(null, user)
-    } catch (ex) {
-      done(ex, null)
-    }
-  })
-
   passport.use(
     'facebook-oauth2',
     new Strategy(
@@ -32,9 +18,10 @@ module.exports = app => {
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,
         callbackURL: config.auth.facebook.callbacks.user.callbackURL,
-        profileFields: config.auth.facebook.profileFields
+        profileFields: config.auth.facebook.profileFields,
+        passReqToCallback: true
       },
-      async (token, refreshToken, profile, done) => {
+      async (req, token, refreshToken, profile, done) => {
         try {
           let user = await User.findOneAndUpdate(
             {
