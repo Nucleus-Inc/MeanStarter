@@ -21,7 +21,9 @@ module.exports = app => {
             })
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
+
               /* Link provider */
+
               user = await User.findByIdAndUpdate(
                 req.user._id,
                 {
@@ -37,6 +39,7 @@ module.exports = app => {
                 }
               )
               return done(null, user)
+              //return done({error: 'test'})
 
               /* User exists and it's not the same user logged in  */
             } else {
@@ -65,7 +68,7 @@ module.exports = app => {
                 'account.google.displayName': parsedToken.payload.name,
                 'account.google.photo': parsedToken.payload.picture
               })
-              return done(null, user)
+              return done({msg: 'test'}, null)
               /* User exists */
             } else {
               /* Link provider */
