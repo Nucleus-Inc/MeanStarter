@@ -1,17 +1,25 @@
-/* Express */
-const express = require('express')
-
 /* Env Config */
 const config = require('./config.js')
 
-/* Express Session and related */
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
-const mongoose = require('mongoose')
+/* Express */
+const express = require('express')
 
 /* Helmet */
 const helmet = require('helmet')
+
+/* Winston logger */
+const winston = require('winston')
+const winstonConfig = require('./winston.js')
+const expressWinston = require('express-winston')
+const WinstonMongo = require('winston-mongodb').MongoDB
+
+/* Cookie parser */
+const cookieParser = require('cookie-parser')
+
+/* Express Session */
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
+const mongoose = require('mongoose')
 
 /* Body Parser */
 const bodyParser = require('body-parser')
@@ -26,29 +34,41 @@ const passportInstances = require('config/passport/instances')
 /* Consign */
 const consign = require('consign')
 
-/* Winston logger */
-const winston = require('winston')
-const winstonConfig = require('./winston.js')
-const expressWinston = require('express-winston')
-const WinstonMongo = require('winston-mongodb').MongoDB
-
 module.exports = () => {
   /* Init Express app and set port */
   const app = express()
-
   app.set('port', process.env.PORT || 5000)
 
-  const apiVersions = {
-    v1: {
-      baseUrl: '/api/v1'
-    }
-  }
+  /* Use Helmet */
+  app.use(helmet.frameguard())
+  app.use(helmet.xssFilter())
+  app.use(helmet.noSniff())
+  app.use(
+    helmet.hidePoweredBy({
+      setTo: config.modules.helmet.poweredBy
+    })
+  )
 
-  const routers = {
-    v1: express.Router()
-  }
+  /* Winston Logger */
+  app.use(
+    expressWinston.logger({
+      transports: [
+        new winston.transports.Console(
+          config.modules.winston.transports.console
+        ),
+        new WinstonMongo({
+          db: config.db
+        })
+      ],
+      skip: winstonConfig.skip,
+      level: winstonConfig.level
+    })
+  )
 
-  /* Set Express Session Middleware */
+  /* Cookie Parser */
+  app.use(cookieParser())
+
+  /* Express Session Middleware */
   app.use(
     session({
       name: config.modules.expressSession.name,
@@ -68,20 +88,7 @@ module.exports = () => {
   app.set('view engine', 'ejs')
   app.set('views', './app/views')
 
-  /* Use Helmet */
-  app.use(helmet.frameguard())
-  app.use(helmet.xssFilter())
-  app.use(helmet.noSniff())
-  app.use(
-    helmet.hidePoweredBy({
-      setTo: config.modules.helmet.poweredBy
-    })
-  )
-
-  /* Use Cookie Parser */
-  app.use(cookieParser())
-
-  /* Use Body Parser */
+  /* Body Parser */
   app.use(
     bodyParser.urlencoded({
       extended: true
@@ -90,37 +97,29 @@ module.exports = () => {
   app.use(bodyParser.json())
   app.use(bodyParserError.beautify())
 
-  /* Use Express Mongo Sanitize */
+  /* Express Mongo Sanitize */
   app.use(mongoSanitize())
-
-  /* Use Passport */
-  app.use(passportInstances.user.initialize())
-  app.use(passportInstances.user.session())
-
-  /* Use routers */
-  app.use(apiVersions.v1.baseUrl, routers.v1)
-
-  /* Set default to latest version */
-  app.use('/', routers.v1)
-
-  /* Use Winston Logger */
-  app.use(
-    expressWinston.logger({
-      transports: [
-        new winston.transports.Console(
-          config.modules.winston.transports.console
-        ),
-        new WinstonMongo({
-          db: config.db
-        })
-      ],
-      skip: winstonConfig.skip,
-      level: winstonConfig.level
-    })
-  )
 
   /* Ensure index is now deprecated: https://github.com/Automattic/mongoose/issues/6890 */
   mongoose.set('useCreateIndex', true)
+
+  /* Passport */
+  app.use(passportInstances.user.initialize())
+  app.use(passportInstances.user.session())
+
+  /* Routers and API versions */
+  const apiVersions = {
+    v1: {
+      baseUrl: '/api/v1'
+    }
+  }
+  const routers = {
+    v1: express.Router()
+  }
+  app.use(apiVersions.v1.baseUrl, routers.v1)
+
+  /* Set default router to latest version */
+  app.use('/', routers.v1)
 
   /* Set App Locals */
   app.locals.mongoose = mongoose
@@ -129,6 +128,7 @@ module.exports = () => {
   app.locals.passport = {
     user: passportInstances.user
   }
+
   /* Autoload modules with Consign */
   consign({
     cwd: 'app'
