@@ -8,6 +8,6 @@ module.exports = app => {
     .post(
       passportJWT.isAuth,
       passport.authenticate('google-signin'),
-      controller.signIn
+      controller.connect
     )
 }

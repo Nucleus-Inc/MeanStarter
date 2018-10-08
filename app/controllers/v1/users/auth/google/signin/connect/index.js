@@ -6,7 +6,7 @@ module.exports = app => {
   const responses = app.libs.responses.users
   const config = app.locals.config
 
-  controller.signIn = async (req, res, next) => {
+  controller.connect = async (req, res, next) => {
     try {
       validationResult(req).throw()
 
