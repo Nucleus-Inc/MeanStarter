@@ -141,5 +141,8 @@ module.exports = () => {
     .then('routes')
     .into(app)
 
+  /* Use errors handler middleware */
+  require('./errors/middleware.js')(app)
+
   return app
 }
