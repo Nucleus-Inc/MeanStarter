@@ -11,6 +11,7 @@ module.exports = app => {
       'account.local.phoneNumber',
       'account.local.isActive',
       'account.local.photo',
+      'account.google.id',
       'account.google.email',
       'account.google.displayName',
       'account.google.phoneNumber',
