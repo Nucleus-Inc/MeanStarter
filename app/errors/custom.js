@@ -52,14 +52,24 @@ module.exports = {
     httpCode: 403,
     response: {
       errorCode: 'AUT-005',
-      description: 'This request could not be processed. The user account is not active.'
+      description:
+        'This request could not be processed. The user account is not active.'
     }
   },
   AUT006: {
     httpCode: 403,
     response: {
       errorCode: 'AUT-006',
-      description: 'This request could not be processed. The user account is already active.'
+      description:
+        'This request could not be processed. The user account is already active.'
+    }
+  },
+  AUT007: {
+    httpCode: 403,
+    response: {
+      errorCode: 'AUT-007',
+      description:
+        'The OAuth2 Provider is already connected to another user account.'
     }
   },
   SRV001: {

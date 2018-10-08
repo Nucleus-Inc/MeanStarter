@@ -3,6 +3,7 @@ const GoogleTokenStrategy = require('passport-google-id-token')
 module.exports = app => {
   const passport = app.locals.passport.user
   const User = app.models.user
+  const errors = app.libs.errors.custom
   const config = app.locals.config
 
   passport.use(
@@ -37,13 +38,13 @@ module.exports = app => {
                   new: true
                 }
               )
-              return done(null, user)
-              // return done({error: 'test'})
+              // return done(null, user)
+              return done({ err: 'test' })
 
               /* User exists and it's not the same user logged in  */
             } else {
               /* Return auth error */
-              return done({ errorCode: 'test' })
+              return done(errors.AUT007)
             }
             /* User not logged in */
           } else {

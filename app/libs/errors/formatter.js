@@ -55,7 +55,9 @@ module.exports = app => {
       response = {
         statusCode: 500,
         errorData: {
-          code: 5000
+          errorCode: 'SRV-001',
+          description:
+            'An internal error occurred. This request has been logged.'
         }
       }
     }
