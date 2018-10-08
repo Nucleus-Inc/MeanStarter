@@ -18,9 +18,6 @@ module.exports = app => {
         }
       )(req, res, next)
     } else {
-      if (req.isAuthenticated()) {
-        return next()
-      }
       res.status(401).end()
     }
   }
