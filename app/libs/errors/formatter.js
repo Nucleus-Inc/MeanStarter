@@ -53,7 +53,7 @@ module.exports = app => {
       }
     } else if (
       _.has(err, 'errorData') &&
-      err.errorData.errorCode === 'AUT-007'
+      err.errorData.response.errorCode === 'AUT-007'
     ) {
       response = {
         statusCode: 403,
