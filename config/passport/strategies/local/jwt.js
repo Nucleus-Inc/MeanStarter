@@ -14,11 +14,8 @@ module.exports = app => {
   passport.use(
     new JwtStrategy(jwtOptions, async (jwtPayload, next) => {
       let user = await User.findById(jwtPayload._id)
-
       if (user) {
-        next(null, {
-          user: jwtPayload._id
-        })
+        next(null, user)
       } else {
         next(null, false)
       }

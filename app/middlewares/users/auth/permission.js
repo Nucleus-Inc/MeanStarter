@@ -2,7 +2,7 @@ module.exports = app => {
   const middleware = {}
 
   middleware.isOwner = (req, res, next) => {
-    if (req.params.id === req.user.user || req.user._id) {
+    if (req.params.id === req.user._id.toString()) {
       next()
     } else {
       res.status(403)
