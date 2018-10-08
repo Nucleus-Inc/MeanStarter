@@ -51,6 +51,15 @@ module.exports = app => {
           errors: err.data
         }
       }
+    } else if (_.has(err, 'errorData') && err.errorData === 'AUT-007') {
+      response = {
+        statusCode: 403,
+        errorData: {
+          errorCode: 'AUT-007',
+          description:
+            'The OAuth2 Provider is already connected to another account.'
+        }
+      }
     } else {
       response = {
         statusCode: 500,

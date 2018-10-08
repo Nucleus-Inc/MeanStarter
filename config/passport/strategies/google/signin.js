@@ -38,8 +38,8 @@ module.exports = app => {
                   new: true
                 }
               )
-              // return done(null, user)
-              return done({ err: 'test' })
+
+              return done(errors.AUT007)
 
               /* User exists and it's not the same user logged in  */
             } else {
