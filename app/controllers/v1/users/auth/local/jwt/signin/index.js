@@ -19,6 +19,7 @@ module.exports = app => {
 
       if (
         user &&
+        user.account.local.password &&
         (await bcrypt.compareHash(
           req.body.password,
           user.account.local.password

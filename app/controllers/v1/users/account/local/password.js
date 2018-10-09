@@ -15,6 +15,7 @@ module.exports = app => {
       if (!user) {
         res.status(404).end()
       } else if (
+        user.account.local.password &&
         !(await bcrypt.compareHash(
           req.body.currentPassword,
           user.account.local.password
@@ -22,10 +23,11 @@ module.exports = app => {
       ) {
         res.status(errors.AUT001.httpCode).send(errors.AUT001.response)
       } else if (
-        await bcrypt.compareHash(
+        user.account.local.password &&
+        (await bcrypt.compareHash(
           req.body.newPassword,
           user.account.local.password
-        )
+        ))
       ) {
         res.status(errors.REQ003.httpCode).send(errors.REQ003.response)
       } else {

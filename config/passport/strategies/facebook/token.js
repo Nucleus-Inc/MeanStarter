@@ -53,7 +53,7 @@ module.exports = app => {
             /* Find user with matching provider id or email address */
             let user = await User.findOne({
               $or: [
-                { 'account.profile.id': profile.id },
+                { 'account.facebook.id': profile.id },
                 { 'account.local.email': profile.emails[0].value }
               ]
             })

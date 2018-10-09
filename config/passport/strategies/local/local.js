@@ -35,6 +35,7 @@ module.exports = app => {
 
           if (
             user &&
+            user.account.local.password &&
             (await bcrypt.compareHash(password, user.account.local.password))
           ) {
             return done(null, user)
