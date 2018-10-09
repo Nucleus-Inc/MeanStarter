@@ -16,6 +16,11 @@ module.exports = app => {
       'account.google.displayName',
       'account.google.phoneNumber',
       'account.google.photo',
+      'account.facebook.id',
+      'account.facebook.email',
+      'account.facebook.displayName',
+      'account.facebook.phoneNumber',
+      'account.facebook.photo',
       'createdAt',
       'updatedAt'
     ]
