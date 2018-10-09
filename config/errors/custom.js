@@ -69,7 +69,7 @@ module.exports = {
     response: {
       errorCode: 'AUT-007',
       description:
-        'The OAuth2 Provider is already connected to another account.'
+        'The OAuth2 Provider and/or email address is already connected to another account.'
     }
   },
   SRV001: {

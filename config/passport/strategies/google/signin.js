@@ -52,9 +52,7 @@ module.exports = app => {
             let user = await User.findOne({
               $or: [
                 { 'account.google.id': googleId },
-                { 'account.local.email': parsedToken.payload.email },
-                { 'account.google.email': parsedToken.payload.email },
-                { 'account.facebook.email': parsedToken.payload.email }
+                { 'account.local.email': parsedToken.payload.email }
               ]
             })
             /* User doesn't exist */
@@ -63,15 +61,19 @@ module.exports = app => {
               user = await User.create({
                 'account.local.email': parsedToken.payload.email,
                 'account.local.displayName': parsedToken.payload.name,
+                'account.local.photo': parsedToken.payload.picture,
                 'account.google.id': googleId,
                 'account.google.email': parsedToken.payload.email,
                 'account.google.displayName': parsedToken.payload.name,
                 'account.google.photo': parsedToken.payload.picture
               })
-              //    return done({ errorCode: 'test' })
+
               return done(null, user)
               /* User exists */
-            } else {
+            } else if (
+              !user.account.google.id ||
+              user.account.google.id === googleId
+            ) {
               /* Link provider */
               user = await User.findByIdAndUpdate(
                 user._id,
@@ -88,6 +90,8 @@ module.exports = app => {
                 }
               )
               return done(null, user)
+            } else {
+              return done(errors.AUT007)
             }
           }
         } catch (ex) {

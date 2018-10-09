@@ -14,11 +14,8 @@ module.exports = app => {
       let query = await User.findOneAndUpdate(
         { 'account.google.id': user.account.google.id },
         {
-          $set: {
-            'account.google.id': null,
-            'account.google.email': null,
-            'account.google.displayName': null,
-            'account.google.photo': null
+          $unset: {
+            'account.google': true
           }
         },
         {
