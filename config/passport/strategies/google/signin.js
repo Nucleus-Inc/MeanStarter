@@ -39,7 +39,7 @@ module.exports = app => {
                 }
               )
 
-              return done(errors.AUT007)
+              return done(null, user)
 
               /* User exists and it's not the same user logged in  */
             } else {
