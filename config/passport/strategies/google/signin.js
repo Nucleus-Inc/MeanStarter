@@ -3,7 +3,7 @@ const GoogleTokenStrategy = require('passport-google-id-token')
 module.exports = app => {
   const passport = app.locals.passport.user
   const User = app.models.user
-  const errors = app.errors.custom
+  const errors = app.locals.errors
   const config = app.locals.config
 
   passport.use(

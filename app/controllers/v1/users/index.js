@@ -1,6 +1,6 @@
 module.exports = app => {
-  const User = app.models.user
   const controller = {}
+  const User = app.models.user
 
   controller.getUsers = async (req, res, next) => {
     let users = await User.find().lean()

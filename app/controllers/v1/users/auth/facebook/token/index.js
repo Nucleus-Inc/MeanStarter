@@ -1,8 +1,8 @@
 const { validationResult } = require('express-validator/check')
 
 module.exports = app => {
-  const responses = app.libs.responses.users
   const controller = {}
+  const responses = app.libs.responses.users
 
   controller.signIn = async (req, res, next) => {
     try {

@@ -10,7 +10,7 @@ module.exports = app => {
   const broadcast = app.libs.broadcast.auth
   const config = app.locals.config
   const responses = app.libs.responses.users
-  const errors = app.errors.custom
+  const errors = app.locals.errors
 
   controller.setActivationCode = async (req, res, next) => {
     try {

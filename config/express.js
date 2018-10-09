@@ -128,6 +128,7 @@ module.exports = () => {
   app.locals.passport = {
     user: passportInstances.user
   }
+  app.locals.errors = require('./errors/custom.js')
 
   /* Autoload modules with Consign */
   consign({

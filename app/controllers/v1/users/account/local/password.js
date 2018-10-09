@@ -1,10 +1,10 @@
 const { validationResult } = require('express-validator/check')
 
 module.exports = app => {
+  const controller = {}
   const User = app.models.user
   const bcrypt = app.libs.bcrypt.hash
-  const errors = app.errors.custom
-  const controller = {}
+  const errors = app.locals.errors
 
   controller.updatePassword = async (req, res, next) => {
     try {

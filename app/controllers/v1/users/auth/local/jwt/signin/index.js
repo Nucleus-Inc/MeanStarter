@@ -7,7 +7,7 @@ module.exports = app => {
   const responses = app.libs.responses.users
   const bcrypt = app.libs.bcrypt.hash
   const config = app.locals.config
-  const errors = app.errors.custom
+  const errors = app.locals.errors
 
   controller.signIn = async (req, res, next) => {
     try {

@@ -2,14 +2,14 @@ const { validationResult } = require('express-validator/check')
 const ms = require('ms')
 
 module.exports = app => {
+  const controller = {}
   const User = app.models.user
   const random = app.libs.random.string
   const bcrypt = app.libs.bcrypt.hash
   const broadcast = app.libs.broadcast.auth
   const config = app.locals.config
   const responses = app.libs.responses.users
-  const errors = app.errors.custom
-  const controller = {}
+  const errors = app.locals.errors
 
   controller.setPhoneChangeCode = async (req, res, next) => {
     try {

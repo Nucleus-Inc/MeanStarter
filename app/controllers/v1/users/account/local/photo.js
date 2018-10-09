@@ -1,9 +1,9 @@
 const { validationResult } = require('express-validator/check')
 
 module.exports = app => {
+  const controller = {}
   const User = app.models.user
   const responses = app.libs.responses.users
-  const controller = {}
 
   controller.updatePhoto = async (req, res, next) => {
     try {
