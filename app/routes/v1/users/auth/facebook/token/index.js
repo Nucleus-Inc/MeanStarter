@@ -4,7 +4,7 @@ module.exports = app => {
 
   app.route('/users/auth/facebook/token').post(
     passport.authenticate('facebook-token', {
-      session: true
+      session: false
     }),
     controller.signIn
   )

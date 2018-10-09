@@ -4,6 +4,7 @@ module.exports = app => {
   require('./strategies/google/signin.js')(app)
   require('./strategies/google/oauth2.js')(app)
   require('./strategies/facebook/oauth2.js')(app)
+  require('./strategies/facebook/token.js')(app)
 
   /* let strategy = app.locals.passport.user._strategies['facebook-oauth2']
 

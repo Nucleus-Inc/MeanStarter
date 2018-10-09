@@ -11,6 +11,8 @@ module.exports = app => {
     new FacebookTokenStrategy(
       {
         clientID: config.auth.facebook.clientID,
+        clientSecret: config.auth.facebook.clientSecret,
+        fbGraphVersion: 'v3.0',
         passReqToCallback: true
       },
       async (req, accessToken, refreshToken, profile, done) => {

@@ -22,7 +22,8 @@ module.exports = {
       }
     },
     google: {
-      clientID: '962854434183-e7r3pbj2fs580ni04oq0c96bld5neubj.apps.googleusercontent.com',
+      clientID:
+        '962854434183-e7r3pbj2fs580ni04oq0c96bld5neubj.apps.googleusercontent.com',
       clientSecret: 'fEzeOabyCvded3R96iebQkRK',
       callbacks: {
         user: {
@@ -31,8 +32,8 @@ module.exports = {
       }
     },
     facebook: {
-      clientID: 'abc',
-      clientSecret: 'abc',
+      clientID: '2202473779971326',
+      clientSecret: 'd05a4f99f8618085c39ed8108a653eb1',
       profileFields: ['id', 'displayName', 'photos', 'email'],
       callbacks: {
         user: {
