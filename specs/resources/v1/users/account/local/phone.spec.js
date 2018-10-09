@@ -18,8 +18,8 @@ describe('User Phone Number Change Request', () => {
       })
       .end((err, res) => {
         res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-001')
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('object')
         res.body.errors.should.have.property('phoneNumber')

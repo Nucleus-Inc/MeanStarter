@@ -31,8 +31,6 @@ describe('User SignIn', () => {
       .request(server)
       .get('/users/auth/facebook/oauth2')
       .end((err, res) => {
-        console.log('######################################')
-        console.log(res.body)
         done()
       })
   })

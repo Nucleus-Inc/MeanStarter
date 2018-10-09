@@ -1,19 +1,23 @@
 const _ = require('lodash')
 
 module.exports = app => {
-  const errorFormatter = {}
+  const lib = {}
+  const errors = app.locals.errors
 
-  errorFormatter.format = err => {
+  lib.format = err => {
     let response = {}
 
+    /* REQ-001 error (Validation errors) */
     if (_.has(err, 'mapped')) {
       response = {
-        statusCode: 400,
+        statusCode: errors.REQ001.httpCode,
         errorData: {
-          code: 4000,
+          errorCode: errors.REQ001.response.errorCode,
+          description: errors.REQ001.response.description,
           errors: err.mapped()
         }
       }
+      /* REQ-003 error (Mongoose duplicated key) */
     } else if (
       _.isObject(err) &&
       _.has(err, 'name') &&
@@ -33,48 +37,28 @@ module.exports = app => {
       err.key = key[0].replace(/index|:|dup|key|_|[0-9]+| /g, '')
 
       response = {
-        statusCode: 422,
+        statusCode: errors.REQ003.httpCode,
         errorData: {
-          code: 4200,
+          errorCode: errors.REQ003.response.errorCode,
+          description: errors.REQ003.response.description,
           errors: [err.key]
         }
       }
-    } else if (
-      _.isObject(err) &&
-      _.has(err, 'apiError') &&
-      _.has(err, 'data')
-    ) {
+      /* AUT-007 error */
+    } else if (_.has(err, 'response') && err.response.errorCode === 'AUT-007') {
       response = {
-        statusCode: 400,
-        errorData: {
-          code: 4000,
-          errors: err.data
-        }
+        statusCode: errors.AUT007.httpCode,
+        errorData: errors.AUT007.response
       }
-    } else if (
-      _.has(err, 'response') &&
-      err.response.errorCode === 'AUT-007'
-    ) {
-      response = {
-        statusCode: 403,
-        errorData: {
-          errorCode: 'AUT-007',
-          description:
-            'The OAuth2 Provider is already connected to another account.'
-        }
-      }
+      /* Unknown errors will be treated as SRV-001 error */
     } else {
       response = {
-        statusCode: 500,
-        errorData: {
-          errorCode: 'SRV-001',
-          description:
-            'An internal error occurred. This request has been logged.'
-        }
+        statusCode: errors.SRV001.httpCode,
+        errorData: errors.SRV001.response
       }
     }
 
     return response
   }
-  return errorFormatter
+  return lib
 }

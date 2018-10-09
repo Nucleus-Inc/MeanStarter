@@ -63,8 +63,8 @@ describe('User Signup', () => {
       })
       .end((err, res) => {
         res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-001')
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('object')
         res.body.errors.should.have.property('displayName')
@@ -87,8 +87,8 @@ describe('User Signup', () => {
       })
       .end((err, res) => {
         res.should.have.status(422)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4200)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-003')
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('array')
         res.body.errors[0].should.be.eql('account.local.email')
@@ -108,8 +108,8 @@ describe('User Signup', () => {
       })
       .end((err, res) => {
         res.should.have.status(422)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4200)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-003')
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('array')
         res.body.errors[0].should.be.eql('account.local.phoneNumber')

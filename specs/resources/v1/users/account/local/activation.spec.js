@@ -10,7 +10,7 @@ let user = require('specs/resources/v1/schemas/user.js')
 chai.use(chaiHttp)
 
 describe('User Account Activation', () => {
-  it('should successfully get a activation code on /users/:id/account/local/activation PATCH', done => {
+  it('should successfully get a activation errorCode on /users/:id/account/local/activation PATCH', done => {
     chai
       .request(server)
       .patch('/api/v1/users/' + user._id + '/account/local/activation')
@@ -49,8 +49,8 @@ describe('User Account Activation', () => {
       .send()
       .end((err, res) => {
         res.should.have.status(400)
-        res.body.should.have.property('code')
-        res.body.code.should.be.eql(4000)
+        res.body.should.have.property('errorCode')
+        res.body.errorCode.should.be.eql('REQ-001')
         res.body.should.have.property('errors')
         res.body.errors.should.be.a('object')
         res.body.errors.should.have.property('token')
@@ -83,7 +83,7 @@ describe('User Account Activation', () => {
       })
   })
 
-  it('should fail to get an activation code for an account that is already active on /users/:id/account/local/activation PATCH', done => {
+  it('should fail to get an activation errorCode for an account that is already active on /users/:id/account/local/activation PATCH', done => {
     chai
       .request(server)
       .patch('/api/v1/users/' + user._id + '/account/local/activation')
