@@ -7,6 +7,9 @@ const errors = require('./errors/custom.js')
 /* Express */
 const express = require('express')
 
+/* Compression */
+const compression = require('compression')
+
 /* Helmet */
 const helmet = require('helmet')
 
@@ -41,6 +44,9 @@ module.exports = () => {
   /* Init Express app and set port */
   const app = express()
   app.set('port', process.env.PORT || 5000)
+
+  /* Compression */
+  app.use(compression())
 
   /* Use Helmet */
   app.use(helmet.frameguard())
