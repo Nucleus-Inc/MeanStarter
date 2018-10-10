@@ -153,5 +153,11 @@ module.exports = () => {
   /* Use errors handler middleware */
   require('./errors/middleware.js')(app)
 
+  /* Load Passport */
+  require('./passport/passport.js')(app)
+
+  /* Load Database configs */
+  require('./database.js')(config.db, app.locals.mongoose)
+
   return app
 }
