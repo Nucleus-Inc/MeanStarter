@@ -1,6 +1,9 @@
 /* Env Config */
 const config = require('./config.js')
 
+/* Custom API Errors */
+const errors = require('./errors/custom.js')
+
 /* Express */
 const express = require('express')
 
@@ -95,7 +98,12 @@ module.exports = () => {
     })
   )
   app.use(bodyParser.json())
-  app.use(bodyParserError.beautify())
+  app.use(
+    bodyParserError.beautify({
+      status: errors.REQ002.httpCode,
+      res: errors.REQ002.response
+    })
+  )
 
   /* Express Mongo Sanitize */
   app.use(mongoSanitize())
@@ -128,7 +136,7 @@ module.exports = () => {
   app.locals.passport = {
     user: passportInstances.user
   }
-  app.locals.errors = require('./errors/custom.js')
+  app.locals.errors = errors
 
   /* Autoload modules with Consign */
   consign({
