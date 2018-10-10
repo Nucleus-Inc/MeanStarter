@@ -55,7 +55,7 @@ module.exports = app => {
           code: code
         },
         {
-          transport: 'email'
+          transport: 'nodemailer'
         }
       )
 

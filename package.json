@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
   "dependencies": {
     "@cgross/angular-notify": "^2.5.1",
+    "@sendgrid/mail": "^6.3.1",
     "angular": "^1.7.0",
     "angular-animate": "^1.7.0",
     "angular-br-filters": "^0.7.0",

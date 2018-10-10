@@ -66,6 +66,12 @@ module.exports = {
       password: '',
       from: ''
     },
+    sendgrid: {
+      apiKey: 'API_KEY',
+      templateId: 'TEMPLATE_ID',
+      senderName: 'SENDER_NAME',
+      senderMail: 'SENDER_MAIL'
+    },
     winston: {
       transports: {
         console: {

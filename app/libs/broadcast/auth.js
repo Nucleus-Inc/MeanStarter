@@ -1,10 +1,12 @@
 const nodemailer = require('nodemailer')
+const sgMail = require('@sendgrid/mail')
 const hbs = require('nodemailer-express-handlebars')
 
 module.exports = app => {
-  const broadcast = {}
+  const lib = {}
   const config = app.locals.config
 
+  /* NodeMailer Setup */
   const smtpTransporter = nodemailer.createTransport(
     {
       service: config.modules.nodeMailer.service,
@@ -18,8 +20,11 @@ module.exports = app => {
     }
   )
 
-  broadcast.sendCode = (data, options) => {
-    if (options.transport === 'email') {
+  /* SendGrid Setup */
+  sgMail.setApiKey(config.modules.sendgrid.apiKey)
+
+  lib.sendCode = (data, options) => {
+    if (options.transport === 'nodemailer') {
       smtpTransporter.use(
         'compile',
         hbs({
@@ -38,18 +43,40 @@ module.exports = app => {
           code: data.code
         }
       })
+    } else if (options.transport === 'sendgrid') {
+      return sgMail.send({
+        personalizations: [
+          {
+            to: [
+              {
+                email: data.recipient
+              }
+            ],
+            dynamic_template_data: {
+              username: data.username,
+              message: 'Here is your confirmation code: ',
+              code: data.code
+            }
+          }
+        ],
+        templateId: config.libs.sendgrid.templateId,
+        from: {
+          email: config.modules.sendgrid.senderMail,
+          name: config.modules.sendgrid.senderName
+        }
+      })
     } else if (options.transport === 'sms') {
       console.log(
         'No SMS has been sent. You need to use your custom function here in order to send sms messages - ' +
           new Error().stack
       )
 
-      // Your code to send sms here ...
+      /* Your code to send sms goes here ... */
       return true
     } else {
       throw new Error('Transport option is invalid or has not been set')
     }
   }
 
-  return broadcast
+  return lib
 }
