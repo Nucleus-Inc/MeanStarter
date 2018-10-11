@@ -1,5 +1,8 @@
 module.exports = {
   db: 'mongodb://localhost/meanstarter',
+  ssl: {
+    enforce: false
+  },
   auth: {
     local: {
       tokens: {
@@ -48,6 +51,9 @@ module.exports = {
     dumpUnkownExeceptionsOnly: true
   },
   modules: {
+    sslify: {
+      trustProtoHeader: true
+    },
     expressSession: {
       name: 'default.sid',
       secret: 'default',

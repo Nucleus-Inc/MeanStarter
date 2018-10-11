@@ -7,6 +7,9 @@ const errors = require('./errors/custom.js')
 /* Express */
 const express = require('express')
 
+/* Express sslify */
+const enforce = require('express-sslify')
+
 /* Compression */
 const compression = require('compression')
 
@@ -44,6 +47,11 @@ module.exports = () => {
   /* Init Express app and set port */
   const app = express()
   app.set('port', process.env.PORT || 5000)
+
+  /* Express sslify */
+  if (config.ssl.enforce) {
+    app.use(enforce.HTTPS(config.modules.sslify))
+  }
 
   /* Compression */
   app.use(compression())
