@@ -8,7 +8,7 @@ module.exports = app => {
   const config = app.locals.config
 
   const jwtOptions = {}
-  jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader()
+  jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt')
   jwtOptions.secretOrKey = config.auth.local.jwt.jwtSecret
 
   passport.use(
