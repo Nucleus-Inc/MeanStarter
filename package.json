@@ -52,7 +52,7 @@
     "body-parser": "^1.17.2",
     "bodyparser-json-error": "^1.0.0",
     "bootstrap": "^4.1.1",
-    "bootstrap-layout": "^1.0.0-alpha.10",
+    "bootstrap-layout": "github:nucleus-inc/bootstrap-layout",
     "chart.js": "^2.7.2",
     "cloudinary-core": "^2.5.0",
     "cloudinary_ng": "^1.1.1",
