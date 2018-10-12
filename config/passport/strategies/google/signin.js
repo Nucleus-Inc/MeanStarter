@@ -1,4 +1,4 @@
-const GoogleTokenStrategy = require('passport-google-id-token')
+const GoogleTokenStrategy = require('@nucleus-inc/passport-google-id-token')
 
 module.exports = app => {
   const passport = app.locals.passport.user
