@@ -10,5 +10,5 @@ server.listen(process.env.PORT || 5000, () => {
   console.log('Express Server listening on port ' + app.get('port'))
 })
 
-// For testing with Mocha
+/* Export app for Mocha tests */
 module.exports = app
