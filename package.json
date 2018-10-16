@@ -27,7 +27,6 @@
   "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
   "dependencies": {
     "@cgross/angular-notify": "^2.5.1",
-    "@nucleus-inc/passport-google-id-token": "^1.0.0",
     "@sendgrid/mail": "^6.3.1",
     "angular": "^1.7.0",
     "angular-animate": "^1.7.0",
@@ -88,6 +87,7 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-facebook-token": "^3.3.0",
+    "passport-google-id-token": "^0.4.6",
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
