@@ -4,6 +4,12 @@ const config = require('./config.js')
 /* Custom API Errors */
 const errors = require('./errors/custom.js')
 
+/* Mongoose */
+const mongoose = require('mongoose')
+
+/* Redis */
+const redis = require('redis')
+
 /* Express */
 const express = require('express')
 
@@ -27,8 +33,7 @@ const cookieParser = require('cookie-parser')
 
 /* Express Session */
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
-const mongoose = require('mongoose')
+const RedisStore = require('connect-redis')(session)
 
 /* Body Parser */
 const bodyParser = require('body-parser')
@@ -74,7 +79,7 @@ module.exports = () => {
           config.modules.winston.transports.console
         ),
         new WinstonMongo({
-          db: config.db
+          db: config.db.mongo.uri
         })
       ],
       skip: winstonConfig.skip,
@@ -98,9 +103,10 @@ module.exports = () => {
       resave: config.modules.expressSession.resave,
       saveUninitialized: config.modules.expressSession.saveUninitialized,
       cookie: config.modules.expressSession.cookie,
-      store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        collection: config.modules.expressSession.mongoStore.collection
+      store: new RedisStore({
+        host: config.db.redis.host,
+        port: config.db.redis.port,
+        client: redis.client
       })
     })
   )
@@ -177,7 +183,7 @@ module.exports = () => {
   require('./passport/passport.js')(app)
 
   /* Load Database configs */
-  require('./database.js')(config.db, app.locals.mongoose)
+  require('./database.js')(config.db.mongo.uri, app.locals.mongoose)
 
   return app
 }

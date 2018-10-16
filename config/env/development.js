@@ -1,5 +1,13 @@
 module.exports = {
-  db: 'mongodb://localhost/meanstarter',
+  db: {
+    mongo: {
+      uri: 'mongodb://localhost/meanstarter'
+    },
+    redis: {
+      host: 'localhost',
+      port: 6379
+    }
+  },
   ssl: {
     enforce: false
   },
@@ -65,7 +73,7 @@ module.exports = {
       cookie: {
         secure: false,
         httpOnly: false,
-        domain: 'localhost',
+        domain: 'localhost:' + process.env.PORT,
         path: '/user',
         maxAge: 60 * 60 * 1000
       },
