@@ -3,6 +3,9 @@ module.exports = {
   ssl: {
     enforce: false
   },
+  proxy: {
+    setTrustProxy: false
+  },
   auth: {
     local: {
       tokens: {
@@ -52,13 +55,20 @@ module.exports = {
   },
   modules: {
     sslify: {
-      trustProtoHeader: true
+      trustProtoHeader: false
     },
     expressSession: {
       name: 'default.sid',
       secret: 'default',
       resave: false,
       saveUninitialized: false,
+      cookie: {
+        secure: false,
+        httpOnly: false,
+        domain: 'localhost',
+        path: '/user',
+        maxAge: 60 * 60 * 1000
+      },
       mongoStore: {
         collection: 'localsessions'
       }

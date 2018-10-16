@@ -86,12 +86,18 @@ module.exports = () => {
   app.use(cookieParser())
 
   /* Express Session Middleware */
+  if (config.proxy.setTrustProxy) {
+    /* Set trust proxy in production */
+    app.set('trust proxy', 1)
+  }
+
   app.use(
     session({
       name: config.modules.expressSession.name,
       secret: config.modules.expressSession.secret,
       resave: config.modules.expressSession.resave,
       saveUninitialized: config.modules.expressSession.saveUninitialized,
+      cookie: config.modules.expressSession.cookie,
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
         collection: config.modules.expressSession.mongoStore.collection
