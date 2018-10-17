@@ -98,12 +98,35 @@ module.exports = {
     },
     winston: {
       transports: {
+        file: {
+          level: 'error',
+          silent: false,
+          filename: '/app.log',
+          maxsize: 5242880,
+          maxFiles: 5
+        },
         console: {
-          colorize: true,
-          json: true,
-          statusLevels: false
+          level: 'info',
+          silent: false
         }
       }
+    },
+    expressWinston: {
+      transports: {
+        file: {
+          level: 'error',
+          silent: false,
+          filename: '/app.log',
+          maxsize: 5242880,
+          maxFiles: 5
+        },
+        console: {
+          level: 'info',
+          silent: false
+        }
+      },
+      meta: false,
+      expressFormat: true
     }
   }
 }

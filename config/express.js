@@ -22,11 +22,13 @@ const compression = require('compression')
 /* Helmet */
 const helmet = require('helmet')
 
+/* path */
+const path = require('path')
+
 /* Winston logger */
 const winston = require('winston')
 const winstonConfig = require('./winston.js')
 const expressWinston = require('express-winston')
-const WinstonMongo = require('winston-mongodb').MongoDB
 
 /* Cookie parser */
 const cookieParser = require('cookie-parser')
@@ -72,18 +74,79 @@ module.exports = () => {
   )
 
   /* Winston Logger */
+
+  /* Create log dir if doesn't exist */
+  winstonConfig.createLogDir()
+
+  const logger = winston.createLogger({
+    transports: [
+      new winston.transports.File({
+        level: config.modules.winston.transports.file.level,
+        silent: config.modules.winston.transports.file.silent,
+        filename: path.join(
+          'logs',
+          config.modules.winston.transports.file.filename
+        ),
+        maxsize: config.modules.winston.transports.file.maxsize,
+        maxFiles: config.modules.winston.transports.file.maxFiles,
+        format: winston.format.combine(
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+          }),
+          winston.format.simple(),
+          winston.format.printf(winstonConfig.formatParams)
+        )
+      }),
+      new winston.transports.Console({
+        level: config.modules.winston.transports.console.level,
+        silent: config.modules.winston.transports.console.silent,
+        format: winston.format.combine(
+          winston.format.colorize({ all: true }),
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+          }),
+          winston.format.printf(winstonConfig.formatParams)
+        )
+      })
+    ]
+  })
+
+  /* Express Winston for request logs */
   app.use(
     expressWinston.logger({
       transports: [
-        new winston.transports.Console(
-          config.modules.winston.transports.console
-        ),
-        new WinstonMongo({
-          db: config.db.mongo.uri
+        new winston.transports.File({
+          level: config.modules.expressWinston.transports.file.level,
+          silent: config.modules.expressWinston.transports.file.silent,
+          filename: path.join(
+            'logs',
+            config.modules.expressWinston.transports.file.filename
+          ),
+          maxsize: config.modules.expressWinston.transports.file.maxsize,
+          maxFiles: config.modules.expressWinston.transports.file.maxFiles,
+          format: winston.format.combine(
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss'
+            }),
+            winston.format.simple(),
+            winston.format.printf(winstonConfig.formatParams)
+          )
+        }),
+        new winston.transports.Console({
+          level: config.modules.expressWinston.transports.console.level,
+          silent: config.modules.expressWinston.transports.console.silent,
+          format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss'
+            }),
+            winston.format.printf(winstonConfig.formatParams)
+          )
         })
       ],
-      skip: winstonConfig.skip,
-      level: winstonConfig.level
+      meta: config.modules.expressWinston.meta,
+      expressFormat: config.modules.expressWinston.expressFormat,
+      level: winstonConfig.getStatusLevel
     })
   )
 
@@ -92,7 +155,6 @@ module.exports = () => {
 
   /* Express Session Middleware */
   if (config.proxy.setTrustProxy) {
-    /* Set trust proxy in production */
     app.set('trust proxy', 1)
   }
 
@@ -124,6 +186,8 @@ module.exports = () => {
     })
   )
   app.use(bodyParser.json())
+
+  /* Body Parser error handler */
   app.use(
     bodyParserError.beautify({
       status: errors.REQ002.httpCode,
@@ -156,12 +220,13 @@ module.exports = () => {
   app.use('/', routers.v1)
 
   /* Set App Locals */
-  app.locals.mongoose = mongoose
   app.locals.config = config
+  app.locals.mongoose = mongoose
   app.locals.routers = routers
   app.locals.passport = {
     user: passportInstances.user
   }
+  app.locals.logger = logger
   app.locals.errors = errors
 
   /* Autoload modules with Consign */
@@ -183,7 +248,7 @@ module.exports = () => {
   require('./passport/passport.js')(app)
 
   /* Load Database configs */
-  require('./database.js')(config.db.mongo.uri, app.locals.mongoose)
+  require('./database.js')(app)
 
   return app
 }

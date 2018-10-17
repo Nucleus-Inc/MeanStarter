@@ -1,9 +1,12 @@
 const bluebird = require('bluebird')
 
-module.exports = (uri, mongoose) => {
+module.exports = app => {
+  const uri = app.locals.config.db.mongo.uri
+  const mongoose = app.locals.mongoose
+  const logger = app.locals.logger
+
   bluebird.promisifyAll(mongoose)
 
-  // mongoose.Promise = global.Promise; For use native promise
   mongoose.Promise = bluebird
 
   mongoose.connect(
@@ -12,20 +15,20 @@ module.exports = (uri, mongoose) => {
   )
 
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose! Connected in: ' + uri)
+    logger.info('Mongoose! Connected in: ' + uri)
   })
 
   mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose! Disconnected: ' + uri)
+    logger.info('Mongoose! Disconnected: ' + uri)
   })
 
   mongoose.connection.on('error', err => {
-    console.log('Mongoose! Error in connection: ' + err)
+    logger.info('Mongoose! Error in connection: ' + err)
   })
 
   process.on('SIGINT', () => {
     mongoose.connection.close(() => {
-      console.log('Mongoose! Disconnected for finished app')
+      logger.info('Mongoose! Disconnected for finished app')
     })
     process.exit(0)
   })

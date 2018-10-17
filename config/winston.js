@@ -1,8 +1,16 @@
+const fs = require('fs')
+
 module.exports = {
-  skip: function (req, res) {
-    return res.statusCode !== 500
+  createLogDir: () => {
+    if (!fs.existsSync('logs')) {
+      /* Create logs directory if it does not exist */
+      fs.mkdirSync('logs')
+    }
   },
-  level: function (req, res) {
+  skip: (req, res) => {
+    return !!(res.statusCode !== 500)
+  },
+  getStatusLevel: function (req, res) {
     let level = ''
 
     if (res.statusCode >= 100) {
@@ -15,5 +23,12 @@ module.exports = {
       level = 'error'
     }
     return level
+  },
+  formatParams: info => {
+    return info.meta
+      ? `[${info.timestamp}] ${info.level}: ${info.message} ${JSON.stringify(
+        info.meta
+      )}`
+      : `[${info.timestamp}] ${info.level}: ${info.message}`
   }
 }
