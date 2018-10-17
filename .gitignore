@@ -4,3 +4,4 @@ public/config/env_dev.js
 public/vendors
 public/tmp
 public/dist
+logs/
