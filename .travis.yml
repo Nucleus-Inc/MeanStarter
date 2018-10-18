@@ -8,6 +8,7 @@ before_script:
 
 services:
   - mongodb
+  - redis-server
 
 script:
   - npm run lint && npm test
