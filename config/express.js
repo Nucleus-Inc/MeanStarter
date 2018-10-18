@@ -227,7 +227,7 @@ module.exports = () => {
   })
 
   redisClient.on('error', err => {
-    logger.error(err)
+    logger.error('Error on Redis connection: ' + err)
   })
 
   const rateLimiter = new RateLimiterRedis({
