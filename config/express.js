@@ -119,7 +119,7 @@ module.exports = () => {
         level: config.modules.winston.transports.console.level,
         silent: config.modules.winston.transports.console.silent,
         format: winston.format.combine(
-          winston.format.colorize({ all: true }),
+          winston.format.colorize(),
           winston.format.timestamp({
             format: 'YYYY-MM-DD HH:mm:ss'
           }),
