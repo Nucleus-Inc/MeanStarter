@@ -25,10 +25,18 @@ module.exports = {
     return level
   },
   formatParams: info => {
-    return info.meta
-      ? `[${info.timestamp}] ${info.level}: ${info.message} ${JSON.stringify(
-        info.meta
-      )}`
-      : `[${info.timestamp}] ${info.level}: ${info.message}`
+    let msg
+
+    if (info.meta && Object.keys(info.meta).length === 0) {
+      msg = `[${info.timestamp}] ${info.level}: ${info.message}`
+    } else if (info.meta && Object.keys(info.meta).length !== 0) {
+      msg = `[${info.timestamp}] ${info.level}: ${
+        info.message
+      } ${JSON.stringify(info.meta)}`
+    } else {
+      msg = `[${info.timestamp}] ${info.level}: ${info.message}`
+    }
+
+    return msg
   }
 }
