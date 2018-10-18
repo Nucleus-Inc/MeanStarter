@@ -127,6 +127,10 @@ module.exports = {
       },
       meta: false,
       expressFormat: true
+    },
+    rateLimiter: {
+      points: 1000,
+      duration: 1
     }
   }
 }

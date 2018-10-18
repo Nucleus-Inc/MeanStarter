@@ -20,6 +20,13 @@ module.exports = {
       description: 'Duplicated resource'
     }
   },
+  REQ004: {
+    httpCode: 429,
+    response: {
+      errorCode: 'REQ-004',
+      description: 'Too Many Requests'
+    }
+  },
   AUT001: {
     httpCode: 401,
     response: {

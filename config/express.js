@@ -47,6 +47,9 @@ const mongoSanitize = require('express-mongo-sanitize')
 /* Passport */
 const passportInstances = require('config/passport/instances')
 
+/* Rate Limiter */
+const { RateLimiterRedis } = require('rate-limiter-flexible')
+
 /* Consign */
 const consign = require('consign')
 
@@ -216,7 +219,37 @@ module.exports = () => {
   }
   app.use(apiVersions.v1.baseUrl, routers.v1)
 
-  /* Set default router to latest version */
+  /* Rate Limiter */
+  const redisClient = redis.createClient({
+    host: config.db.redis.host,
+    port: config.db.redis.port,
+    enable_offline_queue: false
+  })
+
+  redisClient.on('error', err => {
+    logger.error(err)
+  })
+
+  const rateLimiter = new RateLimiterRedis({
+    storeClient: redisClient,
+    points: config.modules.rateLimiter.points,
+    duration: config.modules.rateLimiter.duration
+  })
+
+  const rateLimiterMiddleware = (req, res, next) => {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(rejRes => {
+        res.status(errors.REQ004).send(errors.REQ004.response)
+      })
+  }
+
+  app.use(rateLimiterMiddleware, routers.v1)
+
+  /* Set default router  */
   app.use('/', routers.v1)
 
   /* Set App Locals */
