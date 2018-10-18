@@ -73,8 +73,7 @@ module.exports = {
       cookie: {
         secure: false,
         httpOnly: false,
-        domain: 'localhost:' + process.env.PORT,
-        path: '/user',
+        path: '/',
         maxAge: 60 * 60 * 1000
       },
       mongoStore: {
