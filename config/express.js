@@ -58,6 +58,21 @@ module.exports = () => {
   const app = express()
   app.set('port', process.env.PORT || 5000)
 
+  /* Routers and API versions */
+  const apiVersions = {
+    v1: {
+      baseUrl: '/api/v1'
+    }
+  }
+  const routers = {
+    v1: express.Router()
+  }
+
+  /* Set trust proxy if configured */
+  if (config.proxy.setTrustProxy) {
+    app.set('trust proxy', 1)
+  }
+
   /* Express sslify */
   if (config.ssl.enforce) {
     app.use(enforce.HTTPS(config.modules.sslify))
@@ -153,28 +168,35 @@ module.exports = () => {
     })
   )
 
-  /* Cookie Parser */
-  app.use(cookieParser())
+  /* Rate Limiter */
+  const redisClient = redis.createClient({
+    host: config.db.redis.host,
+    port: config.db.redis.port,
+    enable_offline_queue: false
+  })
 
-  /* Express Session Middleware */
-  if (config.proxy.setTrustProxy) {
-    app.set('trust proxy', 1)
+  redisClient.on('error', err => {
+    logger.error('Error on Redis connection: ' + err)
+  })
+
+  const rateLimiter = new RateLimiterRedis({
+    storeClient: redisClient,
+    points: config.modules.rateLimiter.points,
+    duration: config.modules.rateLimiter.duration
+  })
+
+  const rateLimiterMiddleware = (req, res, next) => {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(rejRes => {
+        res.status(errors.REQ004).send(errors.REQ004.response)
+      })
   }
 
-  app.use(
-    session({
-      name: config.modules.expressSession.name,
-      secret: config.modules.expressSession.secret,
-      resave: config.modules.expressSession.resave,
-      saveUninitialized: config.modules.expressSession.saveUninitialized,
-      cookie: config.modules.expressSession.cookie,
-      store: new RedisStore({
-        host: config.db.redis.host,
-        port: config.db.redis.port,
-        client: redis.client
-      })
-    })
-  )
+  routers.v1.use(rateLimiterMiddleware)
 
   /* Set public dir and use ejs views */
   app.use(require('method-override')())
@@ -204,55 +226,36 @@ module.exports = () => {
   /* Ensure index is now deprecated: https://github.com/Automattic/mongoose/issues/6890 */
   mongoose.set('useCreateIndex', true)
 
-  /* Passport */
-  app.use(passportInstances.user.initialize())
-  app.use(passportInstances.user.session())
+  /* Cookie Parser */
+  app.use(cookieParser())
 
-  /* Routers and API versions */
-  const apiVersions = {
-    v1: {
-      baseUrl: '/api/v1'
-    }
-  }
-  const routers = {
-    v1: express.Router()
-  }
+  /* Express Session Middleware */
+  routers.v1.use(
+    session({
+      name: config.modules.expressSession.name,
+      secret: config.modules.expressSession.secret,
+      resave: config.modules.expressSession.resave,
+      saveUninitialized: config.modules.expressSession.saveUninitialized,
+      cookie: config.modules.expressSession.cookie,
+      store: new RedisStore({
+        host: config.db.redis.host,
+        port: config.db.redis.port,
+        client: redis.client
+      })
+    })
+  )
+
+  /* Passport */
+  routers.v1.use(passportInstances.user.initialize())
+  routers.v1.use(passportInstances.user.session())
+
+  /* Apply base url to router  */
   app.use(apiVersions.v1.baseUrl, routers.v1)
 
-  /* Rate Limiter */
-  const redisClient = redis.createClient({
-    host: config.db.redis.host,
-    port: config.db.redis.port,
-    enable_offline_queue: false
-  })
-
-  redisClient.on('error', err => {
-    logger.error('Error on Redis connection: ' + err)
-  })
-
-  const rateLimiter = new RateLimiterRedis({
-    storeClient: redisClient,
-    points: config.modules.rateLimiter.points,
-    duration: config.modules.rateLimiter.duration
-  })
-
-  const rateLimiterMiddleware = (req, res, next) => {
-    rateLimiter
-      .consume(req.connection.remoteAddress)
-      .then(() => {
-        next()
-      })
-      .catch(rejRes => {
-        res.status(errors.REQ004).send(errors.REQ004.response)
-      })
-  }
-
-  app.use(rateLimiterMiddleware, routers.v1)
-
-  /* Set default router  */
+  /* Set app default router */
   app.use('/', routers.v1)
 
-  /* Set App Locals */
+  /* Set app Locals */
   app.locals.config = config
   app.locals.mongoose = mongoose
   app.locals.routers = routers
