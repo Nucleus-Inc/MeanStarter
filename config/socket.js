@@ -1,9 +1,9 @@
 const consign = require('consign')
 
-module.exports = (app) => {
+module.exports = app => {
   const io = require('socket.io').listen(app)
 
-  /* Express load */
+  /* Consign */
   consign({
     cwd: 'app'
   })

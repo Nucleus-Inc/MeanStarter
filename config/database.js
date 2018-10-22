@@ -15,20 +15,20 @@ module.exports = app => {
   )
 
   mongoose.connection.on('connected', () => {
-    logger.info('Mongoose! Connected in: ' + uri)
+    logger.info('Mongoose - Connected on: ' + uri)
   })
 
   mongoose.connection.on('disconnected', () => {
-    logger.info('Mongoose! Disconnected: ' + uri)
+    logger.info('Mongoose - Disconnected from: ' + uri)
   })
 
   mongoose.connection.on('error', err => {
-    logger.info('Mongoose! Error in connection: ' + err)
+    logger.info('Mongoose - Error on connection: ' + err)
   })
 
   process.on('SIGINT', () => {
     mongoose.connection.close(() => {
-      logger.info('Mongoose! Disconnected for finished app')
+      logger.info('Mongoose - Disconnected from: ' + uri)
     })
     process.exit(0)
   })

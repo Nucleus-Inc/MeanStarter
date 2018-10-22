@@ -7,7 +7,9 @@ const server = http.createServer(app)
 require('./config/socket')(server)
 
 server.listen(process.env.PORT || 5000, () => {
-  app.locals.logger.info('Express Server listening on port ' + app.get('port'))
+  app.locals.logger.info(
+    'Express Server - Listening on port: ' + app.get('port')
+  )
 })
 
 /* Export app for Mocha tests */

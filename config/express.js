@@ -181,12 +181,14 @@ module.exports = () => {
   })
 
   rateLimitterRedisClient.on('ready', () => {
-    logger.info('Rate Limitter - Redis connected in: ' + config.db.redis.host)
+    logger.info('Rate Limitter - Redis connected on: ' + config.db.redis.host)
   })
 
   process.on('exit', () => {
     rateLimitterRedisClient.quit()
-    logger.info('Rate Limitter - Redis connection closed')
+    logger.info(
+      'Rate Limitter - Redis disconnected from: ' + config.db.redis.host
+    )
   })
 
   const rateLimiter = new RateLimiterRedis({
@@ -250,12 +252,14 @@ module.exports = () => {
   })
 
   sessionRedisClient.on('ready', () => {
-    logger.info('Express Session - Redis connected in: ' + config.db.redis.host)
+    logger.info('Express Session - Redis connected on: ' + config.db.redis.host)
   })
 
   process.on('exit', () => {
     sessionRedisClient.quit()
-    logger.info('Express Session - Redis connection closed')
+    logger.info(
+      'Express Session - Redis disconnected from: ' + config.db.redis.host
+    )
   })
 
   routers.v1.use(
