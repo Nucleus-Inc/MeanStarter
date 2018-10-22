@@ -74,26 +74,4 @@ describe('User Email Change Request', () => {
         done()
       })
   })
-  /*
-  it('should successfully get a JWT with the new credentials on /api/v1/users/auth/jwt/local/signin POST', done => {
-    chai
-      .request(server)
-      .post('/api/v1/users/auth/local/jwt/signin')
-      .send({
-        email: user.email,
-        password: user.password
-      })
-      .end((err, res) => {
-        res.should.have.status(200)
-        res.headers.should.have.property('jwt')
-        res.headers.jwt.should.be.a('string')
-        jwt.verify(res.headers.jwt, config.jwt.jwtSecret, (err, decoded) => {
-          decoded.should.have.property('_id')
-          decoded.should.have.property('isActive')
-          decoded.should.have.property('iat')
-          decoded.should.have.property('exp')
-          done()
-        })
-      })
-  }) */
 })
