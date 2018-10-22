@@ -169,18 +169,28 @@ module.exports = () => {
   )
 
   /* Rate Limiter */
-  const redisClient = redis.createClient({
+  const rateLimitterRedisClient = redis.createClient({
     host: config.db.redis.host,
     port: config.db.redis.port,
+    /* Needs to disable offline queue, according to docs */
     enable_offline_queue: false
   })
 
-  redisClient.on('error', err => {
-    logger.error('Error on Redis connection: ' + err)
+  rateLimitterRedisClient.on('error', err => {
+    logger.error('Rate Limitter - Error on Redis connection: ' + err)
+  })
+
+  rateLimitterRedisClient.on('ready', () => {
+    logger.info('Rate Limitter - Redis connected in: ' + config.db.redis.host)
+  })
+
+  process.on('exit', () => {
+    rateLimitterRedisClient.quit()
+    logger.info('Rate Limitter - Redis connection closed')
   })
 
   const rateLimiter = new RateLimiterRedis({
-    storeClient: redisClient,
+    storeClient: rateLimitterRedisClient,
     points: config.modules.rateLimiter.points,
     duration: config.modules.rateLimiter.duration
   })
@@ -230,6 +240,24 @@ module.exports = () => {
   app.use(cookieParser())
 
   /* Express Session Middleware */
+  const sessionRedisClient = redis.createClient({
+    host: config.db.redis.host,
+    port: config.db.redis.port
+  })
+
+  sessionRedisClient.on('error', err => {
+    logger.error('Express Session - Error on Redis connection: ' + err)
+  })
+
+  sessionRedisClient.on('ready', () => {
+    logger.info('Express Session - Redis connected in: ' + config.db.redis.host)
+  })
+
+  process.on('exit', () => {
+    sessionRedisClient.quit()
+    logger.info('Express Session - Redis connection closed')
+  })
+
   routers.v1.use(
     session({
       name: config.modules.expressSession.name,
@@ -238,9 +266,7 @@ module.exports = () => {
       saveUninitialized: config.modules.expressSession.saveUninitialized,
       cookie: config.modules.expressSession.cookie,
       store: new RedisStore({
-        host: config.db.redis.host,
-        port: config.db.redis.port,
-        client: redis.client
+        client: sessionRedisClient
       })
     })
   )
