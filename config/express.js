@@ -33,6 +33,9 @@ const expressWinston = require('express-winston')
 /* Cookie parser */
 const cookieParser = require('cookie-parser')
 
+/* Csurf */
+const csrf = require('csurf')
+
 /* Express Session */
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
@@ -278,6 +281,20 @@ module.exports = () => {
   /* Passport */
   routers.v1.use(passportInstances.user.initialize())
   routers.v1.use(passportInstances.user.session())
+
+  /* Csurf */
+  routers.v1.use(csrf({ cookie: true }))
+
+  routers.v1.use((err, req, res, next) => {
+    /* Bypass CSRF validation if session cookie is not in request */
+    if (!req.cookies[config.modules.expressSession.name]) return next()
+
+    /* Pass other errors to handler middleware */
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+
+    /* Custom error */
+    res.status(errors.AUT002.httpCode).send(errors.AUT002.response)
+  })
 
   /* Apply base url to router  */
   app.use(apiVersions.v1.baseUrl, routers.v1)
