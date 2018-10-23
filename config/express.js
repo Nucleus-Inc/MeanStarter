@@ -209,16 +209,9 @@ module.exports = () => {
   if (config.csrfProtection.enable) {
     routers.v1.use(csrf({ cookie: true }))
 
-    routers.v1.use((err, req, res, next) => {
-      /* Bypass CSRF validation if session cookie is not in request */
-      if (!req.cookies[config.modules.expressSession.name]) return next()
+    const csrfMiddleware = require('./csurf/middleware')(config, errors)
 
-      /* Pass other errors to handler middleware */
-      if (err.code !== 'EBADCSRFTOKEN') return next(err)
-
-      /* Custom error */
-      res.status(errors.AUT002.httpCode).send(errors.AUT002.response)
-    })
+    routers.v1.use(csrfMiddleware)
   }
 
   /* Apply base url to router  */
