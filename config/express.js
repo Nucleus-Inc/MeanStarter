@@ -7,9 +7,6 @@ const errors = require('./errors/custom')
 /* Mongoose */
 const mongoose = require('mongoose')
 
-/* Redis */
-const redis = require('redis')
-
 /* Express */
 const express = require('express')
 
@@ -28,10 +25,6 @@ const cookieParser = require('cookie-parser')
 /* Csurf */
 const csrf = require('csurf')
 
-/* Express Session */
-const session = require('express-session')
-const RedisStore = require('connect-redis')(session)
-
 /* Body Parser */
 const bodyParser = require('body-parser')
 const bodyParserError = require('bodyparser-json-error')
@@ -41,9 +34,6 @@ const mongoSanitize = require('express-mongo-sanitize')
 
 /* Passport */
 const passportInstances = require('config/passport/instances')
-
-/* Rate Limiter */
-const { RateLimiterRedis } = require('rate-limiter-flexible')
 
 /* Consign */
 const consign = require('consign')
@@ -101,49 +91,10 @@ module.exports = () => {
 
   /* Express Winston for request logs */
   const expressLogger = require('./winston/express')(app)
-
   routers.v1.use(expressLogger)
 
   /* Rate Limiter */
-  const rateLimitterRedisClient = redis.createClient({
-    host: config.db.redis.host,
-    port: config.db.redis.port,
-    /* Needs to disable offline queue, according to docs */
-    enable_offline_queue: false
-  })
-
-  rateLimitterRedisClient.on('error', err => {
-    logger.error('Rate Limitter - Error on Redis connection: ' + err)
-  })
-
-  rateLimitterRedisClient.on('ready', () => {
-    logger.info('Rate Limitter - Redis connected on: ' + config.db.redis.host)
-  })
-
-  process.on('exit', () => {
-    rateLimitterRedisClient.quit()
-    logger.info(
-      'Rate Limitter - Redis disconnected from: ' + config.db.redis.host
-    )
-  })
-
-  const rateLimiter = new RateLimiterRedis({
-    storeClient: rateLimitterRedisClient,
-    points: config.modules.rateLimiter.points,
-    duration: config.modules.rateLimiter.duration
-  })
-
-  const rateLimiterMiddleware = (req, res, next) => {
-    rateLimiter
-      .consume(req.connection.remoteAddress)
-      .then(() => {
-        next()
-      })
-      .catch(rejRes => {
-        res.status(errors.REQ004).send(errors.REQ004.response)
-      })
-  }
-
+  const rateLimiterMiddleware = require('./ratelimiter/middleware')(app)
   routers.v1.use(rateLimiterMiddleware)
 
   /* Set public dir and use ejs views */
@@ -178,38 +129,8 @@ module.exports = () => {
   app.use(cookieParser())
 
   /* Express Session Middleware */
-  const sessionRedisClient = redis.createClient({
-    host: config.db.redis.host,
-    port: config.db.redis.port
-  })
-
-  sessionRedisClient.on('error', err => {
-    logger.error('Express Session - Error on Redis connection: ' + err)
-  })
-
-  sessionRedisClient.on('ready', () => {
-    logger.info('Express Session - Redis connected on: ' + config.db.redis.host)
-  })
-
-  process.on('exit', () => {
-    sessionRedisClient.quit()
-    logger.info(
-      'Express Session - Redis disconnected from: ' + config.db.redis.host
-    )
-  })
-
-  routers.v1.use(
-    session({
-      name: config.modules.expressSession.name,
-      secret: config.modules.expressSession.secret,
-      resave: config.modules.expressSession.resave,
-      saveUninitialized: config.modules.expressSession.saveUninitialized,
-      cookie: config.modules.expressSession.cookie,
-      store: new RedisStore({
-        client: sessionRedisClient
-      })
-    })
-  )
+  const sessionMiddleware = require('./session/middleware')(app)
+  routers.v1.use(sessionMiddleware)
 
   /* Passport */
   routers.v1.use(passportInstances.user.initialize())
@@ -244,7 +165,6 @@ module.exports = () => {
 
   /* Use errors handler middleware */
   const errorsMiddleware = require('./errors/middleware')(app)
-
   routers.v1.use(errorsMiddleware)
 
   /* Load Passport */
