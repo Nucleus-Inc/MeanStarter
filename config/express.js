@@ -22,14 +22,6 @@ const compression = require('compression')
 /* Helmet */
 const helmet = require('helmet')
 
-/* path */
-const path = require('path')
-
-/* Winston logger */
-const winston = require('winston')
-const winstonConfig = require('./winston.js')
-const expressWinston = require('express-winston')
-
 /* Cookie parser */
 const cookieParser = require('cookie-parser')
 
@@ -95,81 +87,12 @@ module.exports = () => {
   )
 
   /* Winston Logger */
-
-  /* Create log dir if doesn't exist */
-  winstonConfig.createLogDir()
-
-  const logger = winston.createLogger({
-    transports: [
-      new winston.transports.File({
-        level: config.modules.winston.transports.file.level,
-        silent: config.modules.winston.transports.file.silent,
-        filename: path.join(
-          'logs',
-          config.modules.winston.transports.file.filename
-        ),
-        maxsize: config.modules.winston.transports.file.maxsize,
-        maxFiles: config.modules.winston.transports.file.maxFiles,
-        format: winston.format.combine(
-          winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss'
-          }),
-          winston.format.simple(),
-          winston.format.printf(winstonConfig.formatParams)
-        )
-      }),
-      new winston.transports.Console({
-        level: config.modules.winston.transports.console.level,
-        silent: config.modules.winston.transports.console.silent,
-        format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss'
-          }),
-          winston.format.printf(winstonConfig.formatParams)
-        )
-      })
-    ]
-  })
+  const logger = require('./winston/logger')(config)
 
   /* Express Winston for request logs */
-  app.use(
-    expressWinston.logger({
-      transports: [
-        new winston.transports.File({
-          level: config.modules.expressWinston.transports.file.level,
-          silent: config.modules.expressWinston.transports.file.silent,
-          filename: path.join(
-            'logs',
-            config.modules.expressWinston.transports.file.filename
-          ),
-          maxsize: config.modules.expressWinston.transports.file.maxsize,
-          maxFiles: config.modules.expressWinston.transports.file.maxFiles,
-          format: winston.format.combine(
-            winston.format.timestamp({
-              format: 'YYYY-MM-DD HH:mm:ss'
-            }),
-            winston.format.simple(),
-            winston.format.printf(winstonConfig.formatParams)
-          )
-        }),
-        new winston.transports.Console({
-          level: config.modules.expressWinston.transports.console.level,
-          silent: config.modules.expressWinston.transports.console.silent,
-          format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.timestamp({
-              format: 'YYYY-MM-DD HH:mm:ss'
-            }),
-            winston.format.printf(winstonConfig.formatParams)
-          )
-        })
-      ],
-      meta: config.modules.expressWinston.meta,
-      expressFormat: config.modules.expressWinston.expressFormat,
-      level: winstonConfig.getStatusLevel
-    })
-  )
+  const expressLogger = require('./winston/express')(config)
+
+  routers.v1.use(expressLogger)
 
   /* Rate Limiter */
   const rateLimitterRedisClient = redis.createClient({
