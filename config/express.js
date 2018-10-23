@@ -1,8 +1,8 @@
 /* Env Config */
-const config = require('./config.js')
+const config = require('./config')
 
 /* Custom API Errors */
-const errors = require('./errors/custom.js')
+const errors = require('./errors/custom')
 
 /* Mongoose */
 const mongoose = require('mongoose')
@@ -250,13 +250,13 @@ module.exports = () => {
     .into(app)
 
   /* Use errors handler middleware */
-  require('./errors/middleware.js')(app)
+  require('./errors/middleware')(app)
 
   /* Load Passport */
-  require('./passport/passport.js')(app)
+  require('./passport/passport')(app)
 
   /* Load Database configs */
-  require('./database.js')(app)
+  require('./database')(app)
 
   return app
 }
