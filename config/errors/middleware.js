@@ -1,5 +1,5 @@
 module.exports = app => {
-  app.use((err, req, res, next) => {
+  const middleware = (err, req, res, next) => {
     const errorsLogger = app.libs.errors.logger
     const errorFormatter = app.libs.errors.formatter
 
@@ -10,5 +10,7 @@ module.exports = app => {
     }
 
     res.status(formattedError.statusCode).send(formattedError.errorData)
-  })
+  }
+
+  return middleware
 }

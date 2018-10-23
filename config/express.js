@@ -243,7 +243,9 @@ module.exports = () => {
     .into(app)
 
   /* Use errors handler middleware */
-  require('./errors/middleware')(app)
+  const errorsMiddleware = require('./errors/middleware')(app)
+
+  routers.v1.use(errorsMiddleware)
 
   /* Load Passport */
   require('./passport/passport')(app)
