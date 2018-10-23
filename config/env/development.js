@@ -14,6 +14,9 @@ module.exports = {
   proxy: {
     setTrustProxy: false
   },
+  csrfProtection: {
+    enable: false
+  },
   auth: {
     local: {
       tokens: {

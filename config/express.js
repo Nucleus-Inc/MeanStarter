@@ -283,18 +283,20 @@ module.exports = () => {
   routers.v1.use(passportInstances.user.session())
 
   /* Csurf */
-  routers.v1.use(csrf({ cookie: true }))
+  if (config.csrfProtection.enable) {
+    routers.v1.use(csrf({ cookie: true }))
 
-  routers.v1.use((err, req, res, next) => {
-    /* Bypass CSRF validation if session cookie is not in request */
-    if (!req.cookies[config.modules.expressSession.name]) return next()
+    routers.v1.use((err, req, res, next) => {
+      /* Bypass CSRF validation if session cookie is not in request */
+      if (!req.cookies[config.modules.expressSession.name]) return next()
 
-    /* Pass other errors to handler middleware */
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+      /* Pass other errors to handler middleware */
+      if (err.code !== 'EBADCSRFTOKEN') return next(err)
 
-    /* Custom error */
-    res.status(errors.AUT002.httpCode).send(errors.AUT002.response)
-  })
+      /* Custom error */
+      res.status(errors.AUT002.httpCode).send(errors.AUT002.response)
+    })
+  }
 
   /* Apply base url to router  */
   app.use(apiVersions.v1.baseUrl, routers.v1)
