@@ -60,10 +60,6 @@ module.exports = {
       }
     }
   },
-  errors: {
-    dumpExceptions: true,
-    dumpUnkownExeceptionsOnly: true
-  },
   modules: {
     sslify: {
       trustProtoHeader: false
