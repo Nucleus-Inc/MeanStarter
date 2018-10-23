@@ -3,7 +3,9 @@ const expressWinston = require('express-winston')
 const path = require('path')
 const helpers = require('./helpers')
 
-module.exports = config => {
+module.exports = app => {
+  const config = app.locals.config
+
   const logger = expressWinston.logger({
     transports: [
       new winston.transports.File({

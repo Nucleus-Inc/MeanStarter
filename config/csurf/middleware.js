@@ -1,4 +1,7 @@
-module.exports = (config, errors) => {
+module.exports = app => {
+  const config = app.locals.config
+  const errors = app.locals.errors
+
   const middleware = (err, req, res, next) => {
     /* Bypass CSRF validation if session cookie is not in request */
     if (!req.cookies[config.modules.expressSession.name]) return next()

@@ -73,6 +73,19 @@ module.exports = () => {
     app.use(enforce.HTTPS(config.modules.sslify))
   }
 
+  /* Winston Logger */
+  const logger = require('./winston/logger')(config)
+
+  /* Set app Locals */
+  app.locals.config = config
+  app.locals.mongoose = mongoose
+  app.locals.routers = routers
+  app.locals.passport = {
+    user: passportInstances.user
+  }
+  app.locals.logger = logger
+  app.locals.errors = errors
+
   /* Compression */
   app.use(compression())
 
@@ -86,11 +99,8 @@ module.exports = () => {
     })
   )
 
-  /* Winston Logger */
-  const logger = require('./winston/logger')(config)
-
   /* Express Winston for request logs */
-  const expressLogger = require('./winston/express')(config)
+  const expressLogger = require('./winston/express')(app)
 
   routers.v1.use(expressLogger)
 
@@ -209,7 +219,7 @@ module.exports = () => {
   if (config.csrfProtection.enable) {
     routers.v1.use(csrf({ cookie: true }))
 
-    const csrfMiddleware = require('./csurf/middleware')(config, errors)
+    const csrfMiddleware = require('./csurf/middleware')(app)
 
     routers.v1.use(csrfMiddleware)
   }
@@ -219,16 +229,6 @@ module.exports = () => {
 
   /* Set app default router */
   app.use('/', routers.v1)
-
-  /* Set app Locals */
-  app.locals.config = config
-  app.locals.mongoose = mongoose
-  app.locals.routers = routers
-  app.locals.passport = {
-    user: passportInstances.user
-  }
-  app.locals.logger = logger
-  app.locals.errors = errors
 
   /* Autoload modules with Consign */
   consign({
