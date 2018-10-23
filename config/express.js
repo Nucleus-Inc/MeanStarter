@@ -1,40 +1,28 @@
 /* Env Config */
 const config = require('./config')
-
 /* Custom API Errors */
 const errors = require('./errors/custom')
-
 /* Mongoose */
 const mongoose = require('mongoose')
-
 /* Express */
 const express = require('express')
-
 /* Express sslify */
 const enforce = require('express-sslify')
-
 /* Compression */
 const compression = require('compression')
-
 /* Helmet */
 const helmet = require('helmet')
-
 /* Cookie parser */
 const cookieParser = require('cookie-parser')
-
 /* Csurf */
 const csrf = require('csurf')
-
 /* Body Parser */
 const bodyParser = require('body-parser')
 const bodyParserError = require('bodyparser-json-error')
-
 /* Express Mongo Sanitizer */
 const mongoSanitize = require('express-mongo-sanitize')
-
 /* Passport */
 const passportInstances = require('config/passport/instances')
-
 /* Consign */
 const consign = require('consign')
 
