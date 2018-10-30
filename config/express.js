@@ -82,8 +82,10 @@ module.exports = () => {
   routers.v1.use(expressLogger)
 
   /* Rate Limiter */
-  const rateLimiterMiddleware = require('./ratelimiter/middleware')(app)
-  routers.v1.use(rateLimiterMiddleware)
+  if (config.rateLimiter.enable) {
+    const rateLimiterMiddleware = require('./ratelimiter/middleware')(app)
+    routers.v1.use(rateLimiterMiddleware)
+  }
 
   /* Set public dir and use ejs views */
   app.use(require('method-override')())

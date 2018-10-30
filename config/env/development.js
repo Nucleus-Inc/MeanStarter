@@ -17,6 +17,9 @@ module.exports = {
   csrfProtection: {
     enable: false
   },
+  rateLimiter: {
+    enable: false
+  },
   auth: {
     local: {
       tokens: {
