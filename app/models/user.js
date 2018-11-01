@@ -17,10 +17,11 @@ module.exports = app => {
               unique: true,
               partialFilterExpression: {
                 'account.local.email': {
-                  $exists: true
+                  $type: 'string'
                 }
               }
-            }
+            },
+            default: null
           },
           phoneNumber: {
             type: String,
@@ -28,10 +29,11 @@ module.exports = app => {
               unique: true,
               partialFilterExpression: {
                 'account.local.phoneNumber': {
-                  $exists: true
+                  $type: 'string'
                 }
               }
-            }
+            },
+            default: null
           },
           password: {
             type: String
