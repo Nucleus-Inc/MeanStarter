@@ -3,7 +3,7 @@ const MockStrategy = require('passport-mocked').Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
-  const User = app.models.user
+  const passportLib = app.libs.passport.facebook
   const errors = app.locals.errors
   const config = app.locals.config
 
@@ -24,29 +24,23 @@ module.exports = app => {
       },
       async (req, token, refreshToken, profile, done) => {
         try {
+          let facebookId = profile.id
+
+          let userData = {
+            email: profile.emails.length >= 1 ? profile.emails[0].value : null,
+            displayName: profile.displayName,
+            photo: profile.photos.length >= 1 ? profile.photos[0].value : null
+          }
+
           /* User is logged in */
           if (req.user) {
-            let user = await User.findOne({
-              'account.facebook.id': profile.id
-            })
+            let userId = req.user._id
+
+            let user = await passportLib.findUserByGoogleId(facebookId)
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
-
-              user = await User.findByIdAndUpdate(
-                req.user._id,
-                {
-                  $set: {
-                    'account.facebook.id': profile.id,
-                    'account.facebook.email': profile.emails[0].value,
-                    'account.facebook.displayName': profile.displayName,
-                    'account.facebook.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
-              )
+              user = await passportLib.updateUser(userId, facebookId, userData)
 
               return done(null, user)
 
@@ -58,45 +52,23 @@ module.exports = app => {
             /* User not logged in */
           } else {
             /* Find user with matching provider id or email address */
-            let user = await User.findOne({
-              $or: [
-                { 'account.facebook.id': profile.id },
-                { 'account.local.email': profile.emails[0].value }
-              ]
-            })
+            let user = await passportLib.matchUser(facebookId, userData.email)
             /* User doesn't exist */
             if (!user) {
               /* Create User and set default local data with provider info */
-              user = await User.create({
-                'account.local.email': profile.emails[0].value,
-                'account.local.displayName': profile.displayName,
-                'account.local.photo': profile.photos[0].value,
-                'account.facebook.id': profile.id,
-                'account.facebook.email': profile.emails[0].value,
-                'account.facebook.displayName': profile.displayName,
-                'account.facebook.photo': profile.photos[0].value
-              })
+              user = await passportLib.createUser(facebookId, userData)
 
               return done(null, user)
               /* User exists */
             } else if (
-              !user.account.facebook.id ||
-              user.account.facebook.id === profile.id
+              !user.account.google.id ||
+              user.account.google.id === facebookId
             ) {
               /* Link provider */
-              user = await User.findByIdAndUpdate(
+              user = await passportLib.updateUser(
                 user._id,
-                {
-                  $set: {
-                    'account.facebook.id': profile.id,
-                    'account.facebook.email': profile.emails[0].value,
-                    'account.facebook.displayName': profile.displayName,
-                    'account.facebook.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
+                facebookId,
+                userData
               )
               return done(null, user)
             } else {

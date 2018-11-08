@@ -154,7 +154,7 @@ module.exports = () => {
 
   /* Use errors handler middleware */
   const errorsMiddleware = require('./errors/middleware')(app)
-  routers.v1.use(errorsMiddleware)
+  app.use(errorsMiddleware)
 
   /* Load Passport */
   require('./passport/passport')(app)

@@ -2,7 +2,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
-  const User = app.models.user
+  const passportLib = app.libs.passport.google
   const errors = app.locals.errors
   const config = app.locals.config
 
@@ -17,29 +17,23 @@ module.exports = app => {
       },
       async (req, token, refreshToken, profile, done) => {
         try {
+          let googleId = profile.id
+
+          let userData = {
+            email: profile.emails.length >= 1 ? profile.emails[0].value : null,
+            displayName: profile.displayName,
+            photo: profile.photos.length >= 1 ? profile.photos[0].value : null
+          }
+
           /* User is logged in */
           if (req.user) {
-            let user = await User.findOne({
-              'account.google.id': profile.id
-            })
+            let userId = req.user._id
+
+            let user = await passportLib.findUserByGoogleId(googleId)
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
-
-              user = await User.findByIdAndUpdate(
-                req.user._id,
-                {
-                  $set: {
-                    'account.google.id': profile.id,
-                    'account.google.email': profile.emails[0].value,
-                    'account.google.displayName': profile.displayName,
-                    'account.google.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
-              )
+              user = await passportLib.updateUser(userId, googleId, userData)
 
               return done(null, user)
 
@@ -51,46 +45,20 @@ module.exports = app => {
             /* User not logged in */
           } else {
             /* Find user with matching provider id or email address */
-            let user = await User.findOne({
-              $or: [
-                { 'account.google.id': profile.id },
-                { 'account.local.email': profile.emails[0].value }
-              ]
-            })
+            let user = await passportLib.matchUser(googleId, userData.email)
             /* User doesn't exist */
             if (!user) {
               /* Create User and set default local data with provider info */
-              user = await User.create({
-                'account.local.email': profile.emails[0].value,
-                'account.local.displayName': profile.displayName,
-                'account.local.photo': profile.photos[0].value,
-                'account.google.id': profile.id,
-                'account.google.email': profile.emails[0].value,
-                'account.google.displayName': profile.displayName,
-                'account.google.photo': profile.photos[0].value
-              })
+              user = await passportLib.createUser(googleId, userData)
 
               return done(null, user)
               /* User exists */
             } else if (
               !user.account.google.id ||
-              user.account.google.id === profile.id
+              user.account.google.id === googleId
             ) {
               /* Link provider */
-              user = await User.findByIdAndUpdate(
-                user._id,
-                {
-                  $set: {
-                    'account.google.id': profile.id,
-                    'account.google.email': profile.emails[0].value,
-                    'account.google.displayName': profile.displayName,
-                    'account.google.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
-              )
+              user = await passportLib.updateUser(user._id, googleId, userData)
               return done(null, user)
             } else {
               return done(errors.AUT007)

@@ -1,45 +1,36 @@
 const FacebookTokenStrategy = require('passport-facebook-token')
+const MockStrategy = require('passport-mocked').Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
-  const User = app.models.user
+  const passportLib = app.libs.passport.facebook
   const errors = app.locals.errors
   const config = app.locals.config
 
+  let Strategy =
+    process.env.NODE_ENV === 'production' || 'development'
+      ? FacebookTokenStrategy
+      : MockStrategy
+
   passport.use(
     'facebook-token',
-    new FacebookTokenStrategy(
+    new Strategy(
       {
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,
         fbGraphVersion: 'v3.0',
         passReqToCallback: true
       },
-      async (req, accessToken, refreshToken, profile, done) => {
+      async (req, token, refreshToken, profile, done) => {
         try {
           /* User is logged in */
           if (req.user) {
-            let user = await User.findOne({
-              'account.facebook.id': profile.id
-            })
+            let user = await passportLib.findUserByFacebookId(profile.id)
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
 
-              user = await User.findByIdAndUpdate(
-                req.user._id,
-                {
-                  $set: {
-                    'account.facebook.id': profile.id,
-                    'account.facebook.email': profile.emails[0].value,
-                    'account.facebook.displayName': profile.displayName,
-                    'account.facebook.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
-              )
+              user = await passportLib.updateUser(req.user._id, profile)
 
               return done(null, user)
 
@@ -51,24 +42,11 @@ module.exports = app => {
             /* User not logged in */
           } else {
             /* Find user with matching provider id or email address */
-            let user = await User.findOne({
-              $or: [
-                { 'account.facebook.id': profile.id },
-                { 'account.local.email': profile.emails[0].value }
-              ]
-            })
+            let user = await passportLib.matchUser(profile)
             /* User doesn't exist */
             if (!user) {
               /* Create User and set default local data with provider info */
-              user = await User.create({
-                'account.local.email': profile.emails[0].value,
-                'account.local.displayName': profile.displayName,
-                'account.local.photo': profile.photos[0].value,
-                'account.facebook.id': profile.id,
-                'account.facebook.email': profile.emails[0].value,
-                'account.facebook.displayName': profile.displayName,
-                'account.facebook.photo': profile.photos[0].value
-              })
+              user = await passportLib.createUser(profile)
 
               return done(null, user)
               /* User exists */
@@ -77,20 +55,8 @@ module.exports = app => {
               user.account.facebook.id === profile.id
             ) {
               /* Link provider */
-              user = await User.findByIdAndUpdate(
-                user._id,
-                {
-                  $set: {
-                    'account.facebook.id': profile.id,
-                    'account.facebook.email': profile.emails[0].value,
-                    'account.facebook.displayName': profile.displayName,
-                    'account.facebook.photo': profile.photos[0].value
-                  }
-                },
-                {
-                  new: true
-                }
-              )
+              user = await passportLib.updateUser(req.user._id, profile)
+
               return done(null, user)
             } else {
               return done(errors.AUT007)
