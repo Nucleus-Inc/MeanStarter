@@ -36,7 +36,7 @@ module.exports = app => {
           if (req.user) {
             let userId = req.user._id
 
-            let user = await passportLib.findUserByGoogleId(facebookId)
+            let user = await passportLib.findUserByFacebookId(facebookId)
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
@@ -61,8 +61,8 @@ module.exports = app => {
               return done(null, user)
               /* User exists */
             } else if (
-              !user.account.google.id ||
-              user.account.google.id === facebookId
+              !user.account.facebook.id ||
+              user.account.facebook.id === facebookId
             ) {
               /* Link provider */
               user = await passportLib.updateUser(
