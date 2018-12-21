@@ -1,5 +1,5 @@
 const FacebookStrategy = require('passport-facebook').Strategy
-const MockStrategy = require('passport-mocked').Strategy
+const passportMock = require('passport-mock-strategies').OAuth2Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
@@ -8,9 +8,7 @@ module.exports = app => {
   const config = app.locals.config
 
   let Strategy =
-    process.env.NODE_ENV === 'production' || 'development'
-      ? FacebookStrategy
-      : MockStrategy
+    process.env.NODE_ENV === 'production' ? FacebookStrategy : passportMock
 
   passport.use(
     'facebook-oauth2',

@@ -1,4 +1,5 @@
 const GoogleTokenStrategy = require('passport-google-id-token')
+const passportMock = require('passport-mock-strategies').GoogleTokenStrategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
@@ -6,9 +7,12 @@ module.exports = app => {
   const errors = app.locals.errors
   const config = app.locals.config
 
+  let Strategy =
+    process.env.NODE_ENV === 'production' ? GoogleTokenStrategy : passportMock
+
   passport.use(
     'google-signin',
-    new GoogleTokenStrategy(
+    new Strategy(
       {
         clientID: config.auth.google.clientID,
         passReqToCallback: true

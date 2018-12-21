@@ -1,4 +1,5 @@
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+const passportMock = require('passport-mock-strategies').OAuth2Strategy
 
 module.exports = app => {
   const passport = app.locals.passport.user
@@ -6,9 +7,12 @@ module.exports = app => {
   const errors = app.locals.errors
   const config = app.locals.config
 
+  let Strategy =
+    process.env.NODE_ENV === 'production' ? GoogleStrategy : passportMock
+
   passport.use(
     'google-oauth2',
-    new GoogleStrategy(
+    new Strategy(
       {
         clientID: config.auth.google.clientID,
         clientSecret: config.auth.google.clientSecret,

@@ -5614,6 +5614,13 @@ passport-local@^1.0.0:
   dependencies:
     passport-strategy "1.x.x"
 
+"passport-mock-strategy@git+https://github.com/Nucleus-Inc/passport-mock-strategies.git":
+  version "1.0.0"
+  resolved "git+https://github.com/Nucleus-Inc/passport-mock-strategies.git#f94d629d4115e61ee6617da7dbb5ed26312a1c83"
+  dependencies:
+    passport "^0.4.0"
+    passport-strategy "^1.0.0"
+
 passport-mocked@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/passport-mocked/-/passport-mocked-1.2.0.tgz#7e6050f29abe4360ec56130b02b150be387d0f86"
@@ -5658,6 +5665,13 @@ passport@0.3.0:
 passport@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/passport/-/passport-0.3.2.tgz#9dd009f915e8fe095b0124a01b8f82da07510102"
+  dependencies:
+    passport-strategy "1.x.x"
+    pause "0.0.1"
+
+passport@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.0.tgz#c5095691347bd5ad3b5e180238c3914d16f05811"
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
