@@ -2,7 +2,7 @@ module.exports = app => {
   const lib = {}
   const User = app.models.user
 
-  lib.findUserByGoogleId = async facebookId => {
+  lib.findUserByFacebookId = async facebookId => {
     let query = await User.findOne({
       'account.facebook.id': facebookId
     })

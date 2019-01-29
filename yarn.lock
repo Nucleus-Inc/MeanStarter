@@ -5614,9 +5614,9 @@ passport-local@^1.0.0:
   dependencies:
     passport-strategy "1.x.x"
 
-"passport-mock-strategy@git+https://github.com/Nucleus-Inc/passport-mock-strategies.git":
+passport-mock-strategies@^1.0.0:
   version "1.0.0"
-  resolved "git+https://github.com/Nucleus-Inc/passport-mock-strategies.git#f94d629d4115e61ee6617da7dbb5ed26312a1c83"
+  resolved "https://registry.yarnpkg.com/passport-mock-strategies/-/passport-mock-strategies-1.0.0.tgz#9439952ed04b2408c800890a65b7381a0c45921b"
   dependencies:
     passport "^0.4.0"
     passport-strategy "^1.0.0"
