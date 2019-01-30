@@ -5,21 +5,43 @@ should = require('chai')
 
 const User = server.models.user
 
+const fbMockProfile = {
+  id: 'oauth-test',
+  provider: 'facebook-oauth2',
+  displayName: 'John Doe',
+  emails: [{ value: 'john.doe@email.com' }],
+  photos: [
+    {
+      value: 'https://via.placeholder.com/350x150'
+    }
+  ]
+}
+
 chai.use(chaiHttp)
 
-describe('Facebook OAuth2 - Connect', () => {
-  const fbMockProfile = {
-    id: 'oauth-test-3',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe3',
-    emails: [{ value: 'john.doe3@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
+describe('Facebook OAuth2 Connect - Unauthorized', () => {
+  before(done => {
+    server.request.user = undefined
 
+    server.request.isAuthenticated = function () {
+      return false
+    }
+
+    done()
+  })
+
+  it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
+    chai
+      .request(server)
+      .get('/users/auth/facebook/oauth2/connect')
+      .end((err, res) => {
+        res.should.have.status(401)
+        done()
+      })
+  })
+})
+
+describe('Facebook OAuth2 Connect', () => {
   before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
@@ -36,8 +58,7 @@ describe('Facebook OAuth2 - Connect', () => {
       'account.local.isActive': true
     }).then(result => {
       server.request.user = {
-        id: result._id,
-        isActive: true
+        id: result._id
       }
       server.request.user._id = result._id
 
@@ -97,21 +118,17 @@ describe('Facebook OAuth2 - Connect', () => {
         done()
       })
   })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
+  })
 })
 
-describe('Facebook OAuth2 - Connect auth error AUTH-007', () => {
-  const fbMockProfile = {
-    id: 'oauth-test-3',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe3',
-    emails: [{ value: 'john.doe3@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
-
+describe('Facebook OAuth2 Connect - Error AUTH-007', () => {
   before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
@@ -123,8 +140,18 @@ describe('Facebook OAuth2 - Connect auth error AUTH-007', () => {
 
     User.create({
       'account.local.displayName': fbMockProfile.displayName,
-      'account.local.email': 'john.doe4@email.com',
-      'account.local.photo': 'https://via.placeholder.com/350x150',
+      'account.local.email': fbMockProfile.emails[0].value,
+      'account.local.photo': fbMockProfile.photos[0].value,
+      'account.local.isActive': true,
+      'account.facebook.id': fbMockProfile.id,
+      'account.facebook.displayName': fbMockProfile.displayName,
+      'account.facebook.email': fbMockProfile.emails[0].value,
+      'account.facebook.photo': fbMockProfile.photos[0].value
+    }).then(result => {})
+
+    User.create({
+      'account.local.displayName': 'Different User',
+      'account.local.email': 'other.user@email.com',
       'account.local.isActive': true
     }).then(result => {
       server.request.user = {
@@ -151,5 +178,13 @@ describe('Facebook OAuth2 - Connect auth error AUTH-007', () => {
         res.body.errorCode.should.be.eql('AUT-007')
         done()
       })
+  })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
   })
 })

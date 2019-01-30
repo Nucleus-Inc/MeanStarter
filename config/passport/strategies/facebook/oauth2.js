@@ -35,7 +35,9 @@ module.exports = app => {
             let userId = req.user._id
 
             let user = await passportLib.findUserByFacebookId(facebookId)
+
             /* User doesn't exist or does exist and it's the same user logged in */
+
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
               user = await passportLib.updateUser(userId, facebookId, userData)
@@ -55,7 +57,6 @@ module.exports = app => {
             if (!user) {
               /* Create User and set default local data with provider info */
               user = await passportLib.createUser(facebookId, userData)
-
               return done(null, user)
               /* User exists */
             } else if (

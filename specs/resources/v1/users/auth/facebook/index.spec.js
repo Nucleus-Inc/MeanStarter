@@ -5,21 +5,21 @@ should = require('chai')
 
 const User = server.models.user
 
+const fbMockProfile = {
+  id: 'oauth-test',
+  provider: 'facebook-oauth2',
+  displayName: 'John Doe',
+  emails: [{ value: 'john.doe@email.com' }],
+  photos: [
+    {
+      value: 'https://via.placeholder.com/350x150'
+    }
+  ]
+}
+
 chai.use(chaiHttp)
 
-describe('Facebook OAuth2 - New User Authentication', () => {
-  const fbMockProfile = {
-    id: 'oauth-test',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe',
-    emails: [{ value: 'john.doe@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
-
+describe('Facebook OAuth2 - New User', () => {
   before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
@@ -81,21 +81,17 @@ describe('Facebook OAuth2 - New User Authentication', () => {
         done()
       })
   })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
+  })
 })
 
 describe('Facebook OAuth2 - Existing Local User Account', () => {
-  const fbMockProfile = {
-    id: 'oauth-test-2',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe2',
-    emails: [{ value: 'john.doe2@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
-
   before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
@@ -164,26 +160,22 @@ describe('Facebook OAuth2 - Existing Local User Account', () => {
         done()
       })
   })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
+  })
 })
 
 describe('Facebook OAuth2 - Update Existing Facebook Object', () => {
-  const fbMockProfile = {
-    id: 'oauth-test-2',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe2',
-    emails: [{ value: 'john.doe2@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
-
   const fbMockProfileUpdated = {
-    id: 'oauth-test-2',
+    id: 'oauth-test',
     provider: 'facebook-oauth2',
-    displayName: 'John Doe2 Update',
-    emails: [{ value: 'john.doe2.update@email.com' }],
+    displayName: 'John Doe Update',
+    emails: [{ value: 'john.doe.update@email.com' }],
     photos: [
       {
         value: 'https://via.placeholder.com/350x150/update'
@@ -191,7 +183,7 @@ describe('Facebook OAuth2 - Update Existing Facebook Object', () => {
     ]
   }
 
-  before(() => {
+  before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
     strategy._passAuthentication = true
@@ -199,6 +191,19 @@ describe('Facebook OAuth2 - Update Existing Facebook Object', () => {
     strategy._callbackURL = '/users/auth/facebook/oauth2/callback'
 
     strategy._profile = fbMockProfileUpdated
+
+    User.create({
+      'account.local.displayName': fbMockProfile.displayName,
+      'account.local.email': fbMockProfile.emails[0].value,
+      'account.local.photo': fbMockProfile.photos[0].value,
+      'account.local.isActive': true,
+      'account.facebook.id': fbMockProfile.id,
+      'account.facebook.displayName': fbMockProfile.displayName,
+      'account.facebook.email': fbMockProfile.emails[0].value,
+      'account.facebook.photo': fbMockProfile.photos[0].value
+    }).then(result => {
+      done()
+    })
   })
 
   it('should successfully login on /api/v1/users/auth/facebook/oauth2 GET', done => {
@@ -250,14 +255,21 @@ describe('Facebook OAuth2 - Update Existing Facebook Object', () => {
         done()
       })
   })
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
+  })
 })
 
-describe('Facebook OAuth2 - Auth error AUTH-007', () => {
-  const fbMockProfile = {
+describe('Facebook OAuth2 - Error AUTH-007', () => {
+  const fbMockProfileDifferentId = {
     id: 'oauth-test-different-id',
     provider: 'facebook-oauth2',
-    displayName: 'John Doe2',
-    emails: [{ value: 'john.doe2@email.com' }],
+    displayName: 'John Doe',
+    emails: [{ value: 'john.doe@email.com' }],
     photos: [
       {
         value: 'https://via.placeholder.com/350x150'
@@ -265,14 +277,27 @@ describe('Facebook OAuth2 - Auth error AUTH-007', () => {
     ]
   }
 
-  before(() => {
+  before(done => {
     let strategy = server.locals.passport.user._strategies['facebook-oauth2']
 
     strategy._passAuthentication = true
     strategy._redirectToCallback = true
     strategy._callbackURL = '/users/auth/facebook/oauth2/callback'
 
-    strategy._profile = fbMockProfile
+    strategy._profile = fbMockProfileDifferentId
+
+    User.create({
+      'account.local.displayName': fbMockProfile.displayName,
+      'account.local.email': fbMockProfile.emails[0].value,
+      'account.local.photo': fbMockProfile.photos[0].value,
+      'account.local.isActive': true,
+      'account.facebook.id': fbMockProfile.id,
+      'account.facebook.displayName': fbMockProfile.displayName,
+      'account.facebook.email': fbMockProfile.emails[0].value,
+      'account.facebook.photo': fbMockProfile.photos[0].value
+    }).then(result => {
+      done()
+    })
   })
 
   it('should fail to login on /api/v1/users/auth/facebook/oauth2 GET', done => {
@@ -285,5 +310,13 @@ describe('Facebook OAuth2 - Auth error AUTH-007', () => {
         res.body.errorCode.should.be.eql('AUT-007')
         done()
       })
+  })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
   })
 })

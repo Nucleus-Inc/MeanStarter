@@ -5,24 +5,53 @@ should = require('chai')
 
 const User = server.models.user
 
+const fbMockProfile = {
+  id: 'oauth-test',
+  provider: 'facebook-oauth2',
+  displayName: 'John Doe',
+  emails: [{ value: 'john.doe@email.com' }],
+  photos: [
+    {
+      value: 'https://via.placeholder.com/350x150'
+    }
+  ]
+}
+
 chai.use(chaiHttp)
 
-describe('Facebook OAuth2 - Disconnect', () => {
-  const fbMockProfile = {
-    id: 'oauth-test-3',
-    provider: 'facebook-oauth2',
-    displayName: 'John Doe3',
-    emails: [{ value: 'john.doe3@email.com' }],
-    photos: [
-      {
-        value: 'https://via.placeholder.com/350x150'
-      }
-    ]
-  }
-
+describe('Facebook OAuth2 Disconnect - Unauthorized', () => {
   before(done => {
-    User.findOne({
-      'account.local.email': fbMockProfile.emails[0].value
+    server.request.user = undefined
+
+    server.request.isAuthenticated = function () {
+      return false
+    }
+
+    done()
+  })
+
+  it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
+    chai
+      .request(server)
+      .post('/users/auth/facebook/oauth2/disconnect')
+      .end((err, res) => {
+        res.should.have.status(401)
+        done()
+      })
+  })
+})
+
+describe('Facebook OAuth2 Disconnect', () => {
+  before(done => {
+    User.create({
+      'account.local.displayName': fbMockProfile.displayName,
+      'account.local.email': fbMockProfile.emails[0].value,
+      'account.local.photo': fbMockProfile.photos[0].value,
+      'account.local.isActive': true,
+      'account.facebook.id': fbMockProfile.id,
+      'account.facebook.displayName': fbMockProfile.displayName,
+      'account.facebook.email': fbMockProfile.emails[0].value,
+      'account.facebook.photo': fbMockProfile.photos[0].value
     }).then(result => {
       server.request.user = {
         id: result._id,
@@ -45,7 +74,7 @@ describe('Facebook OAuth2 - Disconnect', () => {
   it('should successfully disconnect account on /users/auth/facebook/oauth2/disconnect POST', done => {
     chai
       .request(server)
-      .post('/users/auth/facebook/disconnect')
+      .post('/users/auth/facebook/oauth2/disconnect')
       .end((err, res) => {
         res.should.have.status(200)
         done()
@@ -74,5 +103,13 @@ describe('Facebook OAuth2 - Disconnect', () => {
         result.account.should.not.have.property('facebook')
         done()
       })
+  })
+
+  after(done => {
+    User.remove({
+      'account.facebook.id': fbMockProfile.id
+    }).then(result => {
+      done()
+    })
   })
 })
