@@ -24,7 +24,7 @@ module.exports = app => {
     return query
   }
 
-  lib.createUser = async (facebookId, data) => {
+  lib.createUser = async data => {
     let userObj = {
       account: {
         local: {},
@@ -41,7 +41,7 @@ module.exports = app => {
     userObj.account.local.photo = data.photo
 
     userObj.account.facebook = {
-      id: facebookId,
+      id: data.id,
       email: data.email,
       displayName: data.displayName,
       photo: data.photo
@@ -52,12 +52,12 @@ module.exports = app => {
     return query
   }
 
-  lib.updateUser = async (_id, facebookId, data) => {
+  lib.linkUser = async (_id, data) => {
     let query = await User.findByIdAndUpdate(
       _id,
       {
         $set: {
-          'account.facebook.id': facebookId,
+          'account.facebook.id': data.id,
           'account.facebook.email': data.email,
           'account.facebook.displayName': data.displayName,
           'account.facebook.photo': data.photo
