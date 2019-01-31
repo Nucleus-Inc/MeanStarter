@@ -11,9 +11,9 @@ require('./resources/v1/users/auth/local/jwt.spec.js')
 require('./resources/v1/users/auth/local/local.spec.js')
 
 /* User Facebook OAuth2 */
-require('./resources/v1/users/auth/facebook/index.spec.js')
-require('./resources/v1/users/auth/facebook/connect/index.spec.js')
-require('./resources/v1/users/auth/facebook/disconnect/index.spec.js')
+require('./resources/v1/users/auth/facebook/oauth2/index.spec.js')
+require('./resources/v1/users/auth/facebook/oauth2/connect/index.spec.js')
+require('./resources/v1/users/auth/facebook/oauth2/disconnect/index.spec.js')
 
 /* User Local Account */
 require('./resources/v1/users/account/local/activation.spec.js')
