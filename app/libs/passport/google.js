@@ -24,7 +24,7 @@ module.exports = app => {
     return query
   }
 
-  lib.createUser = async (googleId, data) => {
+  lib.createUser = async data => {
     let userObj = {
       account: {
         local: {},
@@ -41,7 +41,7 @@ module.exports = app => {
     userObj.account.local.photo = data.photo
 
     userObj.account.google = {
-      id: googleId,
+      id: data.id,
       email: data.email,
       displayName: data.displayName,
       photo: data.photo
@@ -52,12 +52,12 @@ module.exports = app => {
     return query
   }
 
-  lib.updateUser = async (_id, googleId, data) => {
+  lib.linkUser = async (_id, data) => {
     let query = await User.findByIdAndUpdate(
       _id,
       {
         $set: {
-          'account.google.id': googleId,
+          'account.google.id': data.id,
           'account.google.email': data.email,
           'account.google.displayName': data.displayName,
           'account.google.photo': data.photo
