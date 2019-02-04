@@ -23,7 +23,9 @@ require('./resources/v1/users/account/local/index.spec.js')
 /* User Facebook OAuth2 */
 require('./resources/v1/users/auth/facebook/oauth2/index.spec.js')
 require('./resources/v1/users/auth/facebook/oauth2/connect/index.spec.js')
-require('./resources/v1/users/auth/facebook/oauth2/disconnect/index.spec.js')
+
+/* User Facebook Disconnect */
+require('./resources/v1/users/auth/facebook/disconnect/index.spec.js')
 
 /* User Facebook OAuth2 Token */
 require('./resources/v1/users/auth/facebook/token/index.spec.js')
@@ -32,7 +34,9 @@ require('./resources/v1/users/auth/facebook/token/connect/index.spec.js')
 /* User Google OAuth2 */
 require('./resources/v1/users/auth/google/oauth2/index.spec.js')
 require('./resources/v1/users/auth/google/oauth2/connect/index.spec.js')
-require('./resources/v1/users/auth/google/oauth2/disconnect/index.spec.js')
+
+/* User Google Disconnect */
+require('./resources/v1/users/auth/google/disconnect/index.spec.js')
 
 /* Verifications */
 require('./resources/v1/verifications/password.spec.js')

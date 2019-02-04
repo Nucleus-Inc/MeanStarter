@@ -23,7 +23,7 @@ describe('Facebook OAuth2 Disconnect - Unauthorized', () => {
   it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
     chai
       .request(server)
-      .post('/users/auth/facebook/oauth2/disconnect')
+      .post('/users/auth/facebook/disconnect')
       .end((err, res) => {
         res.should.have.status(401)
         done()
@@ -64,7 +64,7 @@ describe('Facebook OAuth2 Disconnect', () => {
   it('should successfully disconnect account on /users/auth/facebook/oauth2/disconnect POST', done => {
     chai
       .request(server)
-      .post('/users/auth/facebook/oauth2/disconnect')
+      .post('/users/auth/facebook/disconnect')
       .end((err, res) => {
         res.should.have.status(200)
         done()

@@ -3,6 +3,6 @@ module.exports = app => {
   const controller = app.controllers.v1.users.auth.facebook.disconnect.index
 
   app
-    .route('/users/auth/facebook/oauth2/disconnect')
+    .route('/users/auth/facebook/disconnect')
     .post(passportMult.isAuth, controller.disconnect)
 }
