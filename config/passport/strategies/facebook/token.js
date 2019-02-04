@@ -51,10 +51,12 @@ module.exports = app => {
           } else {
             /* Find user with matching provider id or email address */
             let user = await passportLib.matchUser(userData.id, userData.email)
+
             /* User doesn't exist */
             if (!user) {
               /* Create User and set default local data with provider info */
               user = await passportLib.createUser(userData)
+
               return done(null, user)
               /* User exists */
             } else if (

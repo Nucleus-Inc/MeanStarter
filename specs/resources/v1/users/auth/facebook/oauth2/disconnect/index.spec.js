@@ -20,16 +20,6 @@ const fbMockProfile = {
 chai.use(chaiHttp)
 
 describe('Facebook OAuth2 Disconnect - Unauthorized', () => {
-  before(done => {
-    server.request.user = undefined
-
-    server.request.isAuthenticated = function () {
-      return false
-    }
-
-    done()
-  })
-
   it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
     chai
       .request(server)
@@ -107,8 +97,13 @@ describe('Facebook OAuth2 Disconnect', () => {
 
   after(done => {
     User.remove({
-      'account.facebook.id': fbMockProfile.id
+      _id: server.request.user._id
     }).then(result => {
+      server.request.user = undefined
+
+      server.request.isAuthenticated = function () {
+        return false
+      }
       done()
     })
   })

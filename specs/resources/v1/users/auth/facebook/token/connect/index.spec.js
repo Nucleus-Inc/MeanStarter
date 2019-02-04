@@ -2,14 +2,16 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('app.js')
 should = require('chai')
+const jwt = require('jsonwebtoken')
+const config = require('config/config')
 
 const User = server.models.user
 
 const fbMockProfile = {
-  id: 'oauth-test',
-  provider: 'facebook-oauth2',
+  id: 'oauth-test-token-connect',
+  provider: 'facebook-token',
   displayName: 'John Doe',
-  emails: [{ value: 'john.doe@email.com' }],
+  emails: [{ value: 'john.doe.connect.token@email.com' }],
   photos: [
     {
       value: 'https://via.placeholder.com/350x150'
@@ -17,13 +19,17 @@ const fbMockProfile = {
   ]
 }
 
+let userId = null
+
+let token = null
+
 chai.use(chaiHttp)
 
-describe('Facebook OAuth2 Connect - Unauthorized', () => {
-  it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
+describe('Facebook Token Connect - Unauthorized', () => {
+  it('should fail to login on /api/v1/users/auth/facebook/token/connect POST', done => {
     chai
       .request(server)
-      .get('/users/auth/facebook/oauth2/connect')
+      .post('/users/auth/facebook/token/connect')
       .end((err, res) => {
         res.should.have.status(401)
         done()
@@ -31,13 +37,13 @@ describe('Facebook OAuth2 Connect - Unauthorized', () => {
   })
 })
 
-describe('Facebook OAuth2 Connect', () => {
+describe('Facebook Token Connect', () => {
   before(done => {
-    let strategy = server.locals.passport.user._strategies['facebook-oauth2']
+    let strategy = server.locals.passport.user._strategies['facebook-token']
 
     strategy._passAuthentication = true
-    strategy._redirectToCallback = true
-    strategy._callbackURL = '/users/auth/facebook/oauth2/callback'
+    strategy._redirectToCallback = false
+    strategy._callbackURL = ''
 
     strategy._profile = fbMockProfile
 
@@ -47,26 +53,28 @@ describe('Facebook OAuth2 Connect', () => {
       'account.local.photo': fbMockProfile.photos[0].value,
       'account.local.isActive': true
     }).then(result => {
-      server.request.user = {
-        id: result._id
-      }
-      server.request.user._id = result._id
-
-      server.request.isAuthenticated = function () {
-        return true
-      }
+      token = jwt.sign(
+        {
+          _id: result._id,
+          isActive: true
+        },
+        config.auth.local.jwt.jwtSecret,
+        {
+          expiresIn: config.auth.local.jwt.expires
+        }
+      )
 
       done()
     })
   })
 
-  it('should successfully connect account on /users/auth/facebook/oauth2/connect GET', done => {
+  it('should successfully connect account on /users/auth/facebook/token/connect POST', done => {
     chai
       .request(server)
-      .get('/users/auth/facebook/oauth2')
+      .post('/users/auth/facebook/token/connect')
+      .set('Authorization', 'JWT ' + token)
       .end((err, res) => {
         res.should.have.status(200)
-        res.headers['content-type'].should.be.eql('text/html; charset=utf-8')
         done()
       })
   })
@@ -110,12 +118,6 @@ describe('Facebook OAuth2 Connect', () => {
   })
 
   after(done => {
-    server.request.user = undefined
-
-    server.request.isAuthenticated = function () {
-      return false
-    }
-
     User.remove({
       'account.facebook.id': fbMockProfile.id
     }).then(result => {
@@ -124,13 +126,13 @@ describe('Facebook OAuth2 Connect', () => {
   })
 })
 
-describe('Facebook OAuth2 Connect - Error AUTH-007', () => {
+describe('Facebook Token Connect - Error AUTH-007', () => {
   before(done => {
-    let strategy = server.locals.passport.user._strategies['facebook-oauth2']
+    let strategy = server.locals.passport.user._strategies['facebook-token']
 
     strategy._passAuthentication = true
-    strategy._redirectToCallback = true
-    strategy._callbackURL = '/users/auth/facebook/oauth2/callback'
+    strategy._redirectToCallback = false
+    strategy._callbackURL = ''
 
     strategy._profile = fbMockProfile
 
@@ -147,27 +149,31 @@ describe('Facebook OAuth2 Connect - Error AUTH-007', () => {
 
     User.create({
       'account.local.displayName': 'Different User',
-      'account.local.email': 'other.user@email.com',
+      'account.local.email': 'other.john.doe.connect.token@email.com',
       'account.local.isActive': true
     }).then(result => {
-      server.request.user = {
-        id: result._id,
-        isActive: true
-      }
-      server.request.user._id = result._id
+      token = jwt.sign(
+        {
+          _id: result._id,
+          isActive: true
+        },
+        config.auth.local.jwt.jwtSecret,
+        {
+          expiresIn: config.auth.local.jwt.expires
+        }
+      )
 
-      server.request.isAuthenticated = function () {
-        return true
-      }
+      userId = result._id
 
       done()
     })
   })
 
-  it('should fail to login on /api/v1/users/auth/facebook/oauth2/connect GET', done => {
+  it('should fail to login on /api/v1/users/auth/facebook/token/connect POST', done => {
     chai
       .request(server)
-      .get('/users/auth/facebook/oauth2')
+      .post('/users/auth/facebook/token/connect')
+      .set('Authorization', 'JWT ' + token)
       .end((err, res) => {
         res.should.have.status(403)
         res.body.should.have.property('errorCode')
@@ -183,15 +189,10 @@ describe('Facebook OAuth2 Connect - Error AUTH-007', () => {
           'account.facebook.id': fbMockProfile.id
         },
         {
-          _id: server.request.user._id
+          _id: userId
         }
       ]
     }).then(result => {
-      server.request.user = undefined
-
-      server.request.isAuthenticated = function () {
-        return false
-      }
       done()
     })
   })

@@ -11,9 +11,14 @@ require('./resources/v1/users/auth/local/jwt.spec.js')
 require('./resources/v1/users/auth/local/local.spec.js')
 
 /* User Facebook OAuth2 */
+
 require('./resources/v1/users/auth/facebook/oauth2/index.spec.js')
 require('./resources/v1/users/auth/facebook/oauth2/connect/index.spec.js')
 require('./resources/v1/users/auth/facebook/oauth2/disconnect/index.spec.js')
+
+/* User Facebook OAuth2 */
+require('./resources/v1/users/auth/facebook/token/index.spec.js')
+require('./resources/v1/users/auth/facebook/token/connect/index.spec.js')
 
 /* User Local Account */
 require('./resources/v1/users/account/local/activation.spec.js')
@@ -24,7 +29,7 @@ require('./resources/v1/users/account/local/email.spec.js')
 require('./resources/v1/users/account/local/photo.spec.js')
 require('./resources/v1/users/account/local/displayName.spec.js')
 
-/* User Account */
+/* User Account  */
 require('./resources/v1/users/account/local/index.spec.js')
 
 /* Verifications */
