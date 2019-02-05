@@ -3,7 +3,7 @@
 /* Hooks */
 require('./hooks.js')
 
-/* User Signup */
+/* User Signup  */
 require('./resources/v1/users/account/local/signup.spec.js')
 
 /* User Local Auth */
@@ -33,6 +33,10 @@ require('./resources/v1/users/auth/facebook/token/connect/index.spec.js')
 
 /* User Google OAuth2 */
 require('./resources/v1/users/auth/google/oauth2/index.spec.js')
+require('./resources/v1/users/auth/google/oauth2/connect/index.spec.js')
+
+/* User Google Signin */
+require('./resources/v1/users/auth/google/signin/index.spec.js')
 require('./resources/v1/users/auth/google/oauth2/connect/index.spec.js')
 
 /* User Google Disconnect */

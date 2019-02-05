@@ -20,6 +20,7 @@ module.exports = app => {
       async (req, parsedToken, googleId, done) => {
         try {
           let userData = {
+            id: googleId,
             email: parsedToken.payload.email || null,
             displayName: parsedToken.payload.name,
             photo: parsedToken.payload.picture || null
@@ -33,7 +34,7 @@ module.exports = app => {
             /* User doesn't exist or does exist and it's the same user logged in */
             if (!user || req.user._id.toString() === user._id.toString()) {
               /* Link provider */
-              user = await passportLib.updateUser(userId, googleId, userData)
+              user = await passportLib.linkUser(userId, userData)
 
               return done(null, user)
 
@@ -49,7 +50,7 @@ module.exports = app => {
             /* User doesn't exist */
             if (!user) {
               /* Create User and set default local data with provider info */
-              user = await passportLib.createUser(googleId, userData)
+              user = await passportLib.createUser(userData)
 
               return done(null, user)
               /* User exists */
@@ -58,7 +59,7 @@ module.exports = app => {
               user.account.google.id === googleId
             ) {
               /* Link provider */
-              user = await passportLib.updateUser(user._id, googleId, userData)
+              user = await passportLib.linkUser(user._id, userData)
               return done(null, user)
             } else {
               return done(errors.AUT007)
