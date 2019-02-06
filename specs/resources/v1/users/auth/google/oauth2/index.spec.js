@@ -179,7 +179,7 @@ describe('Google OAuth2 - Existing Local User Account', () => {
 })
 
 describe('Google OAuth2 - Update Existing Google Object', () => {
-  const fbMockProfileUpdated = {
+  const googleMockProfileUpdated = {
     id: 'oauth-test',
     provider: 'google-oauth2',
     displayName: 'John Doe Update',
@@ -198,7 +198,7 @@ describe('Google OAuth2 - Update Existing Google Object', () => {
     strategy._redirectToCallback = true
     strategy._callbackURL = '/users/auth/google/oauth2/callback'
 
-    strategy._profile = fbMockProfileUpdated
+    strategy._profile = googleMockProfileUpdated
 
     User.create({
       'account.local.displayName': googleMockProfile.displayName,
@@ -254,15 +254,15 @@ describe('Google OAuth2 - Update Existing Google Object', () => {
         result.account.google.id.should.be.eql(googleMockProfile.id)
         result.account.google.should.have.property('email')
         result.account.google.email.should.be.eql(
-          fbMockProfileUpdated.emails[0].value
+          googleMockProfileUpdated.emails[0].value
         )
         result.account.google.should.have.property('displayName')
         result.account.google.displayName.should.be.eql(
-          fbMockProfileUpdated.displayName
+          googleMockProfileUpdated.displayName
         )
         result.account.google.should.have.property('photo')
         result.account.google.photo.should.be.eql(
-          fbMockProfileUpdated.photos[0].value
+          googleMockProfileUpdated.photos[0].value
         )
         done()
       })
@@ -277,7 +277,7 @@ describe('Google OAuth2 - Update Existing Google Object', () => {
 })
 
 describe('Google OAuth2 - Error AUTH-007', () => {
-  const fbMockProfileDifferentId = {
+  const googleMockDifferent = {
     id: 'oauth-test-different-id',
     provider: 'google-oauth2',
     displayName: 'John Doe',
@@ -296,7 +296,7 @@ describe('Google OAuth2 - Error AUTH-007', () => {
     strategy._redirectToCallback = true
     strategy._callbackURL = '/users/auth/google/oauth2/callback'
 
-    strategy._profile = fbMockProfileDifferentId
+    strategy._profile = googleMockDifferent
 
     User.create({
       'account.local.displayName': googleMockProfile.displayName,
