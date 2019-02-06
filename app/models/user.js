@@ -78,12 +78,6 @@ module.exports = app => {
           id: {
             type: String
           },
-          accessToken: {
-            type: String
-          },
-          refreshToken: {
-            type: String
-          },
           email: {
             type: String
           },
