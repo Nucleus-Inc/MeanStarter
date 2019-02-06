@@ -8,23 +8,19 @@
     "test": "NODE_PATH=. NODE_ENV=ci nyc mocha --exit specs/index.js",
     "lint": "eslint app.js app/** config/** specs/** public/controllers/** public/directives/** public/factories/** public/filters/** public/services/** public/app.js public/specs/** --ext .js"
   },
-  "repository": "git+https://github.com/Igor-Lopes/MeanStarter.git",
+  "repository": "git+https://github.com/Nucleus-Inc/MeanStarter.git",
   "keywords": [
     "mean-stack",
     "rest-api",
     "boilerplate",
     "boilerplate-project"
   ],
-  "author": [
-    "Nucleus.eti",
-    "Igor Lopes",
-    "Eduardo Castro"
-  ],
+  "author": "Nucleus.eti",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Igor-Lopes/MeanStarter/issues"
+    "url": "https://github.com/Nucleus-Inc/MeanStarter/issues"
   },
-  "homepage": "https://github.com/Igor-Lopes/MeanStarter#readme",
+  "homepage": "https://github.com/Nucleus-Inc/MeanStarter#readme",
   "dependencies": {
     "@cgross/angular-notify": "^2.5.1",
     "@sendgrid/mail": "^6.3.1",
