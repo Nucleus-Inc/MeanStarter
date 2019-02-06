@@ -4,7 +4,7 @@ node_js:
   - "8"
 
 before_script:
-  - npm install
+  - yarn install
 
 services:
   - mongodb
