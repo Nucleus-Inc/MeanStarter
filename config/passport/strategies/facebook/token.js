@@ -8,7 +8,7 @@ module.exports = app => {
   const config = app.locals.config
 
   let Strategy =
-    process.env.NODE_ENV === 'production' ? FacebookTokenStrategy : passportMock
+    process.env.NODE_ENV === 'ci' ? passportMock : FacebookTokenStrategy
 
   passport.use(
     'facebook-token',

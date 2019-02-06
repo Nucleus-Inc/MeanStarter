@@ -7,9 +7,7 @@ module.exports = app => {
   const errors = app.locals.errors
   const config = app.locals.config
 
-  let Strategy =
-    process.env.NODE_ENV === 'production' ? GoogleStrategy : passportMock
-
+  let Strategy = process.env.NODE_ENV === 'ci' ? passportMock : GoogleStrategy
   passport.use(
     'google-oauth2',
     new Strategy(
