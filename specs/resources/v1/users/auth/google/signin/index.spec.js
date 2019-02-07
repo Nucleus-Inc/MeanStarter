@@ -2,6 +2,8 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('app.js')
 should = require('chai')
+const jwt = require('jsonwebtoken')
+const config = require('config/config')
 
 const User = server.models.user
 
@@ -131,7 +133,17 @@ describe('Google OAuth2 - Existing Local User Account', () => {
       .post('/users/auth/google/signin')
       .end((err, res) => {
         res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 
@@ -240,7 +252,17 @@ describe('Google OAuth2 - Update Existing Google Object', () => {
       .post('/users/auth/google/signin')
       .end((err, res) => {
         res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 

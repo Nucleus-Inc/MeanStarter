@@ -2,6 +2,8 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('app.js')
 should = require('chai')
+const jwt = require('jsonwebtoken')
+const config = require('config/config')
 
 const User = server.models.user
 
@@ -37,8 +39,17 @@ describe('Facebook Token - New User', () => {
       .request(server)
       .post('/users/auth/facebook/token')
       .end((err, res) => {
-        res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 
@@ -115,8 +126,17 @@ describe('Facebook Token - Existing Local User Account', () => {
       .request(server)
       .post('/users/auth/facebook/token')
       .end((err, res) => {
-        res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 
@@ -209,8 +229,17 @@ describe('Facebook Token - Update Existing Facebook Object', () => {
       .request(server)
       .post('/users/auth/facebook/token')
       .end((err, res) => {
-        res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
 

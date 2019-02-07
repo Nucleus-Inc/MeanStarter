@@ -87,8 +87,17 @@ describe('Google Token Connect', () => {
       .post('/users/auth/google/signin/connect')
       .set('Authorization', 'JWT ' + signin)
       .end((err, res) => {
-        res.should.have.status(200)
-        done()
+        jwt.verify(
+          res.headers.jwt,
+          config.auth.local.jwt.jwtSecret,
+          (err, decoded) => {
+            decoded.should.have.property('_id')
+            decoded.should.have.property('isActive')
+            decoded.should.have.property('iat')
+            decoded.should.have.property('exp')
+            done()
+          }
+        )
       })
   })
   it('should successfully create google account object', done => {
