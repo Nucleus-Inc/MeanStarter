@@ -46,7 +46,7 @@ module.exports = app => {
           }
         })
         .catch(ex => {
-          logger.error(ex.toString())
+          logger.error(ex.stack)
         })
     } else if (options.transport === 'sendgrid') {
       return sgMail.send({
