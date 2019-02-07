@@ -45,6 +45,7 @@ module.exports = {
       clientID:
         '962854434183-e7r3pbj2fs580ni04oq0c96bld5neubj.apps.googleusercontent.com',
       clientSecret: 'fEzeOabyCvded3R96iebQkRK',
+      scope: ['profile', 'email'],
       callbacks: {
         user: {
           callbackURL: 'http://localhost:5000/users/auth/google/oauth2/callback'
@@ -54,6 +55,7 @@ module.exports = {
     facebook: {
       clientID: '2202473779971326',
       clientSecret: 'd05a4f99f8618085c39ed8108a653eb1',
+      scope: ['public_profile', 'email'],
       profileFields: ['id', 'displayName', 'photos', 'email'],
       callbacks: {
         user: {

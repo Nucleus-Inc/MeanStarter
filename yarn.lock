@@ -5621,12 +5621,6 @@ passport-mock-strategies@^1.0.0:
     passport "^0.4.0"
     passport-strategy "^1.0.0"
 
-passport-mocked@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/passport-mocked/-/passport-mocked-1.2.0.tgz#7e6050f29abe4360ec56130b02b150be387d0f86"
-  dependencies:
-    passport "0.3.0"
-
 passport-oauth1@1.x.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/passport-oauth1/-/passport-oauth1-1.1.0.tgz#a7de988a211f9cf4687377130ea74df32730c918"
@@ -5654,13 +5648,6 @@ passport-oauth@1.0.0:
 passport-strategy@1.x.x, passport-strategy@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
-
-passport@0.3.0:
-  version "0.3.0"
-  resolved "http://registry.npmjs.org/passport/-/passport-0.3.0.tgz#14c151b0eb6795aa9335239827f548d5f94c7046"
-  dependencies:
-    passport-strategy "1.x.x"
-    pause "0.0.1"
 
 passport@^0.3.2:
   version "0.3.2"
