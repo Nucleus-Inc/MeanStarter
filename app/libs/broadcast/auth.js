@@ -4,6 +4,7 @@ const hbs = require('nodemailer-express-handlebars')
 
 module.exports = app => {
   const lib = {}
+  const logger = app.locals.logger
   const config = app.locals.config
 
   /* NodeMailer Setup */
@@ -33,16 +34,20 @@ module.exports = app => {
         })
       )
 
-      return smtpTransporter.sendMail({
-        to: data.recipient,
-        subject: 'Test',
-        template: 'transactional',
-        context: {
-          username: data.username,
-          message: 'Here is your confirmation code: ',
-          code: data.code
-        }
-      })
+      return smtpTransporter
+        .sendMail({
+          to: data.recipient,
+          subject: 'Test',
+          template: 'transactional',
+          context: {
+            username: data.username,
+            message: 'Here is your confirmation code: ',
+            code: data.code
+          }
+        })
+        .catch(ex => {
+          logger.error(ex.toString())
+        })
     } else if (options.transport === 'sendgrid') {
       return sgMail.send({
         personalizations: [
@@ -66,7 +71,7 @@ module.exports = app => {
         }
       })
     } else if (options.transport === 'sms') {
-      console.log(
+      logger.error(
         'No SMS has been sent. You need to use your custom function here in order to send sms messages - ' +
           new Error().stack
       )
@@ -74,7 +79,9 @@ module.exports = app => {
       /* Your code to send sms goes here ... */
       return true
     } else {
-      throw new Error('Transport option is invalid or has not been set')
+      logger.error(
+        'Transport option is invalid or has not been set - ' + new Error().stack
+      )
     }
   }
 
